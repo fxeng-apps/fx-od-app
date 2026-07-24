@@ -5,6 +5,7 @@ import {
   fetchAllMentors,
   fetchStudentsForMentor,
   fetchStudentsForDepartment,
+  fetchHODsByDepartment,
   assignMentorToStudent,
   softDeleteUser,
   updateUserProfile,
@@ -52,6 +53,14 @@ export const useStudentsForDepartment = (department?: Department) => {
   return useQuery({
     queryKey: ['users', 'students', 'department', department],
     queryFn: () => fetchStudentsForDepartment(department || 'CSE'),
+    enabled: !!department,
+  });
+};
+
+export const useHODsForDepartment = (department?: Department) => {
+  return useQuery({
+    queryKey: ['users', 'hods', department],
+    queryFn: () => fetchHODsByDepartment(department || 'CSE'),
     enabled: !!department,
   });
 };

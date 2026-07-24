@@ -19,12 +19,26 @@ export const TodaysApprovedODCard: React.FC<TodaysApprovedODCardProps> = ({ allR
     return `${yyyy}-${mm}-${dd}`;
   }, []);
 
+  const getPassTypeLabel = (req: ODRequest): string => {
+    if (!req.schedule || req.schedule.length === 0) {
+      return 'Full Day';
+    }
+    const todayEntry = req.schedule.find((entry) => entry.date === todayStr);
+    if (!todayEntry) return 'Full Day';
+    if (todayEntry.passType === 'FULL_DAY') return 'Full Day';
+    return `Partial - Periods: ${todayEntry.periods.map((p) => `P${p}`).join(', ')}`;
+  };
+
   // Filter approved OD requests active for today
   const todaysApprovedRequests = useMemo(() => {
     return allRequests.filter((req) => {
-      if (req.status !== 'HOD_APPROVED') return false;
+      const overallStatus = typeof req.status === 'object' ? req.status.overall : req.status;
+      if (overallStatus !== 'HOD_APPROVED') return false;
 
-      // Check if today falls between startDate and endDate or matches startDate
+      // Check if today falls in the schedule entries
+      if (req.schedule && req.schedule.length > 0) {
+        return req.schedule.some((entry) => entry.date === todayStr);
+      }
       if (req.startDate && req.endDate) {
         return todayStr >= req.startDate && todayStr <= req.endDate;
       }
@@ -176,10 +190,10 @@ export const TodaysApprovedODCard: React.FC<TodaysApprovedODCardProps> = ({ allR
 
                   <div className="flex items-center justify-between">
                     <span className="text-gray-400 flex items-center gap-1">
-                      <Calendar className="w-3 h-3 text-gray-400" /> Time / Schedule:
+                      <Calendar className="w-3 h-3 text-gray-400" /> Pass Type:
                     </span>
                     <span className="font-semibold text-gray-800 dark:text-gray-200">
-                      {req.startDate} ({req.totalDays}d)
+                      {getPassTypeLabel(req)}
                     </span>
                   </div>
 
@@ -194,8 +208,8 @@ export const TodaysApprovedODCard: React.FC<TodaysApprovedODCardProps> = ({ allR
                     <span className="text-gray-400 flex items-center gap-1 shrink-0">
                       <MapPin className="w-3 h-3 text-gray-400" /> Event & Venue:
                     </span>
-                    <span className="font-semibold text-[#0B426E] dark:text-blue-300 text-right truncate max-w-[140px]" title={req.description || req.odType}>
-                      {req.description || req.odType}
+                    <span className="font-semibold text-[#0B426E] dark:text-blue-300 text-right truncate max-w-[140px]" title={req.purpose || req.description || req.odType}>
+                      {req.purpose || req.description || req.odType}
                     </span>
                   </div>
                 </div>

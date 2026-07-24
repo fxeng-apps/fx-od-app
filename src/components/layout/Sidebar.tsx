@@ -31,8 +31,8 @@ export const Sidebar: React.FC<SidebarProps> = ({ onNavigate, isMobileDrawer = f
       case 'STUDENT':
         return [
           { to: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
-          { to: '/student/requests', label: 'My Requests', icon: FileText },
-          { to: '/student/apply', label: 'Apply OD', icon: Send },
+          { to: '/student/requests', label: 'My Movement Passes', icon: FileText },
+          { to: '/student/apply', label: 'Apply Pass', icon: Send },
           { to: '/student/history', label: 'History', icon: History },
           { to: '/student/notifications', label: 'Notifications', icon: Bell },
           { to: '/profile', label: 'Profile', icon: User },
@@ -60,13 +60,13 @@ export const Sidebar: React.FC<SidebarProps> = ({ onNavigate, isMobileDrawer = f
         return [
           { to: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
           { to: '/analytics', label: 'Analytics', icon: PieChart },
-          { to: '/admin/history', label: 'Historical ODs', icon: History },
+          { to: '/admin/history', label: 'Historical Passes', icon: History },
           { to: '/admin/users', label: 'User Management', icon: UserCheck },
           { to: '/admin/audit', label: 'Audit Logs', icon: ShieldCheck },
           { to: '/profile', label: 'Settings', icon: Settings },
         ];
       default:
-        return [{ to: '/student/requests', label: 'My Requests', icon: FileText }];
+        return [{ to: '/student/requests', label: 'My Movement Passes', icon: FileText }];
     }
   };
 
@@ -86,7 +86,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ onNavigate, isMobileDrawer = f
               <GraduationCap className="w-5 h-5" />
             </div>
             <div>
-              <h2 className="font-semibold text-sm text-white tracking-tight">FX OD Portal</h2>
+              <h2 className="font-semibold text-sm text-white tracking-tight">FX Movement Pass Portal</h2>
               <p className="text-[11px] text-white/70">Institutional ERP System</p>
             </div>
           </div>
@@ -127,7 +127,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ onNavigate, isMobileDrawer = f
       {/* Institutional Footer */}
       <div className="p-3 bg-white/10 rounded-md border border-white/10 text-center space-y-0.5 mt-6">
         <p className="text-xs font-semibold text-white">Francis Xavier Engineering College</p>
-        <p className="text-[10px] text-white/70">OD Management System v2.0</p>
+        <p className="text-[10px] text-white/70">Movement Pass Management System v2.0</p>
       </div>
     </aside>
   );

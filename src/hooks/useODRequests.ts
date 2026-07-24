@@ -17,12 +17,12 @@ import type { CreateODDTO } from '../types/od';
 import type { UserProfile, Department } from '../types/user';
 
 export const QUERY_KEYS = {
-  studentODs: (studentUid: string) => ['od_requests', 'student', studentUid],
-  mentorPending: (mentorUid: string, email?: string) => ['od_requests', 'mentor', 'pending', mentorUid, email || ''],
-  mentorHistory: (mentorUid: string, email?: string) => ['od_requests', 'mentor', 'history', mentorUid, email || ''],
-  hodPending: (dept: Department) => ['od_requests', 'hod', 'pending', dept],
-  hodHistory: (dept: Department) => ['od_requests', 'hod', 'history', dept],
-  allODs: () => ['od_requests', 'all'],
+  studentODs: (studentUid: string) => ['movement_passes', 'student', studentUid],
+  mentorPending: (mentorUid: string, email?: string) => ['movement_passes', 'mentor', 'pending', mentorUid, email || ''],
+  mentorHistory: (mentorUid: string, email?: string) => ['movement_passes', 'mentor', 'history', mentorUid, email || ''],
+  hodPending: (dept: Department) => ['movement_passes', 'hod', 'pending', dept],
+  hodHistory: (dept: Department) => ['movement_passes', 'hod', 'history', dept],
+  allODs: () => ['movement_passes', 'all'],
 };
 
 export const useStudentODRequests = (studentUid?: string) => {
@@ -74,7 +74,7 @@ export const useAllODRequests = () => {
 
 // Global cache invalidation helper
 const invalidateAllWorkflowQueries = (queryClient: ReturnType<typeof useQueryClient>) => {
-  queryClient.invalidateQueries({ queryKey: ['od_requests'] });
+  queryClient.invalidateQueries({ queryKey: ['movement_passes'] });
   queryClient.invalidateQueries({ queryKey: ['notifications'] });
   queryClient.invalidateQueries({ queryKey: ['audit_logs'] });
   queryClient.invalidateQueries({ queryKey: ['users'] });

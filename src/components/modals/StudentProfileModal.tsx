@@ -2,6 +2,7 @@ import React from 'react';
 import { CheckCircle, Clock, XCircle } from 'lucide-react';
 import { useStudentODRequests } from '../../hooks/useODRequests';
 import type { UserProfile } from '../../types/user';
+import type { ODRequest } from '../../types/od';
 import { Modal } from '../common/Modal';
 import { Badge } from '../common/Badge';
 import { Loader } from '../common/Loader';
@@ -26,9 +27,10 @@ export const StudentProfileModal: React.FC<StudentProfileModalProps> = ({
 
   if (!student) return null;
 
-  const totalApproved = odRequests.filter((r) => r.status === 'HOD_APPROVED').length;
-  const totalRejected = odRequests.filter((r) => r.status === 'MENTOR_REJECTED' || r.status === 'HOD_REJECTED').length;
-  const totalPending = odRequests.filter((r) => r.status === 'PENDING' || r.status === 'MENTOR_APPROVED').length;
+  const getStatus = (r: ODRequest) => typeof r.status === 'object' ? r.status.overall : r.status;
+  const totalApproved = odRequests.filter((r) => getStatus(r) === 'HOD_APPROVED').length;
+  const totalRejected = odRequests.filter((r) => getStatus(r) === 'MENTOR_REJECTED' || getStatus(r) === 'HOD_REJECTED').length;
+  const totalPending = odRequests.filter((r) => getStatus(r) === 'PENDING' || getStatus(r) === 'MENTOR_APPROVED').length;
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} title={`Student Profile: ${student.displayName}`}>
@@ -107,43 +109,47 @@ export const StudentProfileModal: React.FC<StudentProfileModalProps> = ({
           </div>
         </div>
 
-        {/* OD Request History Timeline */}
+        {/* Movement Pass History Timeline */}
         <div className="space-y-2.5">
-          <h4 className="font-semibold text-gray-900 dark:text-white text-xs">Complete OD Request History</h4>
+          <h4 className="font-semibold text-gray-900 dark:text-white text-xs">Complete Movement Pass History</h4>
 
           {isLoading ? (
-            <Loader label="Loading student OD history..." />
+            <Loader label="Loading student pass history..." />
           ) : odRequests.length === 0 ? (
             <div className="p-4 text-center bg-gray-50 dark:bg-gray-700/40 rounded-md border border-gray-200 dark:border-gray-600 text-gray-500">
-              No OD requests submitted by this student yet.
+              No movement passes submitted by this student yet.
             </div>
           ) : (
-            <div className="space-y-3 max-h-80 overflow-y-auto pr-1">
-              {odRequests.map((req) => (
-                <div key={req.id} className="p-3 bg-white dark:bg-gray-800 rounded-md border border-gray-200 dark:border-gray-700 space-y-2">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <span className="font-mono font-bold text-[#0B426E] dark:text-blue-300">{req.requestNumber}</span>
-                      <span className="text-gray-500 dark:text-gray-400 text-[11px] ml-2">({req.odType})</span>
+            <div className="space-y-3 max-h-80 overflow-y-auto pr-1 text-left">
+              {odRequests.map((req) => {
+                const statusVal = getStatus(req);
+                return (
+                  <div key={req.id} className="p-3 bg-white dark:bg-gray-800 rounded-md border border-gray-200 dark:border-gray-700 space-y-2">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <span className="font-mono font-bold text-[#0B426E] dark:text-blue-300">{req.requestNumber}</span>
+                        <span className="text-gray-500 dark:text-gray-400 text-[11px] ml-2">
+                          ({req.schedule && req.schedule[0]?.passType === 'FULL_DAY' ? 'Full Day' : 'Partial'})
+                        </span>
+                      </div>
+                      <Badge
+                        variant={
+                          statusVal === 'HOD_APPROVED'
+                            ? 'success'
+                            : statusVal === 'PENDING' || statusVal === 'MENTOR_APPROVED'
+                            ? 'warning'
+                            : 'danger'
+                        }
+                      >
+                        {statusVal}
+                      </Badge>
                     </div>
-                    <Badge
-                      variant={
-                        req.status === 'HOD_APPROVED'
-                          ? 'success'
-                          : req.status === 'PENDING' || req.status === 'MENTOR_APPROVED'
-                          ? 'warning'
-                          : 'danger'
-                      }
-                    >
-                      {req.status}
-                    </Badge>
-                  </div>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-1.5 text-[11px] text-gray-600 dark:text-gray-300">
-                    <div><strong>Duration:</strong> {req.startDate} {req.endDate ? `to ${req.endDate}` : ''} ({req.totalDays} day)</div>
-                    <div><strong>Faculty In Charge:</strong> {req.facultyInCharge}</div>
-                    <div><strong>Purpose:</strong> {req.description}</div>
-                  </div>
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-1.5 text-[11px] text-gray-600 dark:text-gray-300">
+                      <div><strong>Duration:</strong> {req.startDate} {req.endDate ? `to ${req.endDate}` : ''} ({req.totalDays} day)</div>
+                      <div><strong>Faculty In Charge:</strong> {req.facultyInCharge}</div>
+                      <div><strong>Purpose:</strong> {req.purpose || req.description}</div>
+                    </div>
 
                   {req.timeline && req.timeline.length > 0 && (
                     <div className="pt-2 border-t border-gray-100 dark:border-gray-700">
@@ -152,8 +158,9 @@ export const StudentProfileModal: React.FC<StudentProfileModalProps> = ({
                     </div>
                   )}
                 </div>
-              ))}
-            </div>
+              );
+            })}
+          </div>
           )}
         </div>
       </div>

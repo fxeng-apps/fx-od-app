@@ -60,12 +60,13 @@ export const StudentsUnderMe: React.FC = () => {
   };
 
   const getStudentODStatus = (studentUid: string) => {
-    const studentReqs = allODs.filter((r) => r.studentUid === studentUid && !r.isDeleted);
+    const studentReqs = allODs.filter((r) => (r.studentId === studentUid || r.studentUid === studentUid) && !r.isDeleted);
     if (studentReqs.length === 0) return { label: 'No Applications', variant: 'info' as const };
 
     const latest = studentReqs[0];
-    if (latest.status === 'HOD_APPROVED') return { label: 'Approved', variant: 'success' as const };
-    if (latest.status === 'PENDING' || latest.status === 'MENTOR_APPROVED') return { label: 'Pending Approval', variant: 'warning' as const };
+    const statusVal = typeof latest.status === 'object' ? latest.status.overall : latest.status;
+    if (statusVal === 'HOD_APPROVED') return { label: 'Approved', variant: 'success' as const };
+    if (statusVal === 'PENDING' || statusVal === 'MENTOR_APPROVED') return { label: 'Pending Approval', variant: 'warning' as const };
     return { label: 'Rejected', variant: 'danger' as const };
   };
 

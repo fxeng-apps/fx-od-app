@@ -1,7 +1,7 @@
 import type { Timestamp } from 'firebase/firestore';
 import type { UserSnapshot, Department } from './user';
 
-export type ODStatus =
+export type MovementPassOverallStatus =
   | 'PENDING'
   | 'MENTOR_APPROVED'
   | 'MENTOR_REJECTED'
@@ -10,14 +10,13 @@ export type ODStatus =
   | 'EXPIRED'
   | 'WITHDRAWN';
 
-export type ODType =
-  | 'Applied Lab'
-  | 'Individual'
-  | 'Symposium'
-  | 'Sports'
-  | 'Workshop'
-  | 'Industrial Visit'
-  | 'Other';
+export type PassType = 'FULL_DAY' | 'PARTIAL';
+
+export interface ScheduleEntry {
+  date: string; // YYYY-MM-DD
+  passType: PassType;
+  periods: number[]; // e.g. [1, 2, 3, 4, 5, 6, 7] or specific periods
+}
 
 export interface ApprovalSnapshot {
   status: 'APPROVED' | 'REJECTED';
@@ -40,23 +39,32 @@ export interface TimelineEntry {
   details?: string;
 }
 
-export interface ODRequest {
+export interface MovementPass {
   id: string;
   requestNumber: string;
-  studentUid: string;
+  studentId: string; // studentId replaces studentUid
   studentSnapshot: UserSnapshot;
-  assignedMentorUid: string;
+  mentorId: string; // mentorId replaces assignedMentorUid
   assignedMentorSnapshot: UserSnapshot;
   department: Department;
-  dateType: 'SINGLE' | 'MULTIPLE';
+  facultyInCharge: string;
+  purpose: string; // purpose replaces description
+  proofDocumentUrl?: string;
+  status: {
+    overall: MovementPassOverallStatus;
+    mentor: 'PENDING' | 'APPROVED' | 'REJECTED';
+    hod: 'PENDING' | 'APPROVED' | 'REJECTED';
+  };
+  schedule: ScheduleEntry[];
+
+  // Helper properties for backward compatibility with existing table columns and sorting
   startDate: string;
   endDate?: string;
   totalDays: number;
-  description: string;
-  facultyInCharge: string;
-  odType: ODType;
-  proofDocumentUrl?: string;
-  status: ODStatus;
+  studentUid?: string;
+  assignedMentorUid?: string | null;
+  description?: string;
+  odType?: string;
 
   // Specific Mentor Approval Fields
   mentorStatus?: 'APPROVED' | 'REJECTED';
@@ -84,12 +92,13 @@ export interface ODRequest {
   updatedBy?: string;
 }
 
-export interface CreateODDTO {
-  dateType: 'SINGLE' | 'MULTIPLE';
-  startDate: string;
-  endDate?: string;
-  description: string;
+export type ODRequest = MovementPass;
+
+export interface CreateMovementPassDTO {
   facultyInCharge: string;
-  odType: ODType;
+  purpose: string;
   proofDocumentUrl?: string;
+  schedule: ScheduleEntry[];
 }
+
+export type CreateODDTO = CreateMovementPassDTO;

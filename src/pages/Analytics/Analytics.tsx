@@ -34,20 +34,21 @@ export const Analytics: React.FC = () => {
   const totalHODs = users.filter((u) => u.role === 'HOD').length;
   const totalDepartments = Array.from(new Set(users.map((u) => u.department))).length || 7;
 
-  // 2. OD Lifecycle Metrics
+  // 2. Lifecycle Metrics
+  const getStatus = (r: any) => typeof r.status === 'object' ? r.status.overall : r.status;
   const totalRequests = requests.length;
-  const pendingMentor = requests.filter((r) => r.status === 'PENDING').length;
-  const pendingHOD = requests.filter((r) => r.status === 'MENTOR_APPROVED').length;
-  const approvedODs = requests.filter((r) => r.status === 'HOD_APPROVED').length;
+  const pendingMentor = requests.filter((r) => getStatus(r) === 'PENDING').length;
+  const pendingHOD = requests.filter((r) => getStatus(r) === 'MENTOR_APPROVED').length;
+  const approvedODs = requests.filter((r) => getStatus(r) === 'HOD_APPROVED').length;
   const rejectedODs = requests.filter(
-    (r) => r.status === 'MENTOR_REJECTED' || r.status === 'HOD_REJECTED'
+    (r) => getStatus(r) === 'MENTOR_REJECTED' || getStatus(r) === 'HOD_REJECTED'
   ).length;
-  const withdrawnODs = requests.filter((r) => r.status === 'WITHDRAWN').length;
-  const expiredODs = requests.filter((r) => r.status === 'EXPIRED').length;
+  const withdrawnODs = requests.filter((r) => getStatus(r) === 'WITHDRAWN').length;
+  const expiredODs = requests.filter((r) => getStatus(r) === 'EXPIRED').length;
 
   const todayStr = new Date().toISOString().split('T')[0];
   const activeTodayODs = requests.filter((r) => {
-    if (r.status !== 'HOD_APPROVED') return false;
+    if (getStatus(r) !== 'HOD_APPROVED') return false;
     const start = r.startDate;
     const end = r.endDate || r.startDate;
     return todayStr >= start && todayStr <= end;
@@ -55,7 +56,7 @@ export const Analytics: React.FC = () => {
 
   // 3. Time Window Metrics
   const todaysApproved = requests.filter(
-    (r) => r.status === 'HOD_APPROVED' && r.startDate === todayStr
+    (r) => getStatus(r) === 'HOD_APPROVED' && r.startDate === todayStr
   ).length;
 
   const now = new Date();
@@ -83,7 +84,8 @@ export const Analytics: React.FC = () => {
   // 5. Category Distributions
   const typeCounts: Record<string, number> = {};
   requests.forEach((r) => {
-    typeCounts[r.odType] = (typeCounts[r.odType] || 0) + 1;
+    const key = r.odType || 'Full Day';
+    typeCounts[key] = (typeCounts[key] || 0) + 1;
   });
 
   if (isLoading) {

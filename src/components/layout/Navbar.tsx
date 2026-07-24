@@ -53,7 +53,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onToggleMobileDrawer }) => {
         <div>
           <div className="flex items-center gap-1.5">
             <h1 className="font-semibold text-xs sm:text-sm text-white tracking-tight leading-tight">
-              Institutional OD Portal
+              Institutional Movement Pass Portal
             </h1>
             <span className="hidden sm:inline-block text-[10px] font-medium bg-white/15 text-white border border-white/20 px-1.5 py-0.5 rounded-md">
               v2.0

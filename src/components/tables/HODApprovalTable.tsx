@@ -17,7 +17,7 @@ interface HODApprovalTableProps {
   isLoading?: boolean;
 }
 
-type SortColumn = 'studentName' | 'odType' | 'status';
+type SortColumn = 'studentName' | 'passType' | 'status';
 
 export const HODApprovalTable: React.FC<HODApprovalTableProps> = ({
   requests,
@@ -40,8 +40,26 @@ export const HODApprovalTable: React.FC<HODApprovalTableProps> = ({
   const [searchParams] = useSearchParams();
   const highlightedId = searchParams.get('highlight') || searchParams.get('odId');
 
+  const getStatusStr = (req: ODRequest): string => {
+    return typeof req.status === 'object' ? req.status.overall : req.status;
+  };
+
+  const getPassTypeLabel = (req: ODRequest): string => {
+    if (!req.schedule || req.schedule.length === 0) {
+      return 'Full Day';
+    }
+    const hasPartial = req.schedule.some((entry) => entry.passType === 'PARTIAL');
+    if (!hasPartial) return 'Full Day';
+
+    const firstPartial = req.schedule.find((entry) => entry.passType === 'PARTIAL');
+    if (firstPartial) {
+      return `Partial (Periods: ${firstPartial.periods.map((p) => `P${p}`).join(', ')})`;
+    }
+    return 'Partial';
+  };
+
   // Filter only mentor-approved items for bulk selection
-  const selectableRequests = requests.filter((r) => r.status === 'MENTOR_APPROVED');
+  const selectableRequests = requests.filter((r) => getStatusStr(r) === 'MENTOR_APPROVED');
 
   const sortedRequests = useMemo(() => {
     return [...requests].sort((a, b) => {
@@ -51,12 +69,12 @@ export const HODApprovalTable: React.FC<HODApprovalTableProps> = ({
       if (sortColumn === 'studentName') {
         valA = a.studentSnapshot?.name || '';
         valB = b.studentSnapshot?.name || '';
-      } else if (sortColumn === 'odType') {
-        valA = a.odType || '';
-        valB = b.odType || '';
+      } else if (sortColumn === 'passType') {
+        valA = getPassTypeLabel(a);
+        valB = getPassTypeLabel(b);
       } else if (sortColumn === 'status') {
-        valA = a.status || '';
-        valB = b.status || '';
+        valA = getStatusStr(a);
+        valB = getStatusStr(b);
       }
 
       valA = valA.toLowerCase();
@@ -133,16 +151,16 @@ export const HODApprovalTable: React.FC<HODApprovalTableProps> = ({
   if (requests.length === 0) {
     return (
       <div className="p-6 text-center bg-white dark:bg-gray-800 rounded-md border border-gray-200 dark:border-gray-700">
-        <p className="text-xs text-gray-500 dark:text-gray-400 font-normal">No pending OD requests for department HOD sanction.</p>
+        <p className="text-xs text-gray-500 dark:text-gray-400 font-normal">No pending movement passes for department HOD sanction.</p>
       </div>
     );
   }
 
   return (
-    <div className="space-y-3">
+    <div className="space-y-3 text-left">
       {/* Bulk Action Header Toolbar */}
       {selectedIds.length > 0 && (
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-3 bg-blue-50 dark:bg-gray-700 border border-blue-200 dark:border-gray-600 rounded-md gap-2">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-3 bg-blue-50 dark:bg-gray-700 border border-blue-200 dark:border-gray-600 rounded-md gap-2 text-left">
           <span className="text-xs font-semibold text-[#0B426E] dark:text-blue-300">
             {selectedIds.length} Mentor-Approved Request(s) Selected
           </span>
@@ -172,7 +190,8 @@ export const HODApprovalTable: React.FC<HODApprovalTableProps> = ({
       {/* Mobile Stacked 1-Hand Approval Cards (< md) */}
       <div className="space-y-3 md:hidden">
         {paginatedRequests.map((req) => {
-          const isMentorApproved = req.status === 'MENTOR_APPROVED';
+          const statusVal = getStatusStr(req);
+          const isMentorApproved = statusVal === 'MENTOR_APPROVED';
           const isSelected = selectedIds.includes(req.id);
           const isHighlighted = req.id === highlightedId;
 
@@ -188,7 +207,7 @@ export const HODApprovalTable: React.FC<HODApprovalTableProps> = ({
               } ${!isMentorApproved ? 'opacity-80 bg-gray-50/50 dark:bg-gray-900/20' : ''}`}
             >
               <div className="flex items-start justify-between gap-2 border-b border-gray-100 dark:border-gray-700 pb-2.5">
-                <div className="flex items-center gap-2.5 min-w-0">
+                <div className="flex items-center gap-2.5 min-w-0 text-left">
                   {isMentorApproved && (
                     <input
                       type="checkbox"
@@ -205,11 +224,11 @@ export const HODApprovalTable: React.FC<HODApprovalTableProps> = ({
                         </span>
                       )}
                       <h3 className="font-semibold text-xs sm:text-sm text-gray-900 dark:text-white truncate">
-                        {req.studentSnapshot.name}
+                        {req.studentSnapshot?.name}
                       </h3>
                     </div>
                     <p className="text-[11px] text-gray-500 dark:text-gray-400 font-mono">
-                      Reg: {req.studentSnapshot.registerNumber} • {req.department}
+                      Reg: {req.studentSnapshot?.registerNumber} • {req.department}
                     </p>
                   </div>
                 </div>
@@ -226,10 +245,10 @@ export const HODApprovalTable: React.FC<HODApprovalTableProps> = ({
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-2 text-xs">
+              <div className="grid grid-cols-2 gap-2 text-xs text-left">
                 <div>
-                  <span className="text-[10px] text-gray-500 dark:text-gray-400 uppercase font-semibold block">Category</span>
-                  <span className="font-semibold text-[#0B426E] dark:text-blue-300">{req.odType}</span>
+                  <span className="text-[10px] text-gray-500 dark:text-gray-400 uppercase font-semibold block">Pass Type</span>
+                  <span className="font-semibold text-[#0B426E] dark:text-blue-300">{getPassTypeLabel(req)}</span>
                 </div>
                 <div>
                   <span className="text-[10px] text-gray-500 dark:text-gray-400 uppercase font-semibold block">Schedule</span>
@@ -294,8 +313,8 @@ export const HODApprovalTable: React.FC<HODApprovalTableProps> = ({
               <th className="p-3 cursor-pointer hover:text-gray-900 dark:hover:text-white" onClick={() => handleSort('studentName')}>
                 Student & Reg No {renderSortIcon('studentName')}
               </th>
-              <th className="p-3 cursor-pointer hover:text-gray-900 dark:hover:text-white" onClick={() => handleSort('odType')}>
-                Category & Days {renderSortIcon('odType')}
+              <th className="p-3 cursor-pointer hover:text-gray-900 dark:hover:text-white" onClick={() => handleSort('passType')}>
+                Pass Type & Days {renderSortIcon('passType')}
               </th>
               <th className="p-3 cursor-pointer hover:text-gray-900 dark:hover:text-white" onClick={() => handleSort('status')}>
                 Mentor Review Status {renderSortIcon('status')}
@@ -305,7 +324,8 @@ export const HODApprovalTable: React.FC<HODApprovalTableProps> = ({
           </thead>
           <tbody className="divide-y divide-gray-100 dark:divide-gray-700/60 text-gray-700 dark:text-gray-200">
             {paginatedRequests.map((req) => {
-              const isMentorApproved = req.status === 'MENTOR_APPROVED';
+              const statusVal = getStatusStr(req);
+              const isMentorApproved = statusVal === 'MENTOR_APPROVED';
               const isHighlighted = req.id === highlightedId;
 
               return (
@@ -326,14 +346,14 @@ export const HODApprovalTable: React.FC<HODApprovalTableProps> = ({
                       className="rounded border-gray-300 dark:border-gray-600 text-[#0B426E] focus:ring-[#0B426E] cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed"
                     />
                   </td>
-                  <td className="p-3">
-                    <div className="font-semibold text-gray-900 dark:text-white">{req.studentSnapshot.name}</div>
+                  <td className="p-3 text-left">
+                    <div className="font-semibold text-gray-900 dark:text-white">{req.studentSnapshot?.name}</div>
                     <div className="text-[11px] text-gray-500 dark:text-gray-400">
-                      Reg: {req.studentSnapshot.registerNumber} • {req.department} ({req.studentSnapshot.year}-{req.studentSnapshot.section})
+                      Reg: {req.studentSnapshot?.registerNumber} • {req.department} ({req.studentSnapshot?.year}-{req.studentSnapshot?.section})
                     </div>
                   </td>
-                  <td className="p-3">
-                    <div className="font-medium text-[#0B426E] dark:text-blue-300">{req.odType}</div>
+                  <td className="p-3 text-left">
+                    <div className="font-semibold text-[#0B426E] dark:text-blue-300">{getPassTypeLabel(req)}</div>
                     <div className="text-[11px] text-gray-500 dark:text-gray-400">
                       {req.startDate} {req.endDate ? ` to ${req.endDate}` : ''} ({req.totalDays} day)
                     </div>

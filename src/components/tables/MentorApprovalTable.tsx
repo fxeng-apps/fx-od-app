@@ -15,7 +15,7 @@ interface MentorApprovalTableProps {
   isLoading?: boolean;
 }
 
-type SortColumn = 'studentName' | 'odType' | 'startDate' | 'facultyInCharge';
+type SortColumn = 'studentName' | 'passType' | 'startDate' | 'facultyInCharge';
 
 export const MentorApprovalTable: React.FC<MentorApprovalTableProps> = ({
   requests,
@@ -34,6 +34,20 @@ export const MentorApprovalTable: React.FC<MentorApprovalTableProps> = ({
   const [searchParams] = useSearchParams();
   const highlightedId = searchParams.get('highlight') || searchParams.get('odId');
 
+  const getPassTypeLabel = (req: ODRequest): string => {
+    if (!req.schedule || req.schedule.length === 0) {
+      return 'Full Day';
+    }
+    const hasPartial = req.schedule.some((entry) => entry.passType === 'PARTIAL');
+    if (!hasPartial) return 'Full Day';
+
+    const firstPartial = req.schedule.find((entry) => entry.passType === 'PARTIAL');
+    if (firstPartial) {
+      return `Partial (Periods: ${firstPartial.periods.map((p) => `P${p}`).join(', ')})`;
+    }
+    return 'Partial';
+  };
+
   const sortedRequests = useMemo(() => {
     return [...requests].sort((a, b) => {
       let valA: string = '';
@@ -42,9 +56,9 @@ export const MentorApprovalTable: React.FC<MentorApprovalTableProps> = ({
       if (sortColumn === 'studentName') {
         valA = a.studentSnapshot?.name || '';
         valB = b.studentSnapshot?.name || '';
-      } else if (sortColumn === 'odType') {
-        valA = a.odType || '';
-        valB = b.odType || '';
+      } else if (sortColumn === 'passType') {
+        valA = getPassTypeLabel(a);
+        valB = getPassTypeLabel(b);
       } else if (sortColumn === 'startDate') {
         valA = a.startDate || '';
         valB = b.startDate || '';
@@ -96,13 +110,13 @@ export const MentorApprovalTable: React.FC<MentorApprovalTableProps> = ({
   if (requests.length === 0) {
     return (
       <div className="p-6 text-center bg-white dark:bg-gray-800 rounded-md border border-gray-200 dark:border-gray-700">
-        <p className="text-xs text-gray-500 dark:text-gray-400 font-normal">No pending OD requests assigned for mentor approval.</p>
+        <p className="text-xs text-gray-500 dark:text-gray-400 font-normal">No pending movement passes assigned for mentor approval.</p>
       </div>
     );
   }
 
   return (
-    <div className="space-y-3">
+    <div className="space-y-3 text-left">
       {/* Mobile Stacked 1-Hand Approval Cards (< md) */}
       <div className="space-y-3 md:hidden">
         {paginatedRequests.map((req) => {
@@ -118,7 +132,7 @@ export const MentorApprovalTable: React.FC<MentorApprovalTableProps> = ({
             >
               {/* Student Info */}
               <div className="flex items-start justify-between gap-2 border-b border-gray-100 dark:border-gray-700 pb-2.5">
-                <div className="min-w-0">
+                <div className="min-w-0 text-left">
                   <div className="flex items-center gap-1.5">
                     {isHighlighted && (
                       <span className="text-[10px] font-bold bg-[#0B426E] text-white px-1.5 py-0.5 rounded-full shrink-0">
@@ -126,21 +140,21 @@ export const MentorApprovalTable: React.FC<MentorApprovalTableProps> = ({
                       </span>
                     )}
                     <h3 className="font-semibold text-xs sm:text-sm text-gray-900 dark:text-white truncate">
-                      {req.studentSnapshot.name}
+                      {req.studentSnapshot?.name}
                     </h3>
                   </div>
                   <p className="text-[11px] text-gray-500 dark:text-gray-400 font-mono">
-                    Reg: {req.studentSnapshot.registerNumber} • {req.department} ({req.studentSnapshot.year}-{req.studentSnapshot.section})
+                    Reg: {req.studentSnapshot?.registerNumber} • {req.department} ({req.studentSnapshot?.year}-{req.studentSnapshot?.section})
                   </p>
                 </div>
                 <Badge variant="warning">Pending Mentor</Badge>
               </div>
 
               {/* Request Details */}
-              <div className="grid grid-cols-2 gap-2 text-xs">
+              <div className="grid grid-cols-2 gap-2 text-xs text-left">
                 <div>
-                  <span className="text-[10px] text-gray-500 dark:text-gray-400 uppercase font-semibold block">Category</span>
-                  <span className="font-semibold text-[#0B426E] dark:text-blue-300">{req.odType}</span>
+                  <span className="text-[10px] text-gray-500 dark:text-gray-400 uppercase font-semibold block">Pass Type</span>
+                  <span className="font-semibold text-[#0B426E] dark:text-blue-300">{getPassTypeLabel(req)}</span>
                 </div>
                 <div>
                   <span className="text-[10px] text-gray-500 dark:text-gray-400 uppercase font-semibold block">Schedule</span>
@@ -193,8 +207,8 @@ export const MentorApprovalTable: React.FC<MentorApprovalTableProps> = ({
               <th className="p-3 cursor-pointer hover:text-gray-900 dark:hover:text-white" onClick={() => handleSort('studentName')}>
                 Student & Reg No {renderSortIcon('studentName')}
               </th>
-              <th className="p-3 cursor-pointer hover:text-gray-900 dark:hover:text-white" onClick={() => handleSort('odType')}>
-                Category {renderSortIcon('odType')}
+              <th className="p-3 cursor-pointer hover:text-gray-900 dark:hover:text-white" onClick={() => handleSort('passType')}>
+                Pass Type {renderSortIcon('passType')}
               </th>
               <th className="p-3 cursor-pointer hover:text-gray-900 dark:hover:text-white" onClick={() => handleSort('startDate')}>
                 Schedule {renderSortIcon('startDate')}
@@ -218,13 +232,13 @@ export const MentorApprovalTable: React.FC<MentorApprovalTableProps> = ({
                       : 'hover:bg-gray-50 dark:hover:bg-gray-700/40'
                   }`}
                 >
-                  <td className="p-3">
-                    <div className="font-semibold text-gray-900 dark:text-white">{req.studentSnapshot.name}</div>
+                  <td className="p-3 text-left">
+                    <div className="font-semibold text-gray-900 dark:text-white">{req.studentSnapshot?.name}</div>
                     <div className="text-[11px] text-gray-500 dark:text-gray-400">
-                      Reg: {req.studentSnapshot.registerNumber} • {req.department} ({req.studentSnapshot.year}-{req.studentSnapshot.section})
+                      Reg: {req.studentSnapshot?.registerNumber} • {req.department} ({req.studentSnapshot?.year}-{req.studentSnapshot?.section})
                     </div>
                   </td>
-                  <td className="p-3 font-medium text-[#0B426E] dark:text-blue-300">{req.odType}</td>
+                  <td className="p-3 font-semibold text-[#0B426E] dark:text-blue-300">{getPassTypeLabel(req)}</td>
                   <td className="p-3">
                     <div>{req.startDate}</div>
                     <div className="text-[11px] text-gray-400">
