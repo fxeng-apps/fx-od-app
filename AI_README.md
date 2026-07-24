@@ -1,6 +1,6 @@
-# College OD Management System v2.0 - AI Agent Development Guide
+# Movement Pass Portal - FXEC - AI Agent Development Guide
 
-Welcome! This repository contains the project structure, configuration, and TypeScript skeleton stubs for the **College On-Duty (OD) Management System v2.0** frontend.
+Welcome! This repository contains the project structure, configuration, and TypeScript skeleton stubs for the **Movement Pass Portal** frontend.
 
 This document is specifically formatted to guide **AI agents** in implementing the remaining page logic and styling.
 

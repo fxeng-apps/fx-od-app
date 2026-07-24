@@ -37,10 +37,10 @@ export const HistoricalODViewer: React.FC = () => {
   // Filter requests active on selected date or matching selectedDate range
   const filteredRequests = useMemo(() => {
     return requests.filter((r) => {
-      // 1. Date Filter (Check if selectedDate falls between startDate and endDate inclusive)
-      const start = r.startDate;
-      const end = r.endDate || r.startDate;
-      const matchesDate = !selectedDate || (selectedDate >= start && selectedDate <= end);
+      // 1. Date Filter (Check if selectedDate matches any date in schedule array)
+      const matchesDate = !selectedDate || (r.schedule && r.schedule.length > 0
+        ? r.schedule.some((entry) => entry.date === selectedDate)
+        : (selectedDate >= r.startDate && selectedDate <= (r.endDate || r.startDate)));
       if (!matchesDate) return false;
 
       // 2. Department Filter
@@ -50,10 +50,11 @@ export const HistoricalODViewer: React.FC = () => {
       if (selectedSection !== 'ALL' && r.studentSnapshot?.section !== selectedSection) return false;
 
       // 4. Mentor Filter
-      if (selectedMentor !== 'ALL' && r.assignedMentorUid !== selectedMentor) return false;
+      if (selectedMentor !== 'ALL' && (r.mentorId || r.assignedMentorUid) !== selectedMentor) return false;
 
       // 5. Status Filter
-      if (selectedStatus !== 'ALL' && r.status !== selectedStatus) return false;
+      const overallStatus = typeof r.status === 'object' ? r.status.overall : r.status;
+      if (selectedStatus !== 'ALL' && overallStatus !== selectedStatus) return false;
 
       // 6. Search Query
       if (searchQuery.trim()) {
@@ -87,15 +88,17 @@ export const HistoricalODViewer: React.FC = () => {
 
   // Status Breakdown for Selected Date
   const statusCounts = useMemo(() => {
-    const approved = filteredRequests.filter((r) => r.status === 'HOD_APPROVED').length;
-    const pending = filteredRequests.filter(
-      (r) => r.status === 'PENDING' || r.status === 'MENTOR_APPROVED'
-    ).length;
-    const rejected = filteredRequests.filter(
-      (r) => r.status === 'MENTOR_REJECTED' || r.status === 'HOD_REJECTED'
-    ).length;
-    const withdrawn = filteredRequests.filter((r) => r.status === 'WITHDRAWN').length;
-    const expired = filteredRequests.filter((r) => r.status === 'EXPIRED').length;
+    const approved = filteredRequests.filter((r) => (typeof r.status === 'object' ? r.status.overall : r.status) === 'HOD_APPROVED').length;
+    const pending = filteredRequests.filter((r) => {
+      const status = typeof r.status === 'object' ? r.status.overall : r.status;
+      return status === 'PENDING' || status === 'MENTOR_APPROVED';
+    }).length;
+    const rejected = filteredRequests.filter((r) => {
+      const status = typeof r.status === 'object' ? r.status.overall : r.status;
+      return status === 'MENTOR_REJECTED' || status === 'HOD_REJECTED';
+    }).length;
+    const withdrawn = filteredRequests.filter((r) => (typeof r.status === 'object' ? r.status.overall : r.status) === 'WITHDRAWN').length;
+    const expired = filteredRequests.filter((r) => (typeof r.status === 'object' ? r.status.overall : r.status) === 'EXPIRED').length;
 
     return { approved, pending, rejected, withdrawn, expired, total: filteredRequests.length };
   }, [filteredRequests]);

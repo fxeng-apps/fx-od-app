@@ -13,11 +13,11 @@ import {
 } from 'firebase/firestore';
 import { db } from '../../config/firebase';
 import type {
-  ODRequest,
-  CreateODDTO,
+  MovementPass as ODRequest,
+  CreateMovementPassDTO as CreateODDTO,
   TimelineEntry,
   ApprovalSnapshot,
-  ODStatus,
+  MovementPassOverallStatus as ODStatus,
 } from '../../types/od';
 import type { UserProfile, Department } from '../../types/user';
 import { logAudit } from './auditService';
@@ -26,48 +26,109 @@ import { fetchHODsByDepartment } from './userService';
 import { sanitizeFirestoreData } from '../../utils/sanitize';
 import { debugLogger } from '../../utils/debugLogger';
 
-// Helper to calculate total calendar days between two dates inclusive
-const calculateTotalDays = (startDateStr: string, endDateStr?: string): number => {
-  if (!endDateStr || startDateStr === endDateStr) return 1;
-  const start = new Date(startDateStr);
-  const end = new Date(endDateStr);
-  const diffTime = Math.abs(end.getTime() - start.getTime());
-  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
-  return diffDays > 0 ? diffDays : 1;
-};
-
-// Generate unique sequential style request number
+// Helper to generate unique sequential style request number
 const generateRequestNumber = (): string => {
   const random = Math.floor(1000 + Math.random() * 9000);
   const year = new Date().getFullYear();
-  return `OD-${year}-${random}`;
+  return `MP-${year}-${random}`;
 };
 
 export const createODRequest = async (
   dto: CreateODDTO,
   student: UserProfile
 ): Promise<string> => {
-  debugLogger.groupStart('createODRequest: Submitting New OD', {
+  debugLogger.groupStart('createODRequest: Submitting New Movement Pass', {
     currentUser: { uid: student.uid, name: student.displayName, role: student.role, email: student.email },
-    action: 'OD_SUBMIT',
+    action: 'PASS_SUBMIT',
     details: { dto },
   });
 
   try {
-    // Backend Date Validation (Today to Next 60 days)
+    // 1. Sort schedule by date for consistency
+    dto.schedule.sort((a, b) => a.date.localeCompare(b.date));
+
+    if (dto.schedule.length === 0) {
+      throw new Error('At least one schedule date is required.');
+    }
+
     const today = new Date();
     today.setHours(0, 0, 0, 0);
-    const start = new Date(dto.startDate);
-    start.setHours(0, 0, 0, 0);
-    if (start < today) {
-      throw new Error('OD start date cannot be in the past.');
-    }
 
     const max60Days = new Date();
     max60Days.setDate(max60Days.getDate() + 60);
     max60Days.setHours(23, 59, 59, 999);
-    if (start > max60Days) {
-      throw new Error('OD start date cannot be more than 60 calendar days in advance.');
+
+    // 2. Validate dates & weekend rules
+    for (const entry of dto.schedule) {
+      const [y, m, d] = entry.date.split('-').map(Number);
+      const entryDate = new Date(y, m - 1, d);
+      entryDate.setHours(0, 0, 0, 0);
+
+      if (entryDate < today) {
+        throw new Error(`Date ${entry.date} cannot be in the past.`);
+      }
+      if (entryDate > max60Days) {
+        throw new Error(`Date ${entry.date} cannot be more than 60 calendar days in advance.`);
+      }
+
+      const dayOfWeek = entryDate.getDay();
+      if (dayOfWeek === 0) {
+        throw new Error(`Sundays (${entry.date}) are closed. No pass can be created.`);
+      }
+
+      if (entry.passType === 'PARTIAL') {
+        if (entry.periods.length === 0) {
+          throw new Error(`Please select at least one period for ${entry.date}.`);
+        }
+        if (dayOfWeek === 6) { // Saturday
+          if (entry.periods.some((p) => p < 1 || p > 6)) {
+            throw new Error(`Saturday timetable only has periods 1-6. Invalid periods on ${entry.date}.`);
+          }
+        } else { // Weekdays
+          if (entry.periods.some((p) => p < 1 || p > 7)) {
+            throw new Error(`Weekday timetable only has periods 1-7. Invalid periods on ${entry.date}.`);
+          }
+        }
+      }
+    }
+
+    // 3. Clash Detection
+    debugLogger.step('Performing Clash Detection');
+    const activePassesQuery = query(
+      collection(db, 'movement_passes'),
+      where('studentId', '==', student.uid),
+      where('isDeleted', '==', false)
+    );
+    const activePassesSnap = await getDocs(activePassesQuery);
+    const activePasses = activePassesSnap.docs
+      .map((d) => ({ id: d.id, ...d.data() } as ODRequest))
+      .filter((p) => ['PENDING', 'MENTOR_APPROVED', 'HOD_APPROVED'].includes(p.status.overall));
+
+    for (const candidateEntry of dto.schedule) {
+      const [cy, cm, cd] = candidateEntry.date.split('-').map(Number);
+      const cDate = new Date(cy, cm - 1, cd);
+      const isSat = cDate.getDay() === 6;
+      const candidatePeriods = candidateEntry.passType === 'FULL_DAY'
+        ? (isSat ? [1, 2, 3, 4, 5, 6] : [1, 2, 3, 4, 5, 6, 7])
+        : candidateEntry.periods;
+
+      for (const existPass of activePasses) {
+        for (const existEntry of existPass.schedule) {
+          if (existEntry.date === candidateEntry.date) {
+            const isExistSat = isSat;
+            const existPeriods = existEntry.passType === 'FULL_DAY'
+              ? (isExistSat ? [1, 2, 3, 4, 5, 6] : [1, 2, 3, 4, 5, 6, 7])
+              : existEntry.periods;
+
+            const intersecting = candidatePeriods.filter((p) => existPeriods.includes(p));
+            if (intersecting.length > 0) {
+              throw new Error(
+                `Schedule clash detected on ${candidateEntry.date} for period(s): ${intersecting.map((p) => `P${p}`).join(', ')}. Pass already exists in status: ${existPass.status.overall}.`
+              );
+            }
+          }
+        }
+      }
     }
 
     let mentorUid = student.mentorUid;
@@ -76,7 +137,6 @@ export const createODRequest = async (
 
     debugLogger.step('Checking Mentor Assignment', { mentorUid, mentorEmail });
 
-    // Dynamic Lookup by mentorEmail if mentorUid is not yet populated
     if (!mentorUid && mentorEmail) {
       const mentorQ = query(
         collection(db, 'users'),
@@ -92,25 +152,29 @@ export const createODRequest = async (
       }
     }
 
-    const totalDays = calculateTotalDays(dto.startDate, dto.endDate);
+    // Prepare compatibility fields
+    const startDate = dto.schedule[0].date;
+    const endDate = dto.schedule[dto.schedule.length - 1].date;
+    const totalDays = dto.schedule.length;
     const requestNumber = generateRequestNumber();
     const now = new Date().toISOString();
 
     const initialTimeline: TimelineEntry = {
       id: `tl-${Date.now()}`,
-      action: 'OD Request Submitted',
+      action: 'Movement Pass Request Submitted',
       performedBy: {
         uid: student.uid,
         name: student.displayName,
         role: student.role,
       },
       timestamp: now,
-      details: `Applied for ${totalDays} day(s) ${dto.odType} (${dto.startDate}${dto.endDate ? ' to ' + dto.endDate : ''})`,
+      details: `Applied for ${totalDays} day(s) (${startDate}${endDate !== startDate ? ' to ' + endDate : ''})`,
     };
 
     const rawODData: Record<string, unknown> = {
       requestNumber,
-      studentUid: student.uid,
+      studentId: student.uid,
+      studentUid: student.uid, // Keep as helper if needed
       studentSnapshot: {
         uid: student.uid,
         name: student.displayName,
@@ -120,22 +184,31 @@ export const createODRequest = async (
         year: student.year || 'N/A',
         section: student.section || 'N/A',
       },
-      assignedMentorUid: mentorUid || null,
+      mentorId: mentorUid || null,
+      assignedMentorUid: mentorUid || null, // Keep as helper
       assignedMentorSnapshot: {
         uid: mentorUid || null,
         name: mentorName,
         email: mentorEmail || 'mentor@institution.edu',
       },
       department: student.department,
-      dateType: dto.dateType,
-      startDate: dto.startDate,
-      endDate: dto.endDate || null,
-      totalDays,
-      description: dto.description,
       facultyInCharge: dto.facultyInCharge,
-      odType: dto.odType,
+      purpose: dto.purpose,
       proofDocumentUrl: dto.proofDocumentUrl || null,
-      status: 'PENDING',
+      status: {
+        overall: 'PENDING',
+        mentor: 'PENDING',
+        hod: 'PENDING',
+      },
+      schedule: dto.schedule,
+
+      // Compatibility fields
+      startDate,
+      endDate: endDate !== startDate ? endDate : null,
+      totalDays,
+      description: dto.purpose,
+      odType: dto.schedule[0].passType === 'FULL_DAY' ? 'Full Day' : 'Partial',
+
       timeline: [initialTimeline],
       isDeleted: false,
       createdAt: serverTimestamp(),
@@ -145,9 +218,9 @@ export const createODRequest = async (
     };
 
     const cleanData = sanitizeFirestoreData(rawODData);
-    debugLogger.step('Writing to Firestore od_requests', cleanData);
+    debugLogger.step('Writing to Firestore movement_passes', cleanData);
 
-    const docRef = await addDoc(collection(db, 'od_requests'), cleanData);
+    const docRef = await addDoc(collection(db, 'movement_passes'), cleanData);
     debugLogger.step('Firestore Write Succeeded', { docId: docRef.id });
 
     // 1. Audit Log
@@ -159,18 +232,18 @@ export const createODRequest = async (
         email: student.email,
         role: student.role,
       },
-      { requestNumber, odType: dto.odType, totalDays },
-      { collection: 'od_requests', id: docRef.id }
+      { requestNumber, purpose: dto.purpose, totalDays },
+      { collection: 'movement_passes', id: docRef.id }
     );
     debugLogger.step('Audit Log Created');
 
-    // 2. Notification to Mentor (if mentorUid is available)
+    // 2. Notification to Mentor
     if (mentorUid) {
       await sendNotification(
         mentorUid,
         { uid: student.uid, name: student.displayName, role: student.role },
-        'New OD Approval Required',
-        `${student.displayName} submitted OD Request ${requestNumber} for ${dto.startDate}.`,
+        'New Movement Pass Approval Required',
+        `${student.displayName} submitted Movement Pass ${requestNumber} for ${startDate}.`,
         `/mentor/pending?highlight=${docRef.id}`,
         'OD_SUBMITTED',
         docRef.id
@@ -178,7 +251,7 @@ export const createODRequest = async (
       debugLogger.step('Mentor Notification Sent', { recipientUid: mentorUid });
     }
 
-    debugLogger.success(`OD Request ${requestNumber} created successfully`, { docId: docRef.id });
+    debugLogger.success(`Movement Pass ${requestNumber} created successfully`, { docId: docRef.id });
     return docRef.id;
   } catch (error) {
     debugLogger.error('createODRequest', error);
@@ -192,7 +265,7 @@ export const mentorReviewODRequest = async (
   mentor: UserProfile,
   rejectionReason?: string
 ): Promise<void> => {
-  debugLogger.groupStart('mentorReviewODRequest: Reviewing OD', {
+  debugLogger.groupStart('mentorReviewODRequest: Reviewing Movement Pass', {
     currentUser: { uid: mentor.uid, name: mentor.displayName, role: mentor.role, email: mentor.email },
     odId,
     action: decision,
@@ -200,22 +273,21 @@ export const mentorReviewODRequest = async (
   });
 
   try {
-    debugLogger.step('Fetching OD Document from Firestore');
-    const odRef = doc(db, 'od_requests', odId);
+    debugLogger.step('Fetching Pass Document from Firestore');
+    const odRef = doc(db, 'movement_passes', odId);
     const snap = await getDoc(odRef);
 
     if (!snap.exists()) {
-      const err = new Error(`OD Request ${odId} not found in Firestore`);
+      const err = new Error(`Movement Pass ${odId} not found in Firestore`);
       debugLogger.error('mentorReviewODRequest', err, odId);
       throw err;
     }
 
     const od = snap.data() as ODRequest;
-    debugLogger.step('OD Document Loaded', { requestNumber: od.requestNumber, currentStatus: od.status });
+    debugLogger.step('Pass Document Loaded', { requestNumber: od.requestNumber, currentStatus: od.status.overall });
 
     const now = new Date().toISOString();
 
-    // Rejection reason MUST ONLY exist when decision == 'REJECTED'
     const reviewSnapshot: ApprovalSnapshot = {
       status: decision,
       approverUid: mentor.uid,
@@ -225,11 +297,11 @@ export const mentorReviewODRequest = async (
       ...(decision === 'REJECTED' && rejectionReason ? { rejectionReason } : {}),
     };
 
-    const newStatus = decision === 'APPROVED' ? 'MENTOR_APPROVED' : 'MENTOR_REJECTED';
+    const newStatusOverall = decision === 'APPROVED' ? 'MENTOR_APPROVED' : 'MENTOR_REJECTED';
 
     const timelineEntry: TimelineEntry = {
       id: `tl-${Date.now()}`,
-      action: decision === 'APPROVED' ? 'Mentor Approved OD' : 'Mentor Rejected OD',
+      action: decision === 'APPROVED' ? 'Mentor Approved Pass' : 'Mentor Rejected Pass',
       performedBy: {
         uid: mentor.uid,
         name: mentor.displayName,
@@ -240,7 +312,8 @@ export const mentorReviewODRequest = async (
     };
 
     const rawUpdateData: Record<string, unknown> = {
-      status: newStatus,
+      'status.overall': newStatusOverall,
+      'status.mentor': decision,
       mentorStatus: decision,
       mentorApprovedBy: decision === 'APPROVED' ? { uid: mentor.uid, name: mentor.displayName, email: mentor.email } : null,
       mentorApprovedAt: decision === 'APPROVED' ? now : null,
@@ -255,7 +328,7 @@ export const mentorReviewODRequest = async (
 
     const updateData = sanitizeFirestoreData(rawUpdateData);
 
-    debugLogger.step('Updating Firestore OD Document', updateData);
+    debugLogger.step('Updating Firestore Pass Document', updateData);
     await updateDoc(odRef, updateData);
     debugLogger.step('Firestore Document Updated Successfully');
 
@@ -264,32 +337,30 @@ export const mentorReviewODRequest = async (
       decision === 'APPROVED' ? 'MENTOR_APPROVED' : 'MENTOR_REJECTED',
       { uid: mentor.uid, name: mentor.displayName, email: mentor.email, role: mentor.role },
       { odId, requestNumber: od.requestNumber, rejectionReason: decision === 'REJECTED' ? rejectionReason : undefined },
-      { collection: 'od_requests', id: odId }
+      { collection: 'movement_passes', id: odId }
     );
     debugLogger.step('Audit Log Written');
 
     if (decision === 'APPROVED') {
       // Notify Student
       await sendNotification(
-        od.studentUid,
+        od.studentId,
         { uid: mentor.uid, name: mentor.displayName, role: mentor.role },
-        'OD Request Approved by Mentor',
-        `Your OD Request ${od.requestNumber} was approved by your mentor and is now pending HOD sanction.`,
+        'Movement Pass Approved by Mentor',
+        `Your Movement Pass ${od.requestNumber} was approved by your mentor and is now pending HOD sanction.`,
         `/student/requests?highlight=${odId}`,
         'OD_MENTOR_APPROVED',
         odId
       );
-      debugLogger.step('Student Notification Sent', { studentUid: od.studentUid });
 
       // Notify HOD(s)
       const hods = await fetchHODsByDepartment(od.department);
-      debugLogger.step('Fetched Department HODs for Notification', { hodCount: hods.length });
       for (const hod of hods) {
         await sendNotification(
           hod.uid,
           { uid: mentor.uid, name: mentor.displayName, role: mentor.role },
           'Pending HOD Approval Required',
-          `OD Request ${od.requestNumber} (${od.studentSnapshot.name}) was approved by mentor and requires HOD sanction.`,
+          `Movement Pass ${od.requestNumber} (${od.studentSnapshot.name}) was approved by mentor and requires HOD sanction.`,
           `/hod/pending?highlight=${odId}`,
           'OD_SUBMITTED',
           odId
@@ -298,18 +369,17 @@ export const mentorReviewODRequest = async (
     } else {
       // Notify Student of rejection
       await sendNotification(
-        od.studentUid,
+        od.studentId,
         { uid: mentor.uid, name: mentor.displayName, role: mentor.role },
-        'OD Request Rejected by Mentor',
-        `Your OD Request ${od.requestNumber} was rejected by your mentor. Reason: ${rejectionReason || 'No reason specified'}`,
+        'Movement Pass Rejected by Mentor',
+        `Your Movement Pass ${od.requestNumber} was rejected by your mentor. Reason: ${rejectionReason || 'No reason specified'}`,
         `/student/requests?highlight=${odId}`,
         'OD_MENTOR_REJECTED',
         odId
       );
-      debugLogger.step('Student Rejection Notification Sent');
     }
 
-    debugLogger.success(`Mentor review for OD ${od.requestNumber} completed successfully as ${decision}`);
+    debugLogger.success(`Mentor review completed successfully as ${decision}`);
   } catch (error) {
     debugLogger.error('mentorReviewODRequest', error, odId);
     throw error;
@@ -322,7 +392,7 @@ export const hodReviewODRequest = async (
   hod: UserProfile,
   rejectionReason?: string
 ): Promise<void> => {
-  debugLogger.groupStart('hodReviewODRequest: Reviewing OD', {
+  debugLogger.groupStart('hodReviewODRequest: Reviewing Movement Pass', {
     currentUser: { uid: hod.uid, name: hod.displayName, role: hod.role, email: hod.email },
     odId,
     action: decision,
@@ -330,19 +400,19 @@ export const hodReviewODRequest = async (
   });
 
   try {
-    const odRef = doc(db, 'od_requests', odId);
+    const odRef = doc(db, 'movement_passes', odId);
     const snap = await getDoc(odRef);
 
     if (!snap.exists()) {
-      const err = new Error(`OD Request ${odId} not found in Firestore`);
+      const err = new Error(`Movement Pass ${odId} not found in Firestore`);
       debugLogger.error('hodReviewODRequest', err, odId);
       throw err;
     }
 
     const od = snap.data() as ODRequest;
-    debugLogger.step('OD Document Loaded', { requestNumber: od.requestNumber, currentStatus: od.status });
+    debugLogger.step('Pass Document Loaded', { requestNumber: od.requestNumber, currentStatus: od.status.overall });
 
-    if (decision === 'APPROVED' && od.status !== 'MENTOR_APPROVED') {
+    if (decision === 'APPROVED' && od.status.overall !== 'MENTOR_APPROVED') {
       const err = new Error('HOD Approval is strictly disabled until Faculty Mentor approval is completed.');
       debugLogger.error('hodReviewODRequest - Gating Violation', err, odId);
       throw err;
@@ -350,7 +420,6 @@ export const hodReviewODRequest = async (
 
     const now = new Date().toISOString();
 
-    // Rejection reason MUST ONLY exist when decision == 'REJECTED'
     const reviewSnapshot: ApprovalSnapshot = {
       status: decision,
       approverUid: hod.uid,
@@ -360,11 +429,11 @@ export const hodReviewODRequest = async (
       ...(decision === 'REJECTED' && rejectionReason ? { rejectionReason } : {}),
     };
 
-    const newStatus = decision === 'APPROVED' ? 'HOD_APPROVED' : 'HOD_REJECTED';
+    const newStatusOverall = decision === 'APPROVED' ? 'HOD_APPROVED' : 'HOD_REJECTED';
 
     const timelineEntry: TimelineEntry = {
       id: `tl-${Date.now()}`,
-      action: decision === 'APPROVED' ? 'HOD Sanctioned OD (Final Approval)' : 'HOD Rejected OD',
+      action: decision === 'APPROVED' ? 'HOD Sanctioned Pass (Final Approval)' : 'HOD Rejected Pass',
       performedBy: {
         uid: hod.uid,
         name: hod.displayName,
@@ -375,7 +444,8 @@ export const hodReviewODRequest = async (
     };
 
     const rawUpdateData: Record<string, unknown> = {
-      status: newStatus,
+      'status.overall': newStatusOverall,
+      'status.hod': decision,
       hodStatus: decision,
       hodApprovedBy: decision === 'APPROVED' ? { uid: hod.uid, name: hod.displayName, email: hod.email } : null,
       hodApprovedAt: decision === 'APPROVED' ? now : null,
@@ -390,7 +460,7 @@ export const hodReviewODRequest = async (
 
     const updateData = sanitizeFirestoreData(rawUpdateData);
 
-    debugLogger.step('Updating Firestore OD Document', updateData);
+    debugLogger.step('Updating Firestore Pass Document', updateData);
     await updateDoc(odRef, updateData);
     debugLogger.step('Firestore Document Updated Successfully');
 
@@ -398,24 +468,23 @@ export const hodReviewODRequest = async (
       decision === 'APPROVED' ? 'HOD_APPROVED' : 'HOD_REJECTED',
       { uid: hod.uid, name: hod.displayName, email: hod.email, role: hod.role },
       { odId, requestNumber: od.requestNumber, rejectionReason: decision === 'REJECTED' ? rejectionReason : undefined },
-      { collection: 'od_requests', id: odId }
+      { collection: 'movement_passes', id: odId }
     );
     debugLogger.step('Audit Log Written');
 
     await sendNotification(
-      od.studentUid,
+      od.studentId,
       { uid: hod.uid, name: hod.displayName, role: hod.role },
-      decision === 'APPROVED' ? 'OD Request Approved by HOD' : 'OD Request Rejected by HOD',
+      decision === 'APPROVED' ? 'Movement Pass Approved by HOD' : 'Movement Pass Rejected by HOD',
       decision === 'APPROVED'
-        ? `Your OD Request ${od.requestNumber} has been officially approved.`
-        : `Your OD Request ${od.requestNumber} was rejected by HOD. Reason: ${rejectionReason}`,
+        ? `Your Movement Pass ${od.requestNumber} has been officially approved.`
+        : `Your Movement Pass ${od.requestNumber} was rejected by HOD. Reason: ${rejectionReason}`,
       `/student/history?highlight=${odId}`,
       decision === 'APPROVED' ? 'OD_HOD_APPROVED' : 'OD_HOD_REJECTED',
       odId
     );
-    debugLogger.step('Student Final Notification Sent');
 
-    debugLogger.success(`HOD review for OD ${od.requestNumber} completed successfully as ${decision}`);
+    debugLogger.success(`HOD review completed successfully as ${decision}`);
   } catch (error) {
     debugLogger.error('hodReviewODRequest', error, odId);
     throw error;
@@ -426,7 +495,7 @@ export const bulkHODApproveODRequests = async (
   odIds: string[],
   hod: UserProfile
 ): Promise<{ successCount: number; skippedCount: number }> => {
-  debugLogger.groupStart('bulkHODApproveODRequests: Bulk Approving ODs', {
+  debugLogger.groupStart('bulkHODApproveODRequests: Bulk Approving passes', {
     currentUser: { uid: hod.uid, name: hod.displayName, role: hod.role, email: hod.email },
     details: { totalCount: odIds.length, odIds },
   });
@@ -438,11 +507,11 @@ export const bulkHODApproveODRequests = async (
     let skippedCount = 0;
 
     for (const id of odIds) {
-      const odRef = doc(db, 'od_requests', id);
+      const odRef = doc(db, 'movement_passes', id);
       const snap = await getDoc(odRef);
       if (snap.exists()) {
         const od = snap.data() as ODRequest;
-        if (od.status === 'MENTOR_APPROVED') {
+        if (od.status.overall === 'MENTOR_APPROVED') {
           const reviewSnapshot: ApprovalSnapshot = {
             status: 'APPROVED',
             approverUid: hod.uid,
@@ -452,14 +521,15 @@ export const bulkHODApproveODRequests = async (
           };
           const timelineEntry: TimelineEntry = {
             id: `tl-${Date.now()}-${Math.random()}`,
-            action: 'HOD Sanctioned OD (Bulk Action)',
+            action: 'HOD Sanctioned Pass (Bulk Action)',
             performedBy: { uid: hod.uid, name: hod.displayName, role: hod.role },
             timestamp: now,
             details: 'Bulk approved by Head of Department',
           };
 
           const rawUpdateData: Record<string, unknown> = {
-            status: 'HOD_APPROVED',
+            'status.overall': 'HOD_APPROVED',
+            'status.hod': 'APPROVED',
             hodStatus: 'APPROVED',
             hodApprovedBy: { uid: hod.uid, name: hod.displayName, email: hod.email },
             hodApprovedAt: now,
@@ -475,10 +545,10 @@ export const bulkHODApproveODRequests = async (
           successCount++;
 
           sendNotification(
-            od.studentUid,
+            od.studentId,
             { uid: hod.uid, name: hod.displayName, role: hod.role },
-            'OD Request Approved by HOD',
-            `Your OD Request ${od.requestNumber} has been officially approved.`,
+            'Movement Pass Approved by HOD',
+            `Your Movement Pass ${od.requestNumber} has been officially approved.`,
             `/student/history?highlight=${id}`,
             'OD_HOD_APPROVED',
             id
@@ -511,7 +581,7 @@ export const bulkHODRejectODRequests = async (
   rejectionReason: string,
   hod: UserProfile
 ): Promise<void> => {
-  debugLogger.groupStart('bulkHODRejectODRequests: Bulk Rejecting ODs', {
+  debugLogger.groupStart('bulkHODRejectODRequests: Bulk Rejecting Passes', {
     currentUser: { uid: hod.uid, name: hod.displayName, role: hod.role, email: hod.email },
     details: { totalCount: odIds.length, rejectionReason },
   });
@@ -521,7 +591,7 @@ export const bulkHODRejectODRequests = async (
     const now = new Date().toISOString();
 
     for (const id of odIds) {
-      const odRef = doc(db, 'od_requests', id);
+      const odRef = doc(db, 'movement_passes', id);
       const snap = await getDoc(odRef);
       if (snap.exists()) {
         const od = snap.data() as ODRequest;
@@ -535,14 +605,15 @@ export const bulkHODRejectODRequests = async (
         };
         const timelineEntry: TimelineEntry = {
           id: `tl-${Date.now()}-${Math.random()}`,
-          action: 'HOD Rejected OD (Bulk Action)',
+          action: 'HOD Rejected Pass (Bulk Action)',
           performedBy: { uid: hod.uid, name: hod.displayName, role: hod.role },
           timestamp: now,
           details: `Bulk rejected. Reason: ${rejectionReason}`,
         };
 
         const rawUpdateData: Record<string, unknown> = {
-          status: 'HOD_REJECTED',
+          'status.overall': 'HOD_REJECTED',
+          'status.hod': 'REJECTED',
           hodStatus: 'REJECTED',
           hodRejectedBy: { uid: hod.uid, name: hod.displayName, email: hod.email },
           hodRejectedAt: now,
@@ -558,10 +629,10 @@ export const bulkHODRejectODRequests = async (
         batch.update(odRef, updateData);
 
         sendNotification(
-          od.studentUid,
+          od.studentId,
           { uid: hod.uid, name: hod.displayName, role: hod.role },
-          'OD Request Rejected by HOD',
-          `Your OD Request ${od.requestNumber} was rejected by HOD. Reason: ${rejectionReason}`,
+          'Movement Pass Rejected by HOD',
+          `Your Movement Pass ${od.requestNumber} was rejected by HOD. Reason: ${rejectionReason}`,
           `/student/history?highlight=${id}`,
           'OD_HOD_REJECTED',
           id
@@ -587,8 +658,8 @@ export const bulkHODRejectODRequests = async (
 export const fetchStudentODRequests = async (studentUid: string): Promise<ODRequest[]> => {
   try {
     const q = query(
-      collection(db, 'od_requests'),
-      where('studentUid', '==', studentUid),
+      collection(db, 'movement_passes'),
+      where('studentId', '==', studentUid),
       where('isDeleted', '==', false)
     );
     const snap = await getDocs(q);
@@ -600,7 +671,7 @@ export const fetchStudentODRequests = async (studentUid: string): Promise<ODRequ
       return tB - tA;
     });
   } catch (error) {
-    console.error('Error fetching student OD requests:', error);
+    console.error('Error fetching student passes:', error);
     return [];
   }
 };
@@ -614,9 +685,9 @@ export const fetchMentorPendingRequests = async (
 
     if (mentorUid) {
       const q1 = query(
-        collection(db, 'od_requests'),
-        where('assignedMentorUid', '==', mentorUid),
-        where('status', '==', 'PENDING'),
+        collection(db, 'movement_passes'),
+        where('mentorId', '==', mentorUid),
+        where('status.overall', '==', 'PENDING'),
         where('isDeleted', '==', false)
       );
       const snap1 = await getDocs(q1);
@@ -625,9 +696,9 @@ export const fetchMentorPendingRequests = async (
 
     if (mentorEmail) {
       const q2 = query(
-        collection(db, 'od_requests'),
+        collection(db, 'movement_passes'),
         where('assignedMentorSnapshot.email', '==', mentorEmail.toLowerCase()),
-        where('status', '==', 'PENDING'),
+        where('status.overall', '==', 'PENDING'),
         where('isDeleted', '==', false)
       );
       const snap2 = await getDocs(q2);
@@ -636,7 +707,7 @@ export const fetchMentorPendingRequests = async (
 
     return Array.from(itemsMap.values());
   } catch (error) {
-    console.error('Error fetching mentor pending requests:', error);
+    console.error('Error fetching mentor pending passes:', error);
     return [];
   }
 };
@@ -651,7 +722,7 @@ export const fetchMentorHistoryRequests = async (
     const processDocs = (snapDocs: any[]) => {
       snapDocs.forEach((d) => {
         const item = { id: d.id, ...d.data() } as ODRequest;
-        if (item.status !== 'PENDING') {
+        if (item.status.overall !== 'PENDING') {
           itemsMap.set(d.id, item);
         }
       });
@@ -659,8 +730,8 @@ export const fetchMentorHistoryRequests = async (
 
     if (mentorUid) {
       const q1 = query(
-        collection(db, 'od_requests'),
-        where('assignedMentorUid', '==', mentorUid),
+        collection(db, 'movement_passes'),
+        where('mentorId', '==', mentorUid),
         where('isDeleted', '==', false)
       );
       const snap1 = await getDocs(q1);
@@ -669,7 +740,7 @@ export const fetchMentorHistoryRequests = async (
 
     if (mentorEmail) {
       const q2 = query(
-        collection(db, 'od_requests'),
+        collection(db, 'movement_passes'),
         where('assignedMentorSnapshot.email', '==', mentorEmail.toLowerCase()),
         where('isDeleted', '==', false)
       );
@@ -683,7 +754,7 @@ export const fetchMentorHistoryRequests = async (
       return tB - tA;
     });
   } catch (error) {
-    console.error('Error fetching mentor history requests:', error);
+    console.error('Error fetching mentor history passes:', error);
     return [];
   }
 };
@@ -691,9 +762,9 @@ export const fetchMentorHistoryRequests = async (
 export const fetchHODPendingRequests = async (department: Department): Promise<ODRequest[]> => {
   try {
     const q = query(
-      collection(db, 'od_requests'),
+      collection(db, 'movement_passes'),
       where('department', '==', department),
-      where('status', 'in', ['PENDING', 'MENTOR_APPROVED']),
+      where('status.overall', 'in', ['PENDING', 'MENTOR_APPROVED']),
       where('isDeleted', '==', false)
     );
     const snap = await getDocs(q);
@@ -704,7 +775,7 @@ export const fetchHODPendingRequests = async (department: Department): Promise<O
       return tB - tA;
     });
   } catch (error) {
-    console.error('Error fetching HOD pending requests:', error);
+    console.error('Error fetching HOD pending passes:', error);
     return [];
   }
 };
@@ -712,9 +783,9 @@ export const fetchHODPendingRequests = async (department: Department): Promise<O
 export const fetchHODHistoryRequests = async (department: Department): Promise<ODRequest[]> => {
   try {
     const q = query(
-      collection(db, 'od_requests'),
+      collection(db, 'movement_passes'),
       where('department', '==', department),
-      where('status', 'in', ['HOD_APPROVED', 'HOD_REJECTED', 'MENTOR_REJECTED']),
+      where('status.overall', 'in', ['HOD_APPROVED', 'HOD_REJECTED', 'MENTOR_REJECTED']),
       where('isDeleted', '==', false)
     );
     const snap = await getDocs(q);
@@ -725,7 +796,7 @@ export const fetchHODHistoryRequests = async (department: Department): Promise<O
       return tB - tA;
     });
   } catch (error) {
-    console.error('Error fetching HOD history requests:', error);
+    console.error('Error fetching HOD history passes:', error);
     return [];
   }
 };
@@ -733,7 +804,7 @@ export const fetchHODHistoryRequests = async (department: Department): Promise<O
 export const fetchAllODRequests = async (): Promise<ODRequest[]> => {
   try {
     const q = query(
-      collection(db, 'od_requests'),
+      collection(db, 'movement_passes'),
       where('isDeleted', '==', false)
     );
     const snap = await getDocs(q);
@@ -745,7 +816,7 @@ export const fetchAllODRequests = async (): Promise<ODRequest[]> => {
     });
     return checkAndExpireODRequests(sorted);
   } catch (error) {
-    console.error('Error fetching all OD requests:', error);
+    console.error('Error fetching all passes:', error);
     return [];
   }
 };
@@ -755,24 +826,24 @@ export const checkAndExpireODRequests = async (requests: ODRequest[]): Promise<O
   const expiredPromises: Promise<void>[] = [];
 
   const updatedRequests = requests.map((req) => {
-    if (req.status === 'PENDING' || req.status === 'MENTOR_APPROVED') {
+    if (req.status.overall === 'PENDING' || req.status.overall === 'MENTOR_APPROVED') {
       const targetDate = req.endDate || req.startDate;
       if (targetDate && targetDate < todayStr) {
         expiredPromises.push(
           (async () => {
             try {
-              const reqRef = doc(db, 'od_requests', req.id);
+              const reqRef = doc(db, 'movement_passes', req.id);
               const now = new Date().toISOString();
               const expiredTimeline: TimelineEntry = {
                 id: `tl-${Date.now()}`,
-                action: 'OD Request Expired (Date Passed)',
+                action: 'Movement Pass Expired (Date Passed)',
                 performedBy: { uid: 'system', name: 'System Auto-Expiry', role: 'SYSTEM' },
                 timestamp: now,
-                details: `OD date (${targetDate}) passed prior to final sanction.`,
+                details: `Pass date (${targetDate}) passed prior to final sanction.`,
               };
 
               const cleanData = sanitizeFirestoreData({
-                status: 'EXPIRED',
+                'status.overall': 'EXPIRED',
                 timeline: arrayUnion(expiredTimeline),
                 updatedAt: serverTimestamp(),
               });
@@ -780,33 +851,39 @@ export const checkAndExpireODRequests = async (requests: ODRequest[]): Promise<O
               await updateDoc(reqRef, cleanData);
 
               sendNotification(
-                req.studentUid,
+                req.studentId,
                 { uid: 'system', name: 'System Auto-Expiry', role: 'SYSTEM' },
-                'OD Request Expired',
-                `Your OD application (${req.requestNumber}) expired because its scheduled date (${targetDate}) passed prior to final sanction.`,
+                'Movement Pass Expired',
+                `Your Movement Pass application (${req.requestNumber}) expired because its date passed prior to final sanction.`,
                 '/student/requests',
                 'SYSTEM',
                 req.id
               ).catch(console.error);
 
-              if (req.assignedMentorUid) {
+              if (req.mentorId) {
                 sendNotification(
-                  req.assignedMentorUid,
+                  req.mentorId,
                   { uid: 'system', name: 'System Auto-Expiry', role: 'SYSTEM' },
-                  'Assigned OD Expired',
-                  `OD request (${req.requestNumber}) for ${req.studentSnapshot?.name} expired as scheduled date passed.`,
+                  'Assigned Movement Pass Expired',
+                  `Movement Pass (${req.requestNumber}) for ${req.studentSnapshot?.name} expired.`,
                   '/mentor/history',
                   'SYSTEM',
                   req.id
                 ).catch(console.error);
               }
             } catch (err) {
-              console.error('Error auto-expiring OD request:', req.id, err);
+              console.error('Error auto-expiring pass:', req.id, err);
             }
           })()
         );
 
-        return { ...req, status: 'EXPIRED' as ODStatus };
+        return {
+          ...req,
+          status: {
+            ...req.status,
+            overall: 'EXPIRED' as ODStatus,
+          },
+        };
       }
     }
     return req;
@@ -823,26 +900,26 @@ export const withdrawODRequest = async (
   requestId: string,
   studentUser: UserProfile
 ): Promise<void> => {
-  const reqRef = doc(db, 'od_requests', requestId);
+  const reqRef = doc(db, 'movement_passes', requestId);
   const snap = await getDoc(reqRef);
 
   if (!snap.exists()) {
-    throw new Error('OD Request not found.');
+    throw new Error('Movement Pass not found.');
   }
 
   const reqData = snap.data() as ODRequest;
-  if (reqData.studentUid !== studentUser.uid) {
-    throw new Error('Only the student who created this OD application may withdraw it.');
+  if (reqData.studentId !== studentUser.uid) {
+    throw new Error('Only the student who created this application may withdraw it.');
   }
 
-  if (reqData.status === 'WITHDRAWN' || reqData.status === 'EXPIRED') {
-    throw new Error(`This application is already ${reqData.status.toLowerCase()}.`);
+  if (reqData.status.overall === 'WITHDRAWN' || reqData.status.overall === 'EXPIRED') {
+    throw new Error(`This application is already ${reqData.status.overall.toLowerCase()}.`);
   }
 
   const now = new Date().toISOString();
   const withdrawTimeline: TimelineEntry = {
     id: `tl-${Date.now()}`,
-    action: 'OD Request Withdrawn by Student',
+    action: 'Movement Pass Withdrawn by Student',
     performedBy: {
       uid: studentUser.uid,
       name: studentUser.displayName,
@@ -852,7 +929,7 @@ export const withdrawODRequest = async (
   };
 
   const cleanData = sanitizeFirestoreData({
-    status: 'WITHDRAWN',
+    'status.overall': 'WITHDRAWN',
     timeline: arrayUnion(withdrawTimeline),
     updatedAt: serverTimestamp(),
     updatedBy: studentUser.uid,
@@ -860,12 +937,12 @@ export const withdrawODRequest = async (
 
   await updateDoc(reqRef, cleanData);
 
-  if (reqData.assignedMentorUid) {
+  if (reqData.mentorId) {
     sendNotification(
-      reqData.assignedMentorUid,
+      reqData.mentorId,
       { uid: studentUser.uid, name: studentUser.displayName, role: studentUser.role },
-      'OD Request Withdrawn',
-      `${studentUser.displayName} has withdrawn OD request (${reqData.requestNumber}).`,
+      'Movement Pass Withdrawn',
+      `${studentUser.displayName} has withdrawn Movement Pass (${reqData.requestNumber}).`,
       '/mentor/history',
       'STATUS_UPDATE',
       requestId
@@ -878,8 +955,8 @@ export const withdrawODRequest = async (
         sendNotification(
           hod.uid,
           { uid: studentUser.uid, name: studentUser.displayName, role: studentUser.role },
-          'OD Request Withdrawn',
-          `${studentUser.displayName} (${reqData.department}) has withdrawn OD request (${reqData.requestNumber}).`,
+          'Movement Pass Withdrawn',
+          `${studentUser.displayName} (${reqData.department}) has withdrawn Movement Pass (${reqData.requestNumber}).`,
           '/hod/history',
           'STATUS_UPDATE',
           requestId
@@ -891,8 +968,8 @@ export const withdrawODRequest = async (
   await logAudit(
     'USER_UPDATED',
     { uid: studentUser.uid, name: studentUser.displayName, email: studentUser.email, role: studentUser.role },
-    { action: 'OD_WITHDRAWN', requestId, requestNumber: reqData.requestNumber },
-    { collection: 'od_requests', id: requestId }
+    { action: 'PASS_WITHDRAWN', requestId, requestNumber: reqData.requestNumber },
+    { collection: 'movement_passes', id: requestId }
   );
 };
 

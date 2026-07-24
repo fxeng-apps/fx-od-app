@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { GraduationCap, Lock, ShieldCheck } from 'lucide-react';
+import { Lock, ShieldCheck, Sun, Moon } from 'lucide-react';
 import { useAuth } from '../../hooks/useAuth';
+import { useTheme } from '../../hooks/useTheme';
 import { Loader } from '../../components/common/Loader';
 
 export const Login: React.FC = () => {
   const { loginWithGoogle, userProfile, loading: authLoading, error: authError } = useAuth();
+  const { theme, toggleTheme } = useTheme();
   const [loading, setLoading] = useState(false);
   const [accessDeniedError, setAccessDeniedError] = useState<string | null>(null);
   const navigate = useNavigate();
@@ -35,19 +37,45 @@ export const Login: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#F5F7FA] dark:bg-[#0F172A] flex flex-col justify-center items-center p-4">
+    <div className="min-h-screen bg-[#F5F7FA] dark:bg-[#0F172A] flex flex-col justify-center items-center p-4 relative text-left">
+      {/* Theme Switcher Button */}
+      <div className="absolute top-4 right-4">
+        <button
+          onClick={toggleTheme}
+          className="flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-semibold bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700/60 cursor-pointer shadow-xs transition-colors"
+          title={`Switch to ${theme === 'light' ? 'Dark' : 'Light'} Mode`}
+        >
+          {theme === 'light' ? (
+            <>
+              <Sun className="w-3.5 h-3.5 text-amber-500" />
+              <span>Light</span>
+            </>
+          ) : (
+            <>
+              <Moon className="w-3.5 h-3.5 text-indigo-300" />
+              <span>Dark</span>
+            </>
+          )}
+        </button>
+      </div>
+
       <div className="max-w-md w-full space-y-6 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-6 sm:p-8 rounded-lg shadow-md">
         {/* Brand Header */}
-        <div className="text-center space-y-2">
-          <div className="mx-auto w-12 h-12 rounded-lg bg-[#0B426E] flex items-center justify-center text-white font-bold shadow-xs">
-            <GraduationCap className="w-6 h-6 text-white" />
+        <div className="text-center space-y-3">
+          {/* Institutional High-Contrast Branding Container */}
+          <div className="mx-auto bg-white p-2 rounded-md border border-gray-200 shadow-xs flex items-center justify-center w-40 h-16">
+            <img
+              src="https://www.francisxavier.ac.in/cs-content/themes/fxec/images/logo.png"
+              alt="Francis Xavier Engineering College Logo"
+              className="object-contain w-full h-full"
+            />
           </div>
           <div>
             <h2 className="text-lg font-bold text-gray-900 dark:text-white tracking-tight">
               Francis Xavier Engineering College
             </h2>
             <p className="text-xs text-[#0B426E] dark:text-blue-400 font-semibold mt-0.5">
-              Institutional OD Management System v2.0
+              Institutional Movement Pass Management System v2.0
             </p>
           </div>
         </div>

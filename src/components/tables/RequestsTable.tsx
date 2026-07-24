@@ -12,7 +12,7 @@ interface RequestsTableProps {
   showStudentDetails?: boolean;
 }
 
-type SortColumn = 'requestNumber' | 'studentName' | 'odType' | 'startDate' | 'facultyInCharge' | 'status';
+type SortColumn = 'requestNumber' | 'studentName' | 'passType' | 'startDate' | 'facultyInCharge' | 'status';
 
 export const RequestsTable: React.FC<RequestsTableProps> = ({
   requests,
@@ -26,6 +26,24 @@ export const RequestsTable: React.FC<RequestsTableProps> = ({
 
   const [searchParams] = useSearchParams();
   const highlightedId = searchParams.get('highlight') || searchParams.get('odId');
+
+  const getStatusStr = (req: ODRequest): string => {
+    return typeof req.status === 'object' ? req.status.overall : req.status;
+  };
+
+  const getPassTypeLabel = (req: ODRequest): string => {
+    if (!req.schedule || req.schedule.length === 0) {
+      return 'Full Day';
+    }
+    const hasPartial = req.schedule.some((entry) => entry.passType === 'PARTIAL');
+    if (!hasPartial) return 'Full Day';
+
+    const firstPartial = req.schedule.find((entry) => entry.passType === 'PARTIAL');
+    if (firstPartial) {
+      return `Partial (Periods: ${firstPartial.periods.map((p) => `P${p}`).join(', ')})`;
+    }
+    return 'Partial';
+  };
 
   const getStatusBadge = (status: string) => {
     switch (status) {
@@ -57,9 +75,9 @@ export const RequestsTable: React.FC<RequestsTableProps> = ({
       } else if (sortColumn === 'studentName') {
         valA = a.studentSnapshot?.name || '';
         valB = b.studentSnapshot?.name || '';
-      } else if (sortColumn === 'odType') {
-        valA = a.odType || '';
-        valB = b.odType || '';
+      } else if (sortColumn === 'passType') {
+        valA = getPassTypeLabel(a);
+        valB = getPassTypeLabel(b);
       } else if (sortColumn === 'startDate') {
         valA = a.startDate || '';
         valB = b.startDate || '';
@@ -67,8 +85,8 @@ export const RequestsTable: React.FC<RequestsTableProps> = ({
         valA = a.facultyInCharge || '';
         valB = b.facultyInCharge || '';
       } else if (sortColumn === 'status') {
-        valA = a.status || '';
-        valB = b.status || '';
+        valA = getStatusStr(a);
+        valB = getStatusStr(b);
       }
 
       valA = valA.toLowerCase();
@@ -107,17 +125,18 @@ export const RequestsTable: React.FC<RequestsTableProps> = ({
   if (requests.length === 0) {
     return (
       <div className="p-6 text-center bg-white dark:bg-gray-800 rounded-md border border-gray-200 dark:border-gray-700">
-        <p className="text-xs text-gray-500 dark:text-gray-400 font-normal">No OD requests found in records.</p>
+        <p className="text-xs text-gray-500 dark:text-gray-400 font-normal">No movement passes found in records.</p>
       </div>
     );
   }
 
   return (
-    <div className="space-y-3">
+    <div className="space-y-3 text-left">
       {/* Mobile Stacked Card View (< md) */}
       <div className="space-y-3 md:hidden">
         {paginatedRequests.map((req) => {
           const isHighlighted = req.id === highlightedId;
+          const statusVal = getStatusStr(req);
           return (
             <div
               key={req.id}
@@ -138,23 +157,23 @@ export const RequestsTable: React.FC<RequestsTableProps> = ({
                     {req.requestNumber || req.id}
                   </span>
                 </div>
-                <div>{getStatusBadge(req.status)}</div>
+                <div>{getStatusBadge(statusVal)}</div>
               </div>
 
               {showStudentDetails && (
                 <div className="flex items-center gap-2 p-2 bg-gray-50 dark:bg-gray-700/50 rounded border border-gray-100 dark:border-gray-600 text-xs">
                   <User className="w-3.5 h-3.5 text-[#0B426E] dark:text-blue-300 shrink-0" />
                   <div className="min-w-0 flex-1">
-                    <p className="font-semibold text-gray-900 dark:text-white truncate">{req.studentSnapshot.name}</p>
-                    <p className="text-[11px] text-gray-500 dark:text-gray-400">Reg: {req.studentSnapshot.registerNumber} • {req.department}</p>
+                    <p className="font-semibold text-gray-900 dark:text-white truncate">{req.studentSnapshot?.name}</p>
+                    <p className="text-[11px] text-gray-500 dark:text-gray-400">Reg: {req.studentSnapshot?.registerNumber} • {req.department}</p>
                   </div>
                 </div>
               )}
 
               <div className="grid grid-cols-2 gap-2 text-xs">
                 <div>
-                  <span className="text-[11px] text-gray-500 dark:text-gray-400 block font-medium">Category</span>
-                  <span className="font-semibold text-gray-800 dark:text-gray-200">{req.odType}</span>
+                  <span className="text-[11px] text-gray-500 dark:text-gray-400 block font-medium">Pass Type</span>
+                  <span className="font-semibold text-gray-800 dark:text-gray-200">{getPassTypeLabel(req)}</span>
                 </div>
                 <div>
                   <span className="text-[11px] text-gray-500 dark:text-gray-400 block font-medium">Schedule</span>
@@ -189,15 +208,15 @@ export const RequestsTable: React.FC<RequestsTableProps> = ({
           <thead>
             <tr className="sticky top-0 bg-gray-50 dark:bg-gray-800 text-gray-600 dark:text-gray-300 border-b border-gray-200 dark:border-gray-700 uppercase font-semibold text-[11px] tracking-wider select-none">
               <th className="p-3 cursor-pointer hover:text-gray-900 dark:hover:text-white" onClick={() => handleSort('requestNumber')}>
-                Req No {renderSortIcon('requestNumber')}
+                Pass No {renderSortIcon('requestNumber')}
               </th>
               {showStudentDetails && (
                 <th className="p-3 cursor-pointer hover:text-gray-900 dark:hover:text-white" onClick={() => handleSort('studentName')}>
                   Student {renderSortIcon('studentName')}
                 </th>
               )}
-              <th className="p-3 cursor-pointer hover:text-gray-900 dark:hover:text-white" onClick={() => handleSort('odType')}>
-                Category {renderSortIcon('odType')}
+              <th className="p-3 cursor-pointer hover:text-gray-900 dark:hover:text-white" onClick={() => handleSort('passType')}>
+                Pass Type {renderSortIcon('passType')}
               </th>
               <th className="p-3 cursor-pointer hover:text-gray-900 dark:hover:text-white" onClick={() => handleSort('startDate')}>
                 Schedule {renderSortIcon('startDate')}
@@ -214,6 +233,7 @@ export const RequestsTable: React.FC<RequestsTableProps> = ({
           <tbody className="divide-y divide-gray-100 dark:divide-gray-700/60 text-gray-700 dark:text-gray-200">
             {paginatedRequests.map((req) => {
               const isHighlighted = req.id === highlightedId;
+              const statusVal = getStatusStr(req);
               return (
                 <tr
                   key={req.id}
@@ -227,16 +247,16 @@ export const RequestsTable: React.FC<RequestsTableProps> = ({
                     {req.requestNumber || req.id}
                   </td>
                   {showStudentDetails && (
-                    <td className="p-3">
+                    <td className="p-3 text-left">
                       <div className="font-semibold text-gray-900 dark:text-white">
-                        {req.studentSnapshot.name}
+                        {req.studentSnapshot?.name}
                       </div>
                       <div className="text-[11px] text-gray-500 dark:text-gray-400">
-                        Reg: {req.studentSnapshot.registerNumber} • {req.department} ({req.studentSnapshot.year}-{req.studentSnapshot.section})
+                        Reg: {req.studentSnapshot?.registerNumber} • {req.department} ({req.studentSnapshot?.year}-{req.studentSnapshot?.section})
                       </div>
                     </td>
                   )}
-                  <td className="p-3 font-medium">{req.odType}</td>
+                  <td className="p-3 font-semibold text-gray-800 dark:text-gray-200">{getPassTypeLabel(req)}</td>
                   <td className="p-3">
                     <div>{req.startDate}</div>
                     <div className="text-[11px] text-gray-400">
@@ -244,7 +264,7 @@ export const RequestsTable: React.FC<RequestsTableProps> = ({
                     </div>
                   </td>
                   <td className="p-3 text-gray-600 dark:text-gray-300">{req.facultyInCharge}</td>
-                  <td className="p-3">{getStatusBadge(req.status)}</td>
+                  <td className="p-3">{getStatusBadge(statusVal)}</td>
                   <td className="p-3 text-right">
                     <Button
                       variant="ghost"
