@@ -19,6 +19,8 @@ export const Badge: React.FC<BadgeProps> = ({
 
   const variantStyles: Record<string, string> = {
     success: 'bg-green-50 text-green-700 border-green-200 dark:bg-green-950/60 dark:text-green-300 dark:border-green-800',
+    fully_approved: 'bg-[#DCFCE7] text-[#166534] border-[#22C55E]',
+    partially_approved: 'bg-[#FFF7CC] text-[#8A6D00] border-[#E6C65A]',
     approved: 'bg-green-50 text-green-700 border-green-200 dark:bg-green-950/60 dark:text-green-300 dark:border-green-800',
     danger: 'bg-red-50 text-red-700 border-red-200 dark:bg-red-950/60 dark:text-red-300 dark:border-red-800',
     rejected: 'bg-red-50 text-red-700 border-red-200 dark:bg-red-950/60 dark:text-red-300 dark:border-red-800',

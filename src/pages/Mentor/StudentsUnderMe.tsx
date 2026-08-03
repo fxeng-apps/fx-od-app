@@ -123,6 +123,7 @@ export const StudentsUnderMe: React.FC = () => {
               <option value="A" className="dark:bg-gray-800">A</option>
               <option value="B" className="dark:bg-gray-800">B</option>
               <option value="C" className="dark:bg-gray-800">C</option>
+              <option value="D" className="dark:bg-gray-800">D</option>
             </select>
           </div>
         </div>

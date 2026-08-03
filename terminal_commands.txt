@@ -1,0 +1,4 @@
+On first run -- npm install
+
+afterwards
+npm run dev

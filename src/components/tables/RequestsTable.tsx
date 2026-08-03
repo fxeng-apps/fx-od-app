@@ -48,9 +48,9 @@ export const RequestsTable: React.FC<RequestsTableProps> = ({
   const getStatusBadge = (status: string) => {
     switch (status) {
       case 'HOD_APPROVED':
-        return <Badge variant="success">HOD Approved</Badge>;
+        return <Badge variant="fully_approved">🟢 Fully Approved</Badge>;
       case 'MENTOR_APPROVED':
-        return <Badge variant="info">Mentor Approved (Pending HOD)</Badge>;
+        return <Badge variant="partially_approved">🟡 Partially Approved</Badge>;
       case 'MENTOR_REJECTED':
         return <Badge variant="danger">Rejected by Mentor</Badge>;
       case 'HOD_REJECTED':
