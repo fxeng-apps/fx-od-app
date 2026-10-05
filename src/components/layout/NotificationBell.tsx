@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Bell, ExternalLink, RefreshCw } from 'lucide-react';
+import { Bell, ExternalLink, RefreshCw, X } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useNotifications, useMarkNotificationReadMutation } from '../../hooks/useNotifications';
 import { useAuth } from '../../hooks/useAuth';
@@ -50,24 +50,37 @@ export const NotificationBell: React.FC = () => {
 
       {isOpen && (
         <>
+          {/* Backdrop Overlay */}
           <div
-            className="fixed inset-0 z-30"
+            className="fixed inset-0 z-40 bg-black/40 backdrop-blur-xs"
             onClick={() => setIsOpen(false)}
           />
-          <div className="absolute right-0 mt-2 w-80 sm:w-96 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md shadow-lg z-40 overflow-hidden text-gray-800 dark:text-gray-100">
-            <div className="p-3 bg-gray-50 dark:bg-gray-700/80 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
+
+          {/* Viewport-clamped popup on mobile, anchored dropdown on desktop */}
+          <div className="fixed left-2.5 right-2.5 top-14 sm:absolute sm:left-auto sm:right-0 sm:top-full sm:mt-2 w-auto sm:w-96 max-w-lg bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl sm:rounded-lg shadow-2xl z-50 overflow-hidden text-gray-800 dark:text-gray-100 flex flex-col max-h-[75vh] animate-in fade-in zoom-in-95 duration-150">
+            {/* Header */}
+            <div className="p-3 bg-gray-50 dark:bg-gray-700/80 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between shrink-0">
               <div className="flex items-center gap-2">
                 <Bell className="text-[#0B426E] dark:text-blue-400 w-4 h-4" />
-                <h3 className="font-semibold text-gray-900 dark:text-white text-xs">Notifications</h3>
+                <h3 className="font-bold text-gray-900 dark:text-white text-xs sm:text-sm">Notifications</h3>
+                <span className="text-[10px] sm:text-[11px] bg-blue-50 dark:bg-blue-950/60 text-[#0B426E] dark:text-blue-300 px-2 py-0.5 rounded-full font-bold border border-blue-200 dark:border-blue-800">
+                  {unreadCount} Unread
+                </span>
               </div>
-              <span className="text-[11px] bg-blue-50 dark:bg-blue-950/60 text-[#0B426E] dark:text-blue-300 px-2 py-0.5 rounded-md font-medium border border-blue-200 dark:border-blue-800">
-                {unreadCount} Unread
-              </span>
+              <button
+                onClick={() => setIsOpen(false)}
+                className="p-1 rounded-md text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 hover:bg-gray-200/50 dark:hover:bg-gray-600 transition-colors cursor-pointer"
+                title="Close notifications"
+                aria-label="Close notifications"
+              >
+                <X className="w-4 h-4" />
+              </button>
             </div>
 
-            <div className="max-h-80 overflow-y-auto divide-y divide-gray-100 dark:divide-gray-700/60">
+            {/* Notification Items List */}
+            <div className="overflow-y-auto flex-1 divide-y divide-gray-100 dark:divide-gray-700/60 custom-scrollbar overscroll-contain">
               {notifications.length === 0 ? (
-                <div className="p-6 text-center text-gray-400 text-xs">
+                <div className="p-8 text-center text-gray-400 text-xs">
                   No notifications yet.
                 </div>
               ) : (
@@ -81,50 +94,50 @@ export const NotificationBell: React.FC = () => {
                       key={item.id}
                       onClick={() => handleNotificationClick(item)}
                       title={absoluteTimestampStr}
-                      className={`p-3 transition-colors cursor-pointer flex items-start justify-between gap-3 ${
+                      className={`p-3 sm:p-3.5 transition-colors cursor-pointer flex items-start justify-between gap-2.5 ${
                         item.read
                           ? 'bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700/40 text-gray-600 dark:text-gray-300'
-                          : 'bg-blue-50/40 dark:bg-blue-950/20 hover:bg-blue-50 dark:hover:bg-blue-950/40 text-gray-900 dark:text-gray-100 border-l-4 border-[#0B426E]'
+                          : 'bg-blue-50/50 dark:bg-blue-950/30 hover:bg-blue-50 dark:hover:bg-blue-950/50 text-gray-900 dark:text-gray-100 border-l-4 border-[#0B426E]'
                       }`}
                     >
-                      <div className="flex-1 space-y-1">
-                        <div className="flex items-center justify-between gap-2">
-                          <div className="flex items-center gap-1.5 min-w-0">
+                      <div className="flex-1 min-w-0 space-y-1">
+                        <div className="flex items-start justify-between gap-2">
+                          <div className="flex items-center gap-1.5 min-w-0 flex-1">
                             {!item.read && (
                               <span
                                 className="w-2 h-2 rounded-full bg-[#0B426E] dark:bg-blue-400 shrink-0"
                                 title="Unread"
                               />
                             )}
-                            <span
-                              className={`text-xs truncate ${
+                            <h4
+                              className={`text-xs break-words line-clamp-2 ${
                                 item.read
-                                  ? 'font-normal text-gray-700 dark:text-gray-300'
+                                  ? 'font-medium text-gray-700 dark:text-gray-300'
                                   : 'font-bold text-gray-900 dark:text-white'
                               }`}
                             >
                               {item.title}
-                            </span>
+                            </h4>
                           </div>
 
                           <span
-                            className="text-[10px] text-gray-400 dark:text-gray-500 whitespace-nowrap shrink-0"
+                            className="text-[10px] text-gray-400 dark:text-gray-500 whitespace-nowrap shrink-0 mt-0.5"
                             title={absoluteTimestampStr}
                           >
                             {relativeTimeStr}
                           </span>
                         </div>
 
-                        <p className="text-xs text-gray-600 dark:text-gray-300 leading-relaxed">
+                        <p className="text-xs text-gray-600 dark:text-gray-300 leading-relaxed break-words">
                           {item.message}
                         </p>
 
-                        <div className="flex items-center justify-between pt-1">
-                          <span className="text-[10px] text-gray-400">
-                            Sender: {item.sender.name} ({item.sender.role})
+                        <div className="flex items-center justify-between pt-1 text-[10px] text-gray-400">
+                          <span className="truncate">
+                            Sender: <strong className="font-semibold text-gray-600 dark:text-gray-300">{item.sender.name}</strong> ({item.sender.role})
                           </span>
                           {targetRoute && (
-                            <ExternalLink className="w-3 h-3 text-gray-400 shrink-0" />
+                            <ExternalLink className="w-3 h-3 text-[#0B426E] dark:text-blue-300 shrink-0 ml-1" />
                           )}
                         </div>
                       </div>
@@ -135,7 +148,7 @@ export const NotificationBell: React.FC = () => {
 
               {/* Lazy Loading Pagination trigger in Bell dropdown */}
               {hasNextPage && (
-                <div className="p-2 text-center bg-gray-50 dark:bg-gray-700/30">
+                <div className="p-2.5 text-center bg-gray-50 dark:bg-gray-700/30">
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
@@ -157,12 +170,15 @@ export const NotificationBell: React.FC = () => {
             </div>
 
             {notifications.length > 0 && (
-              <div className="p-2 bg-gray-50 dark:bg-gray-700/50 border-t border-gray-200 dark:border-gray-700 text-center">
+              <div className="p-2.5 bg-gray-50 dark:bg-gray-700/50 border-t border-gray-200 dark:border-gray-700 flex items-center justify-between px-3 shrink-0">
+                <span className="text-[11px] text-gray-400">
+                  Showing {notifications.length} updates
+                </span>
                 <button
                   onClick={() => setIsOpen(false)}
-                  className="text-xs text-gray-500 hover:text-gray-700 dark:hover:text-white font-medium cursor-pointer"
+                  className="text-xs text-[#0B426E] dark:text-blue-300 hover:underline font-semibold cursor-pointer py-0.5 px-2"
                 >
-                  Close
+                  Dismiss
                 </button>
               </div>
             )}

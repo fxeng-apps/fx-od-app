@@ -9,7 +9,7 @@ import { Loader } from '../../components/common/Loader';
 export const Login: React.FC = () => {
   const { loginWithGoogle, userProfile, loading: authLoading, error: authError } = useAuth();
   const { theme, toggleTheme } = useTheme();
-  const { isInstalled, showIOSPrompt, setShowIOSPrompt, installApp } = usePWAInstall();
+  const { isInstalled, isIOS, showIOSPrompt, setShowIOSPrompt, installFeedback, installApp } = usePWAInstall();
   const [loading, setLoading] = useState(false);
   const [accessDeniedError, setAccessDeniedError] = useState<string | null>(null);
   const navigate = useNavigate();
@@ -141,6 +141,12 @@ export const Login: React.FC = () => {
                 <Download className="w-3.5 h-3.5" />
                 <span>Install App on Phone</span>
               </button>
+
+              {installFeedback && (
+                <div className="p-2 rounded-lg bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-800 text-[11px] text-[#0B426E] dark:text-blue-300 text-center animate-in fade-in duration-200">
+                  {installFeedback}
+                </div>
+              )}
             </div>
           )}
         </div>
@@ -152,8 +158,8 @@ export const Login: React.FC = () => {
         </div>
       </div>
 
-      {/* iOS Safari 'Add to Home Screen' Instructions Sheet */}
-      {showIOSPrompt && (
+      {/* iOS Safari 'Add to Home Screen' Instructions Sheet (ONLY for iOS Safari devices) */}
+      {showIOSPrompt && isIOS && (
         <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-black/60 backdrop-blur-xs animate-in fade-in duration-200">
           <div className="bg-white dark:bg-gray-800 w-full sm:max-w-md rounded-t-3xl sm:rounded-2xl p-5 sm:p-6 border border-gray-200 dark:border-gray-700 shadow-2xl space-y-4 animate-in slide-in-from-bottom duration-250">
             {/* Sheet Handle for Mobile */}
