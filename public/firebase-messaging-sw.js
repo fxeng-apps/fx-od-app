@@ -81,3 +81,17 @@ self.addEventListener('notificationclick', (event) => {
     })
   );
 });
+
+// PWA Lifecycle Event Listeners for Offline Readiness and Installation
+self.addEventListener('install', () => {
+  self.skipWaiting();
+});
+
+self.addEventListener('activate', (event) => {
+  event.waitUntil(self.clients.claim());
+});
+
+self.addEventListener('fetch', (event) => {
+  // Let browser handle normal requests; supports PWA installation criteria
+  event.respondWith(fetch(event.request).catch(() => caches.match(event.request)));
+});

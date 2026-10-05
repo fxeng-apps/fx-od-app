@@ -36,26 +36,9 @@ export const Dashboard: React.FC = () => {
   const [yearFilter, setYearFilter] = useState('ALL');
   const [sectionFilter, setSectionFilter] = useState('ALL');
 
-  // Render Student Dashboard for Student role
-  if (role === 'STUDENT') {
-    return <StudentDashboard />;
-  }
-
-  const roleLabel = ROLE_LABELS[role];
-
-  // Helper to extract pass type details for the chosen date
-  const getPassTypeLabelForDate = (req: any, dateStr: string): string => {
-    if (!req.schedule || req.schedule.length === 0) {
-      return 'Full Day';
-    }
-    const dateEntry = req.schedule.find((entry: any) => entry.date === dateStr);
-    if (!dateEntry) return 'Full Day';
-    if (dateEntry.passType === 'FULL_DAY') return 'Full Day';
-    return `Partial - Periods: ${dateEntry.periods.map((p: any) => `P${p}`).join(', ')}`;
-  };
-
   // Filter approved passes for selected criteria
   const verifiedPasses = useMemo(() => {
+    if (role === 'STUDENT') return [];
     return allRequests.filter((req) => {
       // 1. Date check
       let matchesDate = false;
@@ -87,7 +70,25 @@ export const Dashboard: React.FC = () => {
 
       return true;
     });
-  }, [allRequests, selectedDate, deptFilter, yearFilter, sectionFilter, searchQuery]);
+  }, [allRequests, selectedDate, deptFilter, yearFilter, sectionFilter, searchQuery, role]);
+
+  // Render Student Dashboard for Student role
+  if (role === 'STUDENT') {
+    return <StudentDashboard />;
+  }
+
+  const roleLabel = ROLE_LABELS[role];
+
+  // Helper to extract pass type details for the chosen date
+  const getPassTypeLabelForDate = (req: any, dateStr: string): string => {
+    if (!req.schedule || req.schedule.length === 0) {
+      return 'Full Day';
+    }
+    const dateEntry = req.schedule.find((entry: any) => entry.date === dateStr);
+    if (!dateEntry) return 'Full Day';
+    if (dateEntry.passType === 'FULL_DAY') return 'Full Day';
+    return `Partial - Periods: ${dateEntry.periods.map((p: any) => `P${p}`).join(', ')}`;
+  };
 
   if (isLoading) {
     return <Loader label="Loading verification dashboard..." />;

@@ -1,0 +1,19 @@
+{
+  "name": "FX Movement Pass - FXEC",
+  "short_name": "FX OD Portal",
+  "description": "Francis Xavier Engineering College Movement Pass Management System",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#F5F7FA",
+  "theme_color": "#0B426E",
+  "categories": ["education", "productivity"],
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "192x192 512x512 any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
