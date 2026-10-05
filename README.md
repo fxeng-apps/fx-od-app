@@ -261,9 +261,10 @@ This project was engineered and maintained by students of **Francis Xavier Engin
 | Developer | Role & Contributions | GitHub Profile |
 | :--- | :--- | :--- |
 | **Sam Joshua C** | **Lead Full-Stack Architect**<br>• Core architecture design & Firebase integration<br>• Authentication, state management & RBAC<br>• PWA installation flow & performance optimization | [![GitHub](https://img.shields.io/badge/GitHub-samjoshua7-181717?style=flat&logo=github)](https://github.com/samjoshua7) |
-| **Ramakrishna S** | **Frontend & Mobile UI Engineer**<br>• WhatsApp-styled mobile navigation & touch ergonomics<br>• Student & Mentor approval workflow components<br>• Responsive styling & modal bottom sheet overhaul | [![GitHub](https://img.shields.io/badge/GitHub-RAMAKRISHNA_S-181717?style=flat&logo=github)](https://github.com/fxengg-od-app) |
+| **Ramakrishna S** | **Frontend & Mobile UI Engineer**<br>• WhatsApp-styled mobile navigation & touch ergonomics<br>• Student & Mentor approval workflow components<br>• Responsive styling & modal bottom sheet overhaul | [![GitHub](https://img.shields.io/badge/GitHub-RAMAKRISHNA_S-181717?style=flat&logo=github)](https://github.com/nijesh7) |
 | **Sam Jeyas** | **Feature & Workflow Engineer**<br>• Movement pass scheduling logic (period-level granularity)<br>• OD history archives & filtering infrastructure<br>• Service layer & Firestore query pipelines | [![GitHub](https://img.shields.io/badge/GitHub-Sam21302007-181717?style=flat&logo=github)](https://github.com/fxengg-od-app) |
 | **Santhosh** | **UI/UX & Component Contributor**<br>• Layout scaffoldings & form validation integration<br>• Institutional branding assets & icon configurations<br>• Component modularization | [![GitHub](https://img.shields.io/badge/GitHub-santhosh--frontend-181717?style=flat&logo=github)](https://github.com/fxengg-od-app) |
+| **Vignesh** (`vigchen28`) | **QA & Workflow Testing Contributor**<br>• End-to-end user workflow testing & validation<br>• Request lifecycle QA & edge-case reporting<br>• Feature verification & feedback iteration | [![GitHub](https://img.shields.io/badge/GitHub-vigchen28-181717?style=flat&logo=github)](https://github.com/vigchen28) |
 
 </div>
 
