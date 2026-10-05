@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Outlet } from 'react-router-dom';
 import { Navbar } from '../components/layout/Navbar';
 import { Sidebar } from '../components/layout/Sidebar';
+import { BottomNav } from '../components/layout/BottomNav';
 import { X } from 'lucide-react';
 
 export const MainLayout: React.FC = () => {
@@ -25,7 +26,7 @@ export const MainLayout: React.FC = () => {
         {/* Desktop Permanent Sidebar */}
         <Sidebar />
 
-        {/* Mobile Slide-out Navigation Drawer */}
+        {/* Optional Mobile Slide-out Drawer Panel (if ever triggered) */}
         {mobileDrawerOpen && (
           <div className="fixed inset-0 z-50 md:hidden flex">
             {/* Backdrop Overlay */}
@@ -48,11 +49,14 @@ export const MainLayout: React.FC = () => {
           </div>
         )}
 
-        {/* Scrollable Content Area */}
-        <main className="flex-1 h-full overflow-y-auto p-3.5 sm:p-5 lg:p-6 max-w-7xl mx-auto w-full min-w-0">
+        {/* Scrollable Content Area with Mobile Bottom Nav Clearance */}
+        <main className="flex-1 h-full overflow-y-auto p-3.5 sm:p-5 lg:p-6 pb-24 md:pb-6 max-w-7xl mx-auto w-full min-w-0 overscroll-y-contain custom-scrollbar">
           <Outlet />
         </main>
       </div>
+
+      {/* WhatsApp-Styled Mobile Bottom Navigation Bar */}
+      <BottomNav />
     </div>
   );
 };

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { GraduationCap, Moon, Sun, LogOut, Shield, Clock, Menu } from 'lucide-react';
+import { GraduationCap, Moon, Sun, LogOut, Shield, Clock } from 'lucide-react';
 import { useAuth } from '../../hooks/useAuth';
 import { useTheme } from '../../hooks/useTheme';
 import { NotificationBell } from './NotificationBell';
@@ -9,7 +9,7 @@ interface NavbarProps {
   onToggleMobileDrawer?: () => void;
 }
 
-export const Navbar: React.FC<NavbarProps> = ({ onToggleMobileDrawer }) => {
+export const Navbar: React.FC<NavbarProps> = () => {
   const { userProfile, logout } = useAuth();
   const { theme, toggleTheme } = useTheme();
   const [currentTime, setCurrentTime] = useState<string>('');
@@ -35,31 +35,23 @@ export const Navbar: React.FC<NavbarProps> = ({ onToggleMobileDrawer }) => {
   const roleLabel = ROLE_LABELS[userRole] || userRole;
 
   return (
-    <header className="sticky top-0 z-30 bg-[#0B426E] text-white border-b border-white/10 px-3 sm:px-4 lg:px-6 py-2.5 flex items-center justify-between shadow-md">
-      {/* Left Brand Header & Mobile Hamburger */}
-      <div className="flex items-center gap-2.5">
-        <button
-          onClick={onToggleMobileDrawer}
-          className="md:hidden p-1.5 rounded-md hover:bg-white/10 text-white transition-colors cursor-pointer"
-          title="Toggle Navigation Menu"
-          aria-label="Toggle Navigation Menu"
-        >
-          <Menu className="w-5 h-5 text-white" />
-        </button>
-
-        <div className="h-8 w-8 rounded-md bg-white text-[#0B426E] flex items-center justify-center font-bold shrink-0">
+    <header className="sticky top-0 z-30 bg-[#0B426E] text-white border-b border-white/10 px-3 sm:px-4 lg:px-6 py-2 sm:py-2.5 flex items-center justify-between shadow-md select-none">
+      {/* Left Brand Header */}
+      <div className="flex items-center gap-2 sm:gap-2.5 min-w-0">
+        <div className="h-8 w-8 rounded-lg bg-white text-[#0B426E] flex items-center justify-center font-bold shrink-0 shadow-xs">
           <GraduationCap className="w-5 h-5" />
         </div>
-        <div>
+        <div className="min-w-0">
           <div className="flex items-center gap-1.5">
-            <h1 className="font-semibold text-xs sm:text-sm text-white tracking-tight leading-tight">
-              Institutional Movement Pass Portal
+            <h1 className="font-bold text-xs sm:text-sm text-white tracking-tight truncate">
+              <span className="sm:hidden">FX Movement Pass</span>
+              <span className="hidden sm:inline">Institutional Movement Pass Portal</span>
             </h1>
             <span className="hidden sm:inline-block text-[10px] font-medium bg-white/15 text-white border border-white/20 px-1.5 py-0.5 rounded-md">
               v2.0
             </span>
           </div>
-          <p className="text-[10px] sm:text-[11px] text-white/80">Francis Xavier Engineering College</p>
+          <p className="text-[10px] sm:text-[11px] text-white/80 truncate">Francis Xavier Engineering College</p>
         </div>
       </div>
 

@@ -26,10 +26,18 @@ export const Modal: React.FC<ModalProps> = ({
       />
 
       {/* Modal Wrapper */}
-      <div className="flex min-h-full items-center justify-center p-3 sm:p-4 text-center">
-        <div className={`relative transform overflow-hidden rounded-lg bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-left shadow-xl transition-all w-full ${maxWidth} p-4 sm:p-6 max-h-[90vh] flex flex-col`}>
+      <div className="flex min-h-full items-end sm:items-center justify-center p-0 sm:p-4 text-center">
+        <div
+          className={`relative transform overflow-hidden rounded-t-2xl sm:rounded-xl bg-white dark:bg-gray-800 border-t sm:border border-gray-200 dark:border-gray-700 text-left shadow-2xl transition-all w-full ${maxWidth} p-4 sm:p-6 max-h-[85vh] sm:max-h-[90vh] flex flex-col animate-in slide-in-from-bottom-6 duration-200`}
+          style={{
+            paddingBottom: 'max(env(safe-area-inset-bottom, 0px), 16px)',
+          }}
+        >
+          {/* Mobile Sheet Handle */}
+          <div className="w-12 h-1 bg-gray-300 dark:bg-gray-600 rounded-full mx-auto mb-2 sm:hidden shrink-0" />
+
           {/* Header */}
-          <div className="flex items-center justify-between border-b border-gray-200 dark:border-gray-700 pb-3 mb-4 shrink-0">
+          <div className="flex items-center justify-between border-b border-gray-200 dark:border-gray-700 pb-3 mb-3.5 shrink-0">
             <h3 className="text-sm sm:text-base font-semibold text-gray-900 dark:text-white">
               {title}
             </h3>
