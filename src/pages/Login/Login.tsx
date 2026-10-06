@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Lock, ShieldCheck, Sun, Moon, Download, Smartphone, CheckCircle2, Share2, PlusSquare, X } from 'lucide-react';
+import { Lock, ShieldCheck, Sun, Moon, Download, CheckCircle2, Share2, PlusSquare, X } from 'lucide-react';
 import { useAuth } from '../../hooks/useAuth';
 import { useTheme } from '../../hooks/useTheme';
 import { usePWAInstall } from '../../hooks/usePWAInstall';
@@ -65,11 +65,14 @@ export const Login: React.FC = () => {
         {/* Brand Header */}
         <div className="text-center space-y-3">
           {/* Institutional High-Contrast Branding Container */}
-          <div className="mx-auto bg-white p-2 rounded-xl border border-gray-200 shadow-xs flex items-center justify-center w-40 h-16">
+          <div className="mx-auto bg-white p-2 rounded-xl border border-gray-200 shadow-xs flex items-center justify-center w-48 h-16">
             <img
-              src="https://www.francisxavier.ac.in/cs-content/themes/fxec/images/logo.png"
+              src="/logo.png"
               alt="Francis Xavier Engineering College Logo"
               className="object-contain w-full h-full"
+              onError={(e) => {
+                e.currentTarget.src = '/college-crest.png';
+              }}
             />
           </div>
           <div>
@@ -122,8 +125,8 @@ export const Login: React.FC = () => {
           ) : (
             <div className="p-3.5 bg-linear-to-r from-blue-50 to-indigo-50 dark:from-gray-700/40 dark:to-gray-700/20 border border-blue-200/80 dark:border-gray-600 rounded-xl space-y-2.5 shadow-xs">
               <div className="flex items-center gap-2.5">
-                <div className="w-8 h-8 rounded-lg bg-[#0B426E] text-white flex items-center justify-center shrink-0 shadow-xs">
-                  <Smartphone className="w-4 h-4" />
+                <div className="w-9 h-9 rounded-lg bg-white border border-gray-200 dark:border-gray-600 p-1 flex items-center justify-center shrink-0 shadow-xs">
+                  <img src="/college-crest.png" alt="FXEC Crest" className="w-full h-full object-contain" />
                 </div>
                 <div className="min-w-0 flex-1">
                   <p className="text-xs font-bold text-gray-900 dark:text-white">Install FX Movement App</p>
@@ -166,9 +169,9 @@ export const Login: React.FC = () => {
             <div className="w-12 h-1.5 bg-gray-300 dark:bg-gray-600 rounded-full mx-auto sm:hidden" />
 
             <div className="flex items-center justify-between pb-2 border-b border-gray-100 dark:border-gray-700">
-              <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-lg bg-[#0B426E] text-white flex items-center justify-center font-bold">
-                  <Smartphone className="w-4 h-4" />
+              <div className="flex items-center gap-2.5">
+                <div className="w-9 h-9 rounded-lg bg-white border border-gray-200 dark:border-gray-700 p-1 flex items-center justify-center shrink-0 shadow-xs">
+                  <img src="/college-crest.png" alt="FXEC Crest" className="w-full h-full object-contain" />
                 </div>
                 <div>
                   <h3 className="text-sm font-bold text-gray-900 dark:text-white">Install on iPhone / iPad</h3>

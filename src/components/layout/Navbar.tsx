@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { GraduationCap, Moon, Sun, LogOut, Shield, Clock } from 'lucide-react';
+import { Moon, Sun, LogOut, Shield, Clock } from 'lucide-react';
 import { useAuth } from '../../hooks/useAuth';
 import { useTheme } from '../../hooks/useTheme';
 import { NotificationBell } from './NotificationBell';
@@ -38,8 +38,8 @@ export const Navbar: React.FC<NavbarProps> = () => {
     <header className="sticky top-0 z-30 bg-[#0B426E] text-white border-b border-white/10 px-3 sm:px-4 lg:px-6 py-2 sm:py-2.5 flex items-center justify-between shadow-md select-none">
       {/* Left Brand Header */}
       <div className="flex items-center gap-2 sm:gap-2.5 min-w-0">
-        <div className="h-8 w-8 rounded-lg bg-white text-[#0B426E] flex items-center justify-center font-bold shrink-0 shadow-xs">
-          <GraduationCap className="w-5 h-5" />
+        <div className="h-8 w-8 rounded-lg bg-white p-0.5 flex items-center justify-center shrink-0 shadow-xs border border-white/20">
+          <img src="/college-crest.png" alt="FXEC Crest" className="w-full h-full object-contain" />
         </div>
         <div className="min-w-0">
           <div className="flex items-center gap-1.5">

@@ -13,7 +13,6 @@ import {
   ShieldCheck,
   Settings,
   Bell,
-  GraduationCap,
 } from 'lucide-react';
 import { useAuth } from '../../hooks/useAuth';
 
@@ -82,8 +81,8 @@ export const Sidebar: React.FC<SidebarProps> = ({ onNavigate, isMobileDrawer = f
         {/* Header Branding for Drawer */}
         {isMobileDrawer && (
           <div className="flex items-center gap-3 pb-3 border-b border-white/20">
-            <div className="w-8 h-8 rounded-md bg-white text-[#0B426E] flex items-center justify-center font-bold">
-              <GraduationCap className="w-5 h-5" />
+            <div className="w-8 h-8 rounded-md bg-white p-0.5 flex items-center justify-center shrink-0 shadow-xs border border-white/20">
+              <img src="/college-crest.png" alt="FXEC Crest" className="w-full h-full object-contain" />
             </div>
             <div>
               <h2 className="font-semibold text-sm text-white tracking-tight">FX Movement Pass Portal</h2>
