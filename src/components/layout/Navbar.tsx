@@ -9,9 +9,7 @@ interface NavbarProps {
   onToggleMobileDrawer?: () => void;
 }
 
-export const Navbar: React.FC<NavbarProps> = ({ onToggleMobileDrawer }) => {
-  const { userProfile, logout } = useAuth();
-  const { theme, toggleTheme } = useTheme();
+const LiveClock: React.FC = React.memo(() => {
   const [currentTime, setCurrentTime] = useState<string>('');
 
   useEffect(() => {
@@ -30,6 +28,18 @@ export const Navbar: React.FC<NavbarProps> = ({ onToggleMobileDrawer }) => {
     const interval = setInterval(updateTime, 1000);
     return () => clearInterval(interval);
   }, []);
+
+  return (
+    <div className="hidden lg:flex items-center gap-1.5 font-mono text-xs text-white/90 bg-white/10 px-2.5 py-1 rounded-md border border-white/20">
+      <Clock className="w-3.5 h-3.5 text-white/70" />
+      <span>{currentTime || '12:00:00 PM'}</span>
+    </div>
+  );
+});
+
+export const Navbar: React.FC<NavbarProps> = ({ onToggleMobileDrawer }) => {
+  const { userProfile, logout } = useAuth();
+  const { theme, toggleTheme } = useTheme();
 
   const userRole = userProfile?.role || 'STUDENT';
   const roleLabel = ROLE_LABELS[userRole] || userRole;
@@ -68,10 +78,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onToggleMobileDrawer }) => {
       {/* Right Controls */}
       <div className="flex items-center gap-2 sm:gap-3">
         {/* Live Digital Clock */}
-        <div className="hidden lg:flex items-center gap-1.5 font-mono text-xs text-white/90 bg-white/10 px-2.5 py-1 rounded-md border border-white/20">
-          <Clock className="w-3.5 h-3.5 text-white/70" />
-          <span>{currentTime || '12:00:00 PM'}</span>
-        </div>
+        <LiveClock />
 
         {/* Theme Switch */}
         <button

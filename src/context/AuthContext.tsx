@@ -1,3 +1,4 @@
+/* oxlint-disable react/only-export-components */
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { onAuthStateChanged, type User as FirebaseUser } from 'firebase/auth';
 import { auth } from '../config/firebase';
@@ -74,19 +75,26 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   // Subscribe to FCM Foreground Notification Messages
   useEffect(() => {
-    if (!userProfile) return;
+    if (!userProfile?.uid) return;
 
+    let isMounted = true;
     let unsubListener: (() => void) | undefined;
+
     setupForegroundNotificationListener(({ title, message }) => {
       console.log(`[FCM_FOREGROUND] Notification: ${title} - ${message}`);
     }).then((unsub) => {
-      unsubListener = unsub;
+      if (!isMounted) {
+        if (unsub) unsub();
+      } else {
+        unsubListener = unsub;
+      }
     });
 
     return () => {
+      isMounted = false;
       if (unsubListener) unsubListener();
     };
-  }, [userProfile]);
+  }, [userProfile?.uid]);
 
   const handleGoogleLogin = async (): Promise<UserProfile> => {
     setLoading(true);

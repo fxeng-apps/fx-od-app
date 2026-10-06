@@ -65,10 +65,11 @@ export const useHODHistoryRequests = (department?: Department) => {
   });
 };
 
-export const useAllODRequests = () => {
+export const useAllODRequests = (options?: { enabled?: boolean }) => {
   return useQuery({
     queryKey: QUERY_KEYS.allODs(),
     queryFn: fetchAllODRequests,
+    enabled: options?.enabled ?? true,
   });
 };
 

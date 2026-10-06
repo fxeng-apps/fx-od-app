@@ -19,6 +19,7 @@ import { useAllODRequests } from '../../hooks/useODRequests';
 import { useAllUsers } from '../../hooks/useUserManagement';
 import { Card } from '../../components/common/Card';
 import { Loader } from '../../components/common/Loader';
+import { parseNotificationDate } from '../../utils/dateUtils';
 
 export const Analytics: React.FC = () => {
   const { data: requests = [], isLoading: isLoadingODs } = useAllODRequests();
@@ -26,67 +27,104 @@ export const Analytics: React.FC = () => {
 
   const isLoading = isLoadingODs || isLoadingUsers;
 
-  // 1. User Demographics Metrics
-  const totalUsers = users.length;
-  const totalStudents = users.filter((u) => u.role === 'STUDENT').length;
-  const totalStaff = users.filter((u) => u.role !== 'STUDENT').length;
-  const totalMentors = users.filter((u) => u.role === 'MENTOR').length;
-  const totalHODs = users.filter((u) => u.role === 'HOD').length;
-  const totalDepartments = Array.from(new Set(users.map((u) => u.department))).length || 7;
+  // 1. User Demographics Metrics (Memoized)
+  const demographics = React.useMemo(() => {
+    const totalUsers = users.length;
+    const totalStudents = users.filter((u) => u.role === 'STUDENT').length;
+    const totalStaff = users.filter((u) => u.role !== 'STUDENT').length;
+    const totalMentors = users.filter((u) => u.role === 'MENTOR').length;
+    const totalHODs = users.filter((u) => u.role === 'HOD').length;
+    const totalDepartments = Array.from(new Set(users.map((u) => u.department))).length || 7;
+    return { totalUsers, totalStudents, totalStaff, totalMentors, totalHODs, totalDepartments };
+  }, [users]);
 
-  // 2. Lifecycle Metrics
-  const getStatus = (r: any) => typeof r.status === 'object' ? r.status.overall : r.status;
-  const totalRequests = requests.length;
-  const pendingMentor = requests.filter((r) => getStatus(r) === 'PENDING').length;
-  const pendingHOD = requests.filter((r) => getStatus(r) === 'MENTOR_APPROVED').length;
-  const approvedODs = requests.filter((r) => getStatus(r) === 'HOD_APPROVED').length;
-  const rejectedODs = requests.filter(
-    (r) => getStatus(r) === 'MENTOR_REJECTED' || getStatus(r) === 'HOD_REJECTED'
-  ).length;
-  const withdrawnODs = requests.filter((r) => getStatus(r) === 'WITHDRAWN').length;
-  const expiredODs = requests.filter((r) => getStatus(r) === 'EXPIRED').length;
+  const { totalUsers, totalStudents, totalStaff, totalMentors, totalHODs, totalDepartments } = demographics;
 
-  const todayStr = new Date().toISOString().split('T')[0];
-  const activeTodayODs = requests.filter((r) => {
-    if (getStatus(r) !== 'HOD_APPROVED') return false;
-    const start = r.startDate;
-    const end = r.endDate || r.startDate;
-    return todayStr >= start && todayStr <= end;
-  }).length;
+  // 2. Lifecycle & Time Window Metrics (Memoized)
+  const metrics = React.useMemo(() => {
+    const getStatus = (r: any) => typeof r.status === 'object' ? r.status.overall : r.status;
+    const totalRequests = requests.length;
+    const pendingMentor = requests.filter((r) => getStatus(r) === 'PENDING').length;
+    const pendingHOD = requests.filter((r) => getStatus(r) === 'MENTOR_APPROVED').length;
+    const approvedODs = requests.filter((r) => getStatus(r) === 'HOD_APPROVED').length;
+    const rejectedODs = requests.filter(
+      (r) => getStatus(r) === 'MENTOR_REJECTED' || getStatus(r) === 'HOD_REJECTED'
+    ).length;
+    const withdrawnODs = requests.filter((r) => getStatus(r) === 'WITHDRAWN').length;
+    const expiredODs = requests.filter((r) => getStatus(r) === 'EXPIRED').length;
 
-  // 3. Time Window Metrics
-  const todaysApproved = requests.filter(
-    (r) => getStatus(r) === 'HOD_APPROVED' && r.startDate === todayStr
-  ).length;
+    const todayStr = new Date().toISOString().split('T')[0];
+    const activeTodayODs = requests.filter((r) => {
+      if (getStatus(r) !== 'HOD_APPROVED') return false;
+      const start = r.startDate;
+      const end = r.endDate || r.startDate;
+      return todayStr >= start && todayStr <= end;
+    }).length;
 
-  const now = new Date();
-  const sevenDaysAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
-  const thisWeeksODs = requests.filter((r) => {
-    const created = r.createdAt ? new Date(r.createdAt as any) : new Date(r.startDate);
-    return created >= sevenDaysAgo;
-  }).length;
+    const todaysApproved = requests.filter(
+      (r) => getStatus(r) === 'HOD_APPROVED' && r.startDate === todayStr
+    ).length;
 
-  const currentYear = now.getFullYear();
-  const currentMonth = now.getMonth();
-  const thisMonthsODs = requests.filter((r) => {
-    const created = r.createdAt ? new Date(r.createdAt as any) : new Date(r.startDate);
-    return created.getFullYear() === currentYear && created.getMonth() === currentMonth;
-  }).length;
+    const now = new Date();
+    const sevenDaysAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+    const thisWeeksODs = requests.filter((r) => {
+      const created = parseNotificationDate(r.createdAt || r.startDate);
+      return created >= sevenDaysAgo;
+    }).length;
 
-  const approvalRate = totalRequests > 0 ? Math.round((approvedODs / totalRequests) * 100) : 0;
+    const currentYear = now.getFullYear();
+    const currentMonth = now.getMonth();
+    const thisMonthsODs = requests.filter((r) => {
+      const created = parseNotificationDate(r.createdAt || r.startDate);
+      return created.getFullYear() === currentYear && created.getMonth() === currentMonth;
+    }).length;
 
-  // 4. Departmental Distributions
-  const deptCounts: Record<string, number> = {};
-  requests.forEach((r) => {
-    deptCounts[r.department] = (deptCounts[r.department] || 0) + 1;
-  });
+    const approvalRate = totalRequests > 0 ? Math.round((approvedODs / totalRequests) * 100) : 0;
 
-  // 5. Category Distributions
-  const typeCounts: Record<string, number> = {};
-  requests.forEach((r) => {
-    const key = r.odType || 'Full Day';
-    typeCounts[key] = (typeCounts[key] || 0) + 1;
-  });
+    const deptCounts: Record<string, number> = {};
+    const typeCounts: Record<string, number> = {};
+    requests.forEach((r) => {
+      deptCounts[r.department] = (deptCounts[r.department] || 0) + 1;
+      const key = r.odType || 'Full Day';
+      typeCounts[key] = (typeCounts[key] || 0) + 1;
+    });
+
+    return {
+      todayStr,
+      totalRequests,
+      pendingMentor,
+      pendingHOD,
+      approvedODs,
+      rejectedODs,
+      withdrawnODs,
+      expiredODs,
+      activeTodayODs,
+      todaysApproved,
+      thisWeeksODs,
+      thisMonthsODs,
+      approvalRate,
+      deptCounts,
+      typeCounts,
+    };
+  }, [requests]);
+
+  const {
+    todayStr,
+    totalRequests,
+    pendingMentor,
+    pendingHOD,
+    approvedODs,
+    rejectedODs,
+    withdrawnODs,
+    expiredODs,
+    activeTodayODs,
+    todaysApproved,
+    thisWeeksODs,
+    thisMonthsODs,
+    approvalRate,
+    deptCounts,
+    typeCounts,
+  } = metrics;
 
   if (isLoading) {
     return <Loader label="Computing institutional Super Admin analytics..." />;

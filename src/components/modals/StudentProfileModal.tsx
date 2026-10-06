@@ -23,7 +23,7 @@ export const StudentProfileModal: React.FC<StudentProfileModalProps> = ({
   canEdit = false,
   onEdit,
 }) => {
-  const { data: odRequests = [], isLoading } = useStudentODRequests(student?.uid);
+  const { data: odRequests = [], isLoading } = useStudentODRequests(isOpen ? student?.uid : undefined);
 
   if (!student) return null;
 

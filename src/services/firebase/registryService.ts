@@ -10,7 +10,6 @@ import {
   writeBatch,
   serverTimestamp,
 } from 'firebase/firestore';
-import * as XLSX from 'xlsx';
 import { db } from '../../config/firebase';
 import type { ImportedUserRecord, UserRole, Department } from '../../types/user';
 import { logAudit } from './auditService';
@@ -141,6 +140,7 @@ export const bulkImportRegistryFromExcel = async (
 
   try {
     const data = await file.arrayBuffer();
+    const XLSX = await import('xlsx');
     const workbook = XLSX.read(data);
     const firstSheetName = workbook.SheetNames[0];
     const worksheet = workbook.Sheets[firstSheetName];

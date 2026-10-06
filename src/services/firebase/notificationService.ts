@@ -7,7 +7,6 @@ import {
   limit,
   startAfter,
   getDocs,
-  getDoc,
   doc,
   updateDoc,
   serverTimestamp,
@@ -69,30 +68,6 @@ export const sendNotification = async (
     const cleanData = sanitizeFirestoreData(rawData);
 
     const docRef = await addDoc(collection(db, 'notifications'), cleanData);
-
-    // 3. Query recipient's registered FCM tokens for push notification dispatch
-    try {
-      const recipientDocRef = doc(db, 'users', recipientUid);
-      const recipientSnap = await getDoc(recipientDocRef);
-
-      if (recipientSnap.exists()) {
-        const recipientData = recipientSnap.data();
-        const fcmTokens: string[] = recipientData.fcmTokens || [];
-
-        console.groupCollapsed(
-          '%c[FCM_PUSH_DISPATCH] FCM Push Notification Targeted',
-          'color: #06b6d4; font-weight: bold;'
-        );
-        console.log('Recipient UID:', recipientUid);
-        console.log('FCM Tokens Found:', fcmTokens.length);
-        console.log('Notification Title:', title);
-        console.log('Deep-link Target:', finalRoute);
-        console.groupEnd();
-      }
-    } catch (fcmErr) {
-      console.warn('FCM Token lookup warning:', fcmErr);
-    }
-
     return docRef.id;
   } catch (error) {
     console.error('Failed to store notification:', error);
@@ -136,7 +111,7 @@ export const fetchUserNotifications = async (
     const hasMore = snap.docs.length === limitCount;
 
     return { notifications, lastDoc, hasMore };
-  } catch (error) {
+  } catch {
     // Fallback: If index is building or not yet deployed, fetch by recipientUid and sort in memory
     try {
       const fallbackQuery = query(

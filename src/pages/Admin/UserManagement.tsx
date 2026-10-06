@@ -10,7 +10,6 @@ import {
 import { useAuth } from '../../hooks/useAuth';
 import {
   useAllUsers,
-  useAllMentors,
   useImportedRegistry,
   useAssignMentorMutation,
   useSoftDeleteUserMutation,
@@ -44,7 +43,6 @@ export const UserManagement: React.FC = () => {
   const [newMentorEmail, setNewMentorEmail] = useState('');
 
   const { data: users = [], isLoading: isLoadingUsers } = useAllUsers();
-  const { data: mentors = [] } = useAllMentors();
   const { data: registry = [], isLoading: isLoadingRegistry } = useImportedRegistry();
 
   const assignMentorMutation = useAssignMentorMutation();
@@ -283,7 +281,6 @@ export const UserManagement: React.FC = () => {
         <UserManagementTable
           users={users}
           registry={registry}
-          mentors={mentors}
           onUpdateUser={handleUpdateUser}
           onUpdateRegistry={handleUpdateRegistry}
           onSoftDeleteUser={handleSoftDeleteUser}

@@ -2,6 +2,7 @@ import React, { useState, useMemo } from 'react';
 import { Shield, Filter, ArrowUpDown, ArrowUp, ArrowDown } from 'lucide-react';
 import type { AuditLogEntry } from '../../types/audit';
 import { Pagination } from '../common/Pagination';
+import { parseNotificationDate } from '../../utils/dateUtils';
 
 interface AuditLogsViewerProps {
   logs: AuditLogEntry[];
@@ -25,13 +26,16 @@ export const AuditLogsViewer: React.FC<AuditLogsViewerProps> = ({ logs }) => {
 
   const sortedLogs = useMemo(() => {
     return [...filteredLogs].sort((a, b) => {
+      if (sortColumn === 'timestamp') {
+        const timeA = parseNotificationDate(a.createdAt).getTime();
+        const timeB = parseNotificationDate(b.createdAt).getTime();
+        return sortDirection === 'asc' ? timeA - timeB : timeB - timeA;
+      }
+
       let valA: string = '';
       let valB: string = '';
 
-      if (sortColumn === 'timestamp') {
-        valA = typeof a.createdAt === 'string' ? a.createdAt : String(a.createdAt || '');
-        valB = typeof b.createdAt === 'string' ? b.createdAt : String(b.createdAt || '');
-      } else if (sortColumn === 'action') {
+      if (sortColumn === 'action') {
         valA = a.action || '';
         valB = b.action || '';
       } else if (sortColumn === 'performedBy') {

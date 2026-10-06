@@ -189,6 +189,7 @@ export const RequestsTable: React.FC<RequestsTableProps> = ({
 
         {selectedViewRequest && (
           <ODDetailsModal
+            isOpen={!!selectedViewRequest}
             request={selectedViewRequest}
             onClose={() => setSelectedViewRequest(null)}
           />

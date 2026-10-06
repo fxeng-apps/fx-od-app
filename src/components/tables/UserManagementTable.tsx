@@ -43,7 +43,7 @@ export interface UnifiedUserRecord {
 interface UserManagementTableProps {
   users: UserProfile[];
   registry: ImportedUserRecord[];
-  mentors: UserProfile[]; // legacy prop, we will construct unifiedMentors from users and registry
+  mentors?: UserProfile[]; // legacy prop, unifiedMentors is constructed from users and registry
   onUpdateUser: (uid: string, updates: Partial<UserProfile>) => void;
   onUpdateRegistry: (docId: string, updates: Partial<ImportedUserRecord>) => void;
   onSoftDeleteUser: (uid: string) => void;

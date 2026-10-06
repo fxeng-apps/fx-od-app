@@ -18,9 +18,8 @@ import { Loader } from '../../components/common/Loader';
 export const Dashboard: React.FC = () => {
   const { userProfile, activeRole } = useAuth();
   const navigate = useNavigate();
-  const { data: allRequests = [], isLoading } = useAllODRequests();
-
   const role = activeRole || userProfile?.role || 'STUDENT';
+  const { data: allRequests = [], isLoading } = useAllODRequests({ enabled: role !== 'STUDENT' });
 
   // State for Faculty Verification Filters
   const [selectedDate, setSelectedDate] = useState<string>(() => {
@@ -71,6 +70,20 @@ export const Dashboard: React.FC = () => {
       return true;
     });
   }, [allRequests, selectedDate, deptFilter, yearFilter, sectionFilter, searchQuery, role]);
+
+  // Memoize status counts for verification session
+  const { pendingMentorCount, waitingHODCount, fullyApprovedCount } = useMemo(() => {
+    let pending = 0;
+    let waiting = 0;
+    let approved = 0;
+    for (const r of verifiedPasses) {
+      const s = typeof r.status === 'object' ? r.status.overall : r.status;
+      if (s === 'PENDING') pending++;
+      else if (s === 'MENTOR_APPROVED') waiting++;
+      else if (s === 'HOD_APPROVED') approved++;
+    }
+    return { pendingMentorCount: pending, waitingHODCount: waiting, fullyApprovedCount: approved };
+  }, [verifiedPasses]);
 
   // Render Student Dashboard for Student role
   if (role === 'STUDENT') {
@@ -134,13 +147,13 @@ export const Dashboard: React.FC = () => {
         </div>
         <div className="flex gap-4">
           <div className="text-xs font-semibold text-gray-600 dark:text-gray-300 bg-gray-50 dark:bg-gray-700 px-3 py-1.5 rounded-md border border-gray-200 dark:border-gray-600">
-            🔴 Pending Mentor: <strong className="text-red-600">{verifiedPasses.filter(r => (typeof r.status === 'object' ? r.status.overall : r.status) === 'PENDING').length}</strong>
+            🔴 Pending Mentor: <strong className="text-red-600">{pendingMentorCount}</strong>
           </div>
           <div className="text-xs font-semibold text-gray-600 dark:text-gray-300 bg-gray-50 dark:bg-gray-700 px-3 py-1.5 rounded-md border border-gray-200 dark:border-gray-600">
-            🟡 Waiting for HOD: <strong className="text-yellow-600">{verifiedPasses.filter(r => (typeof r.status === 'object' ? r.status.overall : r.status) === 'MENTOR_APPROVED').length}</strong>
+            🟡 Waiting for HOD: <strong className="text-yellow-600">{waitingHODCount}</strong>
           </div>
           <div className="text-xs font-semibold text-gray-600 dark:text-gray-300 bg-gray-50 dark:bg-gray-700 px-3 py-1.5 rounded-md border border-gray-200 dark:border-gray-600">
-            🟢 Fully Approved: <strong className="text-green-600">{verifiedPasses.filter(r => (typeof r.status === 'object' ? r.status.overall : r.status) === 'HOD_APPROVED').length}</strong>
+            🟢 Fully Approved: <strong className="text-green-600">{fullyApprovedCount}</strong>
           </div>
           <div className="text-xs font-semibold text-gray-600 dark:text-gray-300 bg-gray-50 dark:bg-gray-700 px-3 py-1.5 rounded-md border border-gray-200 dark:border-gray-600">
             📋 Total OD Requests: <strong className="text-[#2f5da8] dark:text-blue-400">{verifiedPasses.length}</strong>

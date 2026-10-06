@@ -10,6 +10,7 @@ import {
   arrayUnion,
   serverTimestamp,
   writeBatch,
+  limit,
 } from 'firebase/firestore';
 import { db } from '../../config/firebase';
 import type {
@@ -683,6 +684,7 @@ export const fetchMentorPendingRequests = async (
 ): Promise<ODRequest[]> => {
   try {
     const itemsMap = new Map<string, ODRequest>();
+    const promises = [];
 
     if (mentorUid) {
       const q1 = query(
@@ -691,8 +693,7 @@ export const fetchMentorPendingRequests = async (
         where('status.overall', '==', 'PENDING'),
         where('isDeleted', '==', false)
       );
-      const snap1 = await getDocs(q1);
-      snap1.docs.forEach((d) => itemsMap.set(d.id, { id: d.id, ...d.data() } as ODRequest));
+      promises.push(getDocs(q1));
     }
 
     if (mentorEmail) {
@@ -702,9 +703,13 @@ export const fetchMentorPendingRequests = async (
         where('status.overall', '==', 'PENDING'),
         where('isDeleted', '==', false)
       );
-      const snap2 = await getDocs(q2);
-      snap2.docs.forEach((d) => itemsMap.set(d.id, { id: d.id, ...d.data() } as ODRequest));
+      promises.push(getDocs(q2));
     }
+
+    const snaps = await Promise.all(promises);
+    snaps.forEach((snap) => {
+      snap.docs.forEach((d) => itemsMap.set(d.id, { id: d.id, ...d.data() } as ODRequest));
+    });
 
     return Array.from(itemsMap.values()).sort((a, b) => {
       const tA = parseNotificationDate(a.createdAt).getTime();
@@ -723,15 +728,7 @@ export const fetchMentorHistoryRequests = async (
 ): Promise<ODRequest[]> => {
   try {
     const itemsMap = new Map<string, ODRequest>();
-
-    const processDocs = (snapDocs: any[]) => {
-      snapDocs.forEach((d) => {
-        const item = { id: d.id, ...d.data() } as ODRequest;
-        if (item.status.overall !== 'PENDING') {
-          itemsMap.set(d.id, item);
-        }
-      });
-    };
+    const promises = [];
 
     if (mentorUid) {
       const q1 = query(
@@ -739,8 +736,7 @@ export const fetchMentorHistoryRequests = async (
         where('mentorId', '==', mentorUid),
         where('isDeleted', '==', false)
       );
-      const snap1 = await getDocs(q1);
-      processDocs(snap1.docs);
+      promises.push(getDocs(q1));
     }
 
     if (mentorEmail) {
@@ -749,9 +745,18 @@ export const fetchMentorHistoryRequests = async (
         where('assignedMentorSnapshot.email', '==', mentorEmail.toLowerCase()),
         where('isDeleted', '==', false)
       );
-      const snap2 = await getDocs(q2);
-      processDocs(snap2.docs);
+      promises.push(getDocs(q2));
     }
+
+    const snaps = await Promise.all(promises);
+    snaps.forEach((snap) => {
+      snap.docs.forEach((d) => {
+        const item = { id: d.id, ...d.data() } as ODRequest;
+        if (item.status.overall !== 'PENDING') {
+          itemsMap.set(d.id, item);
+        }
+      });
+    });
 
     return Array.from(itemsMap.values()).sort((a, b) => {
       const tA = parseNotificationDate(a.createdAt).getTime();
@@ -978,14 +983,14 @@ export const withdrawODRequest = async (
   );
 };
 
-export const fetchAuditLogs = async () => {
+export const fetchAuditLogs = async (limitCount = 100) => {
   try {
-    const q = query(collection(db, 'audit_logs'));
+    const q = query(collection(db, 'audit_logs'), limit(limitCount));
     const snap = await getDocs(q);
     const list = snap.docs.map((d) => ({ id: d.id, ...d.data() })) as Record<string, any>[];
     return list.sort((a, b) => {
-      const tA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
-      const tB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+      const tA = parseNotificationDate(a.createdAt).getTime();
+      const tB = parseNotificationDate(b.createdAt).getTime();
       return tB - tA;
     });
   } catch (error) {
