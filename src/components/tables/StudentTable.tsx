@@ -11,7 +11,7 @@ interface StudentTableProps {
 export const StudentTable: React.FC<StudentTableProps> = ({ data }) => {
   if (data.length === 0) {
     return (
-      <div className="p-6 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md shadow-xs">
+      <div className="p-6 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-md shadow-xs">
         <EmptyState
           title="No Students on Duty Today"
           description="There are currently no approved OD applications active for today's date."
@@ -27,10 +27,10 @@ export const StudentTable: React.FC<StudentTableProps> = ({ data }) => {
         {data.map((student) => (
           <div
             key={student.id}
-            className="p-3.5 bg-white dark:bg-gray-800 rounded-md border border-gray-200 dark:border-gray-700 shadow-xs flex items-center justify-between gap-3"
+            className="p-3.5 bg-white dark:bg-gray-800 rounded-md border border-gray-300 dark:border-gray-700 shadow-xs flex items-center justify-between gap-3"
           >
             <div className="flex items-center gap-3 min-w-0">
-              <div className="w-8 h-8 rounded-md bg-[#0B426E] text-white flex items-center justify-center font-bold text-xs shrink-0">
+              <div className="w-8 h-8 rounded-lg bg-[#2f5da8] text-white flex items-center justify-center font-bold text-xs shrink-0 shadow-xs">
                 <User className="w-4 h-4" />
               </div>
               <div className="min-w-0">
@@ -49,10 +49,10 @@ export const StudentTable: React.FC<StudentTableProps> = ({ data }) => {
       </div>
 
       {/* Desktop Table Layout (>= md) */}
-      <div className="hidden md:block w-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md overflow-hidden shadow-xs">
+      <div className="hidden md:block w-full bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-md overflow-hidden shadow-xs">
         <div className="overflow-x-auto">
-          <table className="min-w-full divide-y divide-gray-100 dark:divide-gray-700 text-left text-xs">
-            <thead className="bg-gray-50 dark:bg-gray-800 uppercase font-semibold text-[11px] text-gray-600 dark:text-gray-300">
+          <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700 text-left text-xs">
+            <thead className="bg-[#E2E8F0] dark:bg-gray-800 uppercase font-bold text-[11px] text-gray-800 dark:text-gray-200 border-b border-gray-300 dark:border-gray-700">
               <tr>
                 <th className="px-4 py-3">Register Number</th>
                 <th className="px-4 py-3">Name</th>
@@ -61,10 +61,10 @@ export const StudentTable: React.FC<StudentTableProps> = ({ data }) => {
                 <th className="px-4 py-3">Status</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-100 dark:divide-gray-700/60 text-gray-700 dark:text-gray-200">
+            <tbody className="divide-y divide-gray-200 dark:divide-gray-700/60 text-gray-700 dark:text-gray-200">
               {data.map((student) => (
-                <tr key={student.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/40 transition-colors">
-                  <td className="px-4 py-3 font-mono font-semibold text-[#0B426E] dark:text-blue-300">
+                <tr key={student.id} className="hover:bg-blue-50/50 dark:hover:bg-gray-700/40 transition-colors">
+                  <td className="px-4 py-3 font-mono font-semibold text-[#2f5da8] dark:text-blue-300">
                     {student.registerNumber}
                   </td>
                   <td className="px-4 py-3 font-bold text-gray-900 dark:text-white">

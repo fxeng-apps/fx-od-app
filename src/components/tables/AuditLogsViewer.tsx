@@ -66,9 +66,9 @@ export const AuditLogsViewer: React.FC<AuditLogsViewerProps> = ({ logs }) => {
   const renderSortIcon = (col: SortColumn) => {
     if (sortColumn !== col) return <ArrowUpDown className="w-3 h-3 opacity-40 ml-1 inline" />;
     return sortDirection === 'asc' ? (
-      <ArrowUp className="w-3 h-3 text-[#0B426E] ml-1 inline" />
+      <ArrowUp className="w-3 h-3 text-[#2f5da8] ml-1 inline" />
     ) : (
-      <ArrowDown className="w-3 h-3 text-[#0B426E] ml-1 inline" />
+      <ArrowDown className="w-3 h-3 text-[#2f5da8] ml-1 inline" />
     );
   };
 
@@ -77,9 +77,9 @@ export const AuditLogsViewer: React.FC<AuditLogsViewerProps> = ({ logs }) => {
   return (
     <div className="space-y-4">
       {/* Action Filter Bar */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-3.5 bg-white dark:bg-gray-800 rounded-md border border-gray-200 dark:border-gray-700 shadow-xs gap-3">
-        <div className="flex items-center gap-2 text-xs font-bold text-[#0B426E] dark:text-blue-300">
-          <Shield className="w-4 h-4 text-[#0B426E] dark:text-blue-400" />
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-3.5 bg-white dark:bg-gray-800 rounded-md border border-gray-300 dark:border-gray-700 shadow-xs gap-3">
+        <div className="flex items-center gap-2 text-xs font-bold text-[#2f5da8] dark:text-blue-300">
+          <Shield className="w-4 h-4 text-[#2f5da8] dark:text-blue-400" />
           <span>Security Audit Trail ({filteredLogs.length} Events)</span>
         </div>
         <div className="flex items-center gap-2 w-full sm:w-auto">
@@ -90,7 +90,7 @@ export const AuditLogsViewer: React.FC<AuditLogsViewerProps> = ({ logs }) => {
               setFilterAction(e.target.value);
               setCurrentPage(1);
             }}
-            className="w-full sm:w-auto bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-xs font-medium text-gray-900 dark:text-white px-3 py-1.5 rounded-md focus:ring-1 focus:ring-[#0B426E] cursor-pointer"
+            className="w-full sm:w-auto bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-xs font-medium text-gray-900 dark:text-white px-3 py-1.5 rounded-md focus:ring-1 focus:ring-[#2f5da8] cursor-pointer"
           >
             <option value="ALL">All Audit Actions</option>
             {uniqueActions.map((action) => (
@@ -107,7 +107,7 @@ export const AuditLogsViewer: React.FC<AuditLogsViewerProps> = ({ logs }) => {
         {paginatedLogs.map((log) => (
           <div
             key={log.id}
-            className="p-3.5 bg-white dark:bg-gray-800 rounded-md border border-gray-200 dark:border-gray-700 shadow-xs space-y-2 text-xs"
+            className="p-3.5 bg-white dark:bg-gray-800 rounded-md border border-gray-300 dark:border-gray-700 shadow-xs space-y-2 text-xs"
           >
             <div className="flex items-center justify-between gap-2">
               <span className="font-mono text-[11px] text-gray-500 dark:text-gray-400">
@@ -119,7 +119,7 @@ export const AuditLogsViewer: React.FC<AuditLogsViewerProps> = ({ logs }) => {
                     ).toLocaleString()
                   : 'Just now'}
               </span>
-              <span className="font-bold text-[11px] bg-blue-50 dark:bg-blue-950/60 text-[#0B426E] dark:text-blue-300 border border-blue-200 dark:border-blue-800 px-2 py-0.5 rounded-md">
+              <span className="font-bold text-[11px] bg-blue-50 dark:bg-blue-950/60 text-[#2f5da8] dark:text-blue-300 border border-blue-200 dark:border-blue-800 px-2 py-0.5 rounded-md">
                 {log.action}
               </span>
             </div>
@@ -131,7 +131,7 @@ export const AuditLogsViewer: React.FC<AuditLogsViewerProps> = ({ logs }) => {
               </p>
             </div>
 
-            <pre className="text-[10px] font-mono bg-gray-50 dark:bg-gray-700/50 p-2 rounded-md border border-gray-200 dark:border-gray-600 text-gray-700 dark:text-gray-200 overflow-x-auto max-h-32">
+            <pre className="text-[10px] font-mono bg-gray-100 dark:bg-gray-700/50 p-2 rounded-md border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 overflow-x-auto max-h-32">
               {JSON.stringify(log.details, null, 2)}
             </pre>
           </div>
@@ -139,25 +139,25 @@ export const AuditLogsViewer: React.FC<AuditLogsViewerProps> = ({ logs }) => {
       </div>
 
       {/* Desktop Audit Log Table (>= md) */}
-      <div className="hidden md:block overflow-x-auto bg-white dark:bg-gray-800 rounded-md border border-gray-200 dark:border-gray-700 shadow-xs">
+      <div className="hidden md:block overflow-x-auto bg-white dark:bg-gray-800 rounded-md border border-gray-300 dark:border-gray-700 shadow-xs">
         <table className="w-full text-left text-xs border-collapse">
-          <thead className="sticky top-0 bg-gray-50 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 uppercase font-semibold text-[11px] tracking-wider text-gray-600 dark:text-gray-300 select-none">
+          <thead className="sticky top-0 bg-[#E2E8F0] dark:bg-gray-800 border-b border-gray-300 dark:border-gray-700 uppercase font-bold text-[11px] tracking-wider text-gray-800 dark:text-gray-200 select-none">
             <tr>
-              <th className="p-3.5 cursor-pointer hover:text-gray-900 dark:hover:text-white" onClick={() => handleSort('timestamp')}>
+              <th className="p-3.5 cursor-pointer hover:text-blue-900 dark:hover:text-white" onClick={() => handleSort('timestamp')}>
                 Timestamp {renderSortIcon('timestamp')}
               </th>
-              <th className="p-3.5 cursor-pointer hover:text-gray-900 dark:hover:text-white" onClick={() => handleSort('action')}>
+              <th className="p-3.5 cursor-pointer hover:text-blue-900 dark:hover:text-white" onClick={() => handleSort('action')}>
                 Action Event {renderSortIcon('action')}
               </th>
-              <th className="p-3.5 cursor-pointer hover:text-gray-900 dark:hover:text-white" onClick={() => handleSort('performedBy')}>
+              <th className="p-3.5 cursor-pointer hover:text-blue-900 dark:hover:text-white" onClick={() => handleSort('performedBy')}>
                 Performed By {renderSortIcon('performedBy')}
               </th>
               <th className="p-3.5">Details & Target</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-gray-100 dark:divide-gray-700/60 text-gray-700 dark:text-gray-200">
+          <tbody className="divide-y divide-gray-200 dark:divide-gray-700/60 text-gray-700 dark:text-gray-200">
             {paginatedLogs.map((log) => (
-              <tr key={log.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/40 transition-colors">
+              <tr key={log.id} className="hover:bg-blue-50/50 dark:hover:bg-gray-700/40 transition-colors">
                 <td className="p-3.5 text-[11px] text-gray-500 dark:text-gray-400 font-mono whitespace-nowrap">
                   {typeof log.createdAt === 'string'
                     ? new Date(log.createdAt).toLocaleString()
@@ -168,7 +168,7 @@ export const AuditLogsViewer: React.FC<AuditLogsViewerProps> = ({ logs }) => {
                     : 'Just now'}
                 </td>
                 <td className="p-3.5">
-                  <span className="font-bold text-xs bg-blue-50 dark:bg-blue-950/60 text-[#0B426E] dark:text-blue-300 border border-blue-200 dark:border-blue-800 px-2 py-0.5 rounded-md">
+                  <span className="font-bold text-xs bg-blue-50 dark:bg-blue-950/60 text-[#2f5da8] dark:text-blue-300 border border-blue-200 dark:border-blue-800 px-2 py-0.5 rounded-md">
                     {log.action}
                   </span>
                 </td>

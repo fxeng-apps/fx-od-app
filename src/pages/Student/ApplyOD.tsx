@@ -173,7 +173,7 @@ export const ApplyOD: React.FC = () => {
       <div className="p-4 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md shadow-xs flex items-center justify-between">
         <div className="space-y-0.5 text-left">
           <h2 className="text-base font-semibold text-gray-900 dark:text-white tracking-tight flex items-center gap-2">
-            <Send className="w-4 h-4 text-[#0B426E] dark:text-blue-400" /> Apply for a Movement Pass
+            <Send className="w-4 h-4 text-[#2f5da8] dark:text-blue-400" /> Apply for a Movement Pass
           </h2>
           <p className="text-xs text-gray-500 dark:text-gray-400">
             Submit movement pass for faculty mentor review and department HOD sanction.
@@ -185,7 +185,7 @@ export const ApplyOD: React.FC = () => {
       {userProfile && (
         <div className="p-3.5 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs text-gray-700 dark:text-gray-300 shadow-xs">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-md bg-[#0B426E] text-white flex items-center justify-center font-bold shrink-0">
+            <div className="w-9 h-9 rounded-xl bg-[#2f5da8] text-white flex items-center justify-center font-bold shrink-0 shadow-xs">
               <User className="w-4 h-4" />
             </div>
             <div className="text-left">
@@ -195,13 +195,13 @@ export const ApplyOD: React.FC = () => {
           </div>
           <div className="sm:text-right">
             <span className="text-gray-500 dark:text-gray-400 block text-[11px]">Assigned Mentor</span>
-            <span className="font-medium text-[#0B426E] dark:text-blue-300">{userProfile.mentorName || 'Faculty Mentor'}</span>
+            <span className="font-medium text-[#2f5da8] dark:text-blue-400">{userProfile.mentorName || 'Faculty Mentor'}</span>
           </div>
         </div>
       )}
 
       {/* Form Application */}
-      <form onSubmit={handleSubmit} className="p-4 sm:p-6 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md shadow-xs space-y-5 text-left">
+      <form onSubmit={handleSubmit} className="p-4 sm:p-6 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-md shadow-xs space-y-5 text-left">
         
         {/* Core details */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -232,12 +232,12 @@ export const ApplyOD: React.FC = () => {
         />
 
         {/* Schedule Type Selection */}
-        <div className="bg-gray-50 dark:bg-zinc-900/60 p-4 rounded-md border border-gray-100 dark:border-zinc-800 flex items-center justify-between">
+        <div className="bg-gray-100 dark:bg-zinc-900/60 p-4 rounded-md border border-gray-300 dark:border-zinc-800 flex items-center justify-between">
           <div className="space-y-0.5">
             <h4 className="text-xs font-bold text-gray-800 dark:text-zinc-200">
               Pass Duration & Timetable Mode
             </h4>
-            <p className="text-[11px] text-gray-400">
+            <p className="text-[11px] text-gray-500 dark:text-gray-400">
               Uncheck Full Day to specify exact timetable periods for individual dates.
             </p>
           </div>
@@ -254,14 +254,14 @@ export const ApplyOD: React.FC = () => {
 
         {/* Schedule dates entries */}
         <div className="space-y-3">
-          <div className="flex items-center justify-between border-b border-gray-100 dark:border-gray-700 pb-1.5">
-            <h4 className="text-xs font-bold uppercase tracking-wider text-gray-400">
+          <div className="flex items-center justify-between border-b border-gray-200 dark:border-gray-700 pb-1.5">
+            <h4 className="text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">
               Schedule Configurator
             </h4>
             <button
               type="button"
               onClick={handleAddDate}
-              className="text-[11px] text-[#0B426E] dark:text-blue-400 hover:underline font-bold flex items-center gap-1 cursor-pointer"
+              className="text-[11px] text-[#2f5da8] dark:text-blue-400 hover:underline font-bold flex items-center gap-1 cursor-pointer"
             >
               <Plus className="w-3.5 h-3.5" /> Add Another Date
             </button>
@@ -277,7 +277,7 @@ export const ApplyOD: React.FC = () => {
                 <div
                   key={idx}
                   className={`p-3 bg-gray-50 dark:bg-gray-700/30 rounded-md border transition-all space-y-2.5 ${
-                    isDateError || isPeriodError ? 'border-red-500 bg-red-50/10' : 'border-gray-200 dark:border-gray-700'
+                    isDateError || isPeriodError ? 'border-red-500 bg-red-50/10' : 'border-gray-300 dark:border-gray-700'
                   }`}
                 >
                   <div className="flex items-center justify-between gap-3">
@@ -286,7 +286,7 @@ export const ApplyOD: React.FC = () => {
                         type="date"
                         value={entry.date}
                         onChange={(e) => handleUpdateDate(idx, e.target.value)}
-                        className={`w-full bg-white dark:bg-gray-800 border rounded-md p-1.5 text-xs text-gray-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-[#0B426E] ${
+                        className={`w-full bg-white dark:bg-gray-800 border rounded-md p-1.5 text-xs text-gray-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-[#2f5da8] ${
                           isDateError ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'
                         }`}
                       />
@@ -344,7 +344,7 @@ export const ApplyOD: React.FC = () => {
                               onClick={() => handleTogglePeriod(idx, periodNum)}
                               className={`px-2.5 py-1 text-xs font-semibold rounded-md border cursor-pointer transition-all ${
                                 isSelected
-                                  ? 'bg-[#0B426E] text-white border-[#0B426E]'
+                                  ? 'bg-[#2f5da8] text-white border-[#2f5da8]'
                                   : 'bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50'
                               }`}
                             >

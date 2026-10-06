@@ -291,9 +291,9 @@ export const UserManagementTable: React.FC<UserManagementTableProps> = ({
   const renderSortIcon = (col: SortColumn) => {
     if (sortColumn !== col) return <ArrowUpDown className="w-3 h-3 opacity-40 ml-1 inline" />;
     return sortDirection === 'asc' ? (
-      <ArrowUp className="w-3 h-3 text-[#0B426E] ml-1 inline" />
+      <ArrowUp className="w-3 h-3 text-[#2f5da8] ml-1 inline" />
     ) : (
-      <ArrowDown className="w-3 h-3 text-[#0B426E] ml-1 inline" />
+      <ArrowDown className="w-3 h-3 text-[#2f5da8] ml-1 inline" />
     );
   };
 
@@ -435,7 +435,7 @@ export const UserManagementTable: React.FC<UserManagementTableProps> = ({
               </span>
               <span className="text-lg font-bold text-gray-800 dark:text-white">{total}</span>
             </div>
-            <div className="p-2 rounded-md bg-blue-50 dark:bg-blue-950/50 text-[#0B426E] dark:text-blue-400">
+            <div className="p-2 rounded-md bg-blue-50 dark:bg-blue-950/50 text-[#2f5da8] dark:text-blue-400">
               <GraduationCap className="w-5 h-5" />
             </div>
           </div>
@@ -519,7 +519,7 @@ export const UserManagementTable: React.FC<UserManagementTableProps> = ({
               </span>
               <span className="text-lg font-bold text-gray-800 dark:text-white">{total}</span>
             </div>
-            <div className="p-2 rounded-md bg-blue-50 dark:bg-blue-950/50 text-[#0B426E]">
+            <div className="p-2 rounded-md bg-blue-50 dark:bg-blue-950/50 text-[#2f5da8]">
               <Building className="w-5 h-5" />
             </div>
           </div>
@@ -552,7 +552,7 @@ export const UserManagementTable: React.FC<UserManagementTableProps> = ({
   return (
     <div className="space-y-4 text-left">
       {/* 1. TOP ROLE SWITCHER SEGMENTED TABS */}
-      <div className="p-1 bg-gray-100 dark:bg-gray-700 rounded-lg inline-flex gap-1 border border-gray-200 dark:border-gray-600 w-full sm:w-auto">
+      <div className="p-1 bg-gray-200 dark:bg-gray-700 rounded-lg inline-flex gap-1 border border-gray-300 dark:border-gray-600 w-full sm:w-auto">
         {(
           [
             { id: 'STUDENT', label: 'Students' },
@@ -568,8 +568,8 @@ export const UserManagementTable: React.FC<UserManagementTableProps> = ({
               onClick={() => handleSectionSwitch(tab.id)}
               className={`flex-1 sm:flex-none px-4 py-2 rounded-md text-xs font-bold transition-all cursor-pointer ${
                 isSelected
-                  ? 'bg-[#0B426E] text-white shadow-xs dark:bg-blue-600'
-                  : 'text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white'
+                  ? 'bg-[#2f5da8] text-white shadow-xs'
+                  : 'text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white'
               }`}
             >
               {tab.label}
@@ -582,7 +582,7 @@ export const UserManagementTable: React.FC<UserManagementTableProps> = ({
       {renderSummaryCards()}
 
       {/* 3. SEARCH & SECONDARY FILTER BAR */}
-      <div className="p-3 bg-white dark:bg-gray-800 rounded-md border border-gray-200 dark:border-gray-700 shadow-xs space-y-3">
+      <div className="p-3 bg-white dark:bg-gray-800 rounded-md border border-gray-300 dark:border-gray-700 shadow-xs space-y-3">
         <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3">
           {/* Smart placeholder search input */}
           <div className="relative flex-1 max-w-md">
@@ -599,7 +599,7 @@ export const UserManagementTable: React.FC<UserManagementTableProps> = ({
                   ? 'Search students by name, reg no, email...'
                   : 'Search staff by name, email...'
               }
-              className="w-full pl-9 pr-3 py-1.5 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-md text-xs text-gray-800 dark:text-gray-100 placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-[#0B426E]"
+              className="w-full pl-9 pr-3 py-1.5 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-md text-xs text-gray-800 dark:text-gray-100 placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-[#2f5da8]"
             />
           </div>
 
@@ -613,7 +613,7 @@ export const UserManagementTable: React.FC<UserManagementTableProps> = ({
                   setDepartmentFilter(e.target.value);
                   setCurrentPage(1);
                 }}
-                className="bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-md px-2.5 py-1 text-xs text-gray-800 dark:text-gray-200 font-medium focus:outline-none focus:ring-1 focus:ring-[#0B426E] cursor-pointer"
+                className="bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-md px-2.5 py-1 text-xs text-gray-800 dark:text-gray-200 font-medium focus:outline-none focus:ring-1 focus:ring-[#2f5da8] cursor-pointer"
               >
                 <option value="ALL">All Departments</option>
                 <option value="CSE">CSE</option>
@@ -635,7 +635,7 @@ export const UserManagementTable: React.FC<UserManagementTableProps> = ({
                   setStatusFilter(e.target.value);
                   setCurrentPage(1);
                 }}
-                className="bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-md px-2.5 py-1 text-xs text-gray-800 dark:text-gray-200 font-medium focus:outline-none focus:ring-1 focus:ring-[#0B426E] cursor-pointer"
+                className="bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-md px-2.5 py-1 text-xs text-gray-800 dark:text-gray-200 font-medium focus:outline-none focus:ring-1 focus:ring-[#2f5da8] cursor-pointer"
               >
                 <option value="ALL">All Statuses</option>
                 <option value="ACTIVE">Active Account</option>
@@ -653,7 +653,7 @@ export const UserManagementTable: React.FC<UserManagementTableProps> = ({
                     setStudentMentorFilter(e.target.value);
                     setCurrentPage(1);
                   }}
-                  className="bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-md px-2.5 py-1 text-xs text-gray-800 dark:text-gray-200 font-medium focus:outline-none focus:ring-1 focus:ring-[#0B426E] cursor-pointer"
+                  className="bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-md px-2.5 py-1 text-xs text-gray-800 dark:text-gray-200 font-medium focus:outline-none focus:ring-1 focus:ring-[#2f5da8] cursor-pointer"
                 >
                   <option value="ALL">All Students</option>
                   <option value="ASSIGNED">Assigned Mentor</option>
@@ -666,48 +666,48 @@ export const UserManagementTable: React.FC<UserManagementTableProps> = ({
       </div>
 
       {/* 4. DYNAMIC TABLES BY ROLE */}
-      <div className="overflow-x-auto bg-white dark:bg-gray-800 rounded-md border border-gray-200 dark:border-gray-700 shadow-xs">
-        <table className="w-full text-left text-xs border-collapse">
+      <div className="overflow-x-auto w-full max-w-full bg-white dark:bg-gray-800 rounded-md border border-gray-300 dark:border-gray-700 shadow-xs custom-scrollbar">
+        <table className="min-w-[850px] w-full text-left text-xs border-collapse">
           <thead>
-            <tr className="bg-gray-50 dark:bg-gray-800 text-gray-600 dark:text-gray-300 border-b border-gray-200 dark:border-gray-700 uppercase font-semibold text-[11px] tracking-wider select-none">
+            <tr className="bg-[#E2E8F0] dark:bg-gray-800 text-gray-800 dark:text-gray-200 border-b border-gray-300 dark:border-gray-700 uppercase font-bold text-[11px] tracking-wider select-none">
               <th
-                className="p-3 cursor-pointer hover:text-gray-900 dark:hover:text-white"
+                className="p-3 cursor-pointer hover:text-blue-900 dark:hover:text-white whitespace-nowrap"
                 onClick={() => handleSort('displayName')}
               >
                 Name {renderSortIcon('displayName')}
               </th>
               <th
-                className="p-3 cursor-pointer hover:text-gray-900 dark:hover:text-white"
+                className="p-3 cursor-pointer hover:text-blue-900 dark:hover:text-white whitespace-nowrap"
                 onClick={() => handleSort('email')}
               >
                 College Email {renderSortIcon('email')}
               </th>
               {activeSection !== 'HOD' && (
                 <th
-                  className="p-3 cursor-pointer hover:text-gray-900 dark:hover:text-white"
+                  className="p-3 cursor-pointer hover:text-blue-900 dark:hover:text-white whitespace-nowrap"
                   onClick={() => handleSort('role')}
                 >
                   {activeSection === 'STUDENT' ? 'Register Number' : 'Role Badge'} {renderSortIcon('role')}
                 </th>
               )}
               <th
-                className="p-3 cursor-pointer hover:text-gray-900 dark:hover:text-white"
+                className="p-3 cursor-pointer hover:text-blue-900 dark:hover:text-white whitespace-nowrap"
                 onClick={() => handleSort('department')}
               >
                 Department {renderSortIcon('department')}
               </th>
-              {activeSection === 'STUDENT' && <th className="p-3">Current Mentor</th>}
-              {activeSection === 'STAFF' && <th className="p-3 text-center">Assigned Students</th>}
+              {activeSection === 'STUDENT' && <th className="p-3 whitespace-nowrap">Current Mentor</th>}
+              {activeSection === 'STAFF' && <th className="p-3 text-center whitespace-nowrap">Assigned Students</th>}
               <th
-                className="p-3 cursor-pointer hover:text-gray-900 dark:hover:text-white"
+                className="p-3 cursor-pointer hover:text-blue-900 dark:hover:text-white whitespace-nowrap"
                 onClick={() => handleSort('isLinked')}
               >
                 Status {renderSortIcon('isLinked')}
               </th>
-              <th className="p-3 text-right">Actions</th>
+              <th className="p-3 text-right whitespace-nowrap">Actions</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-gray-100 dark:divide-gray-700/60 text-gray-700 dark:text-gray-200 font-medium">
+          <tbody className="divide-y divide-gray-200 dark:divide-gray-700/60 text-gray-700 dark:text-gray-200 font-medium">
             {paginatedList.length === 0 ? (
               <tr>
                 <td colSpan={8} className="p-6 text-center text-gray-400 text-xs">
@@ -749,12 +749,12 @@ export const UserManagementTable: React.FC<UserManagementTableProps> = ({
                     rec.mentorName === 'Unassigned Mentor');
 
                 return (
-                  <tr key={rec.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/40 transition-colors">
+                  <tr key={rec.id} className="hover:bg-blue-50/50 dark:hover:bg-gray-700/40 transition-colors">
                     {/* Name */}
                     <td className="p-3 font-semibold text-gray-900 dark:text-white">{rec.displayName}</td>
 
                     {/* Email */}
-                    <td className="p-3 font-mono text-[#0B426E] dark:text-blue-300 font-semibold">{rec.email}</td>
+                    <td className="p-3 font-mono text-[#2f5da8] dark:text-blue-300 font-semibold">{rec.email}</td>
 
                     {/* Role / Reg No column */}
                     {activeSection !== 'HOD' && (
@@ -798,7 +798,7 @@ export const UserManagementTable: React.FC<UserManagementTableProps> = ({
                       <td className="p-3 text-center">
                         <button
                           onClick={() => setViewingMentorStudents(rec)}
-                          className="px-2 py-1 rounded text-xs font-bold text-[#0B426E] dark:text-blue-300 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer underline decoration-dotted"
+                          className="px-2 py-1 rounded text-xs font-bold text-[#2f5da8] dark:text-blue-300 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer underline decoration-dotted"
                           title="Click to view students list"
                         >
                           {studentCount} Student(s)
@@ -825,7 +825,7 @@ export const UserManagementTable: React.FC<UserManagementTableProps> = ({
                             onClick={() => openAssignMentorModal(rec)}
                             title="Assign / Reassign Faculty Mentor"
                           >
-                            <UserCheck className="w-3.5 h-3.5 text-[#0B426E] mr-1 shrink-0" /> Mentor
+                            <UserCheck className="w-3.5 h-3.5 text-[#2f5da8] mr-1 shrink-0" /> Mentor
                           </Button>
                         )}
 
@@ -835,7 +835,7 @@ export const UserManagementTable: React.FC<UserManagementTableProps> = ({
                           onClick={() => openEditModal(rec)}
                           title="Edit User Details"
                         >
-                          <Pencil className="w-3.5 h-3.5 text-[#0B426E] mr-1" /> Edit
+                          <Pencil className="w-3.5 h-3.5 text-[#2f5da8] mr-1" /> Edit
                         </Button>
 
                         {isSuperAdmin ? (
@@ -888,7 +888,7 @@ export const UserManagementTable: React.FC<UserManagementTableProps> = ({
       >
         <form onSubmit={handleAssignMentorSubmit} className="space-y-4 text-xs text-left">
           <div className="p-3 bg-blue-50 dark:bg-gray-700/60 rounded-md border border-blue-200 dark:border-gray-600">
-            <p className="font-semibold text-[#0B426E] dark:text-blue-300">{assigningStudent?.displayName}</p>
+            <p className="font-semibold text-[#2f5da8] dark:text-blue-300">{assigningStudent?.displayName}</p>
             <p className="text-[11px] text-gray-500 dark:text-gray-400">
               Reg: {assigningStudent?.registerNumber || 'N/A'} • Dept: {assigningStudent?.department}
             </p>
@@ -902,7 +902,7 @@ export const UserManagementTable: React.FC<UserManagementTableProps> = ({
               placeholder="Type name or email to filter list..."
               value={mentorSearchText}
               onChange={(e) => setMentorSearchText(e.target.value)}
-              className="w-full bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md p-1.5 text-xs text-gray-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-[#0B426E]"
+              className="w-full bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md p-1.5 text-xs text-gray-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-[#2f5da8]"
             />
           </div>
 
@@ -912,7 +912,7 @@ export const UserManagementTable: React.FC<UserManagementTableProps> = ({
               required
               value={selectedMentorUid}
               onChange={(e) => setSelectedMentorUid(e.target.value)}
-              className="w-full bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md p-2 text-gray-900 dark:text-white cursor-pointer focus:ring-1 focus:ring-[#0B426E]"
+              className="w-full bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md p-2 text-gray-900 dark:text-white cursor-pointer focus:ring-1 focus:ring-[#2f5da8]"
             >
               <option value="">-- Choose Faculty Mentor ({filteredMentorsForDropdown.length} options) --</option>
               {filteredMentorsForDropdown.map((m) => (
@@ -946,8 +946,8 @@ export const UserManagementTable: React.FC<UserManagementTableProps> = ({
             <p className="font-semibold text-gray-900 dark:text-white">{viewingMentorStudents?.email}</p>
           </div>
 
-          <div className="overflow-x-auto border border-gray-200 dark:border-gray-700 rounded-md max-h-80 overflow-y-auto">
-            <table className="w-full text-left text-xs border-collapse">
+          <div className="overflow-x-auto w-full max-w-full border border-gray-200 dark:border-gray-700 rounded-md max-h-80 overflow-y-auto custom-scrollbar">
+            <table className="min-w-[500px] w-full text-left text-xs border-collapse">
               <thead>
                 <tr className="bg-gray-50 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider text-[10px]">
                   <th className="p-2.5">Name</th>
@@ -1009,7 +1009,7 @@ export const UserManagementTable: React.FC<UserManagementTableProps> = ({
               required
               value={editName}
               onChange={(e) => setEditName(e.target.value)}
-              className="w-full bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md p-2 text-gray-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-[#0B426E]"
+              className="w-full bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md p-2 text-gray-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-[#2f5da8]"
             />
           </div>
 
@@ -1020,7 +1020,7 @@ export const UserManagementTable: React.FC<UserManagementTableProps> = ({
               required
               value={editEmail}
               onChange={(e) => setEditEmail(e.target.value)}
-              className="w-full bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md p-2 text-gray-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-[#0B426E]"
+              className="w-full bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md p-2 text-gray-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-[#2f5da8]"
             />
           </div>
 
@@ -1030,7 +1030,7 @@ export const UserManagementTable: React.FC<UserManagementTableProps> = ({
               <select
                 value={editRole}
                 onChange={(e) => setEditRole(e.target.value as UserRole)}
-                className="w-full bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md p-2 text-gray-900 dark:text-white cursor-pointer focus:outline-none focus:ring-1 focus:ring-[#0B426E]"
+                className="w-full bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md p-2 text-gray-900 dark:text-white cursor-pointer focus:outline-none focus:ring-1 focus:ring-[#2f5da8]"
               >
                 <option value="STUDENT">Student</option>
                 <option value="MENTOR">Faculty Mentor</option>
@@ -1046,7 +1046,7 @@ export const UserManagementTable: React.FC<UserManagementTableProps> = ({
               <select
                 value={editDepartment}
                 onChange={(e) => setEditDepartment(e.target.value as Department)}
-                className="w-full bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md p-2 text-gray-900 dark:text-white cursor-pointer focus:outline-none focus:ring-1 focus:ring-[#0B426E]"
+                className="w-full bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md p-2 text-gray-900 dark:text-white cursor-pointer focus:outline-none focus:ring-1 focus:ring-[#2f5da8]"
               >
                 <option value="CSE">CSE</option>
                 <option value="ECE">ECE</option>
@@ -1068,7 +1068,7 @@ export const UserManagementTable: React.FC<UserManagementTableProps> = ({
                     type="text"
                     value={editRegNo}
                     onChange={(e) => setEditRegNo(e.target.value)}
-                    className="w-full bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md p-2 text-gray-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-[#0B426E]"
+                    className="w-full bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md p-2 text-gray-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-[#2f5da8]"
                   />
                 </div>
                 <div>
@@ -1076,7 +1076,7 @@ export const UserManagementTable: React.FC<UserManagementTableProps> = ({
                   <select
                     value={editYear}
                     onChange={(e) => setEditYear(e.target.value as any)}
-                    className="w-full bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md p-2 text-gray-900 dark:text-white cursor-pointer focus:outline-none focus:ring-1 focus:ring-[#0B426E]"
+                    className="w-full bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md p-2 text-gray-900 dark:text-white cursor-pointer focus:outline-none focus:ring-1 focus:ring-[#2f5da8]"
                   >
                     <option value="I">I</option>
                     <option value="II">II</option>
@@ -1090,7 +1090,7 @@ export const UserManagementTable: React.FC<UserManagementTableProps> = ({
                     type="text"
                     value={editSection}
                     onChange={(e) => setEditSection(e.target.value)}
-                    className="w-full bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md p-2 text-gray-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-[#0B426E]"
+                    className="w-full bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md p-2 text-gray-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-[#2f5da8]"
                   />
                 </div>
               </div>
@@ -1102,7 +1102,7 @@ export const UserManagementTable: React.FC<UserManagementTableProps> = ({
                   placeholder="mentor@fx.edu.in"
                   value={editMentorEmail}
                   onChange={(e) => setEditMentorEmail(e.target.value)}
-                  className="w-full bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md p-2 text-gray-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-[#0B426E]"
+                  className="w-full bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md p-2 text-gray-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-[#2f5da8]"
                 />
               </div>
             </>

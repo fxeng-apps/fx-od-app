@@ -32,7 +32,6 @@ export const Sidebar: React.FC<SidebarProps> = ({ onNavigate, isMobileDrawer = f
           { to: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
           { to: '/student/requests', label: 'My Movement Passes', icon: FileText },
           { to: '/student/apply', label: 'Apply Pass', icon: Send },
-          { to: '/student/history', label: 'History', icon: History },
           { to: '/student/notifications', label: 'Notifications', icon: Bell },
           { to: '/profile', label: 'Profile', icon: User },
         ];
@@ -72,34 +71,34 @@ export const Sidebar: React.FC<SidebarProps> = ({ onNavigate, isMobileDrawer = f
   const navLinks = getRoleNavLinks();
 
   const containerClasses = isMobileDrawer
-    ? 'w-full h-full bg-[#0B426E] text-white p-4 flex flex-col justify-between overflow-y-auto'
-    : 'w-60 bg-[#0B426E] text-white h-full overflow-y-auto p-3 flex flex-col justify-between hidden md:flex shrink-0 shadow-md';
+    ? 'w-full h-full bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-200 flex flex-col justify-between overflow-y-auto select-none transition-colors'
+    : 'w-64 bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-200 h-full flex flex-col justify-between hidden md:flex shrink-0 border-r border-gray-300 dark:border-gray-800 select-none shadow-xs transition-colors z-20';
 
   return (
     <aside className={containerClasses}>
-      <div className="space-y-4">
-        {/* Header Branding for Drawer */}
-        {isMobileDrawer && (
-          <div className="flex items-center gap-3 pb-3 border-b border-white/20">
-            <div className="w-8 h-8 rounded-md bg-white p-0.5 flex items-center justify-center shrink-0 shadow-xs border border-white/20">
-              <img src="/college-crest.png" alt="FXEC Crest" className="w-full h-full object-contain" />
-            </div>
-            <div>
-              <h2 className="font-semibold text-sm text-white tracking-tight">FX Movement Pass Portal</h2>
-              <p className="text-[11px] text-white/70">Institutional ERP System</p>
-            </div>
-          </div>
-        )}
+      {/* Top College Logo Branding (Exact h-14 to match Navbar header alignment) */}
+      <div className="h-14 min-h-[56px] border-b border-gray-300 dark:border-gray-800 flex items-center px-4 shrink-0 bg-white dark:bg-gray-900">
+        <img
+          src="/logo.png"
+          alt="Francis Xavier Engineering College Logo"
+          className="h-9 w-auto max-w-[210px] object-contain"
+          onError={(e) => {
+            e.currentTarget.src = '/college-crest.png';
+          }}
+        />
+      </div>
 
+      {/* Scrollable Navigation Body */}
+      <div className="flex-1 overflow-y-auto p-3.5 space-y-4 custom-scrollbar">
         {/* Section Header */}
-        <div className="px-2 py-1 border-b border-white/10">
-          <p className="text-[10px] font-semibold text-white/60 uppercase tracking-wider">
+        <div className="px-2 py-0.5">
+          <p className="text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
             Portal Navigation
           </p>
         </div>
 
         {/* Navigation Items */}
-        <nav className="space-y-1.5">
+        <nav className="space-y-1">
           {navLinks.map((link, idx) => {
             const Icon = link.icon;
             return (
@@ -108,10 +107,10 @@ export const Sidebar: React.FC<SidebarProps> = ({ onNavigate, isMobileDrawer = f
                 to={link.to}
                 onClick={onNavigate}
                 className={({ isActive }) =>
-                  `flex items-center gap-3 px-3 py-2.5 rounded-md text-xs font-medium transition-all cursor-pointer ${
+                  `flex items-center gap-3 px-3 py-2.5 rounded-lg text-xs font-medium transition-all cursor-pointer ${
                     isActive
-                      ? 'bg-white text-[#0B426E] font-semibold shadow-xs'
-                      : 'text-white/80 hover:bg-[#0d4e82] hover:text-white'
+                      ? 'bg-[#2f5da8]/15 text-[#2f5da8] dark:bg-[#2f5da8]/25 dark:text-blue-300 font-semibold border-l-4 border-[#2f5da8]'
+                      : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800/70 hover:text-gray-900 dark:hover:text-white'
                   }`
                 }
               >
@@ -124,9 +123,11 @@ export const Sidebar: React.FC<SidebarProps> = ({ onNavigate, isMobileDrawer = f
       </div>
 
       {/* Institutional Footer */}
-      <div className="p-3 bg-white/10 rounded-md border border-white/10 text-center space-y-0.5 mt-6">
-        <p className="text-xs font-semibold text-white">Francis Xavier Engineering College</p>
-        <p className="text-[10px] text-white/70">Movement Pass Management System v2.0</p>
+      <div className="p-3.5 border-t border-gray-200 dark:border-gray-800 shrink-0">
+        <div className="p-2.5 bg-gray-100 dark:bg-gray-800/60 rounded-xl border border-gray-300/80 dark:border-gray-700/60 text-center space-y-0.5">
+          <p className="text-xs font-semibold text-gray-800 dark:text-gray-200">Francis Xavier Engineering College</p>
+          <p className="text-[10px] text-gray-500 dark:text-gray-400">Movement Pass Portal v2.0</p>
+        </div>
       </div>
     </aside>
   );

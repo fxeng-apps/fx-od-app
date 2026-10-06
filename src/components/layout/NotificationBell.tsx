@@ -57,13 +57,13 @@ export const NotificationBell: React.FC = () => {
           />
 
           {/* Viewport-clamped popup on mobile, anchored dropdown on desktop */}
-          <div className="fixed left-2.5 right-2.5 top-14 sm:absolute sm:left-auto sm:right-0 sm:top-full sm:mt-2 w-auto sm:w-96 max-w-lg bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl sm:rounded-lg shadow-2xl z-50 overflow-hidden text-gray-800 dark:text-gray-100 flex flex-col max-h-[75vh] animate-in fade-in zoom-in-95 duration-150">
+          <div className="fixed left-2.5 right-2.5 top-14 sm:absolute sm:left-auto sm:right-0 sm:top-full sm:mt-2 w-auto sm:w-96 max-w-lg bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-2xl sm:rounded-lg shadow-2xl z-50 overflow-hidden text-gray-800 dark:text-gray-100 flex flex-col max-h-[75vh] animate-in fade-in zoom-in-95 duration-150">
             {/* Header */}
-            <div className="p-3 bg-gray-50 dark:bg-gray-700/80 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between shrink-0">
+            <div className="p-3 bg-gray-100 dark:bg-gray-700/80 border-b border-gray-300 dark:border-gray-700 flex items-center justify-between shrink-0">
               <div className="flex items-center gap-2">
-                <Bell className="text-[#0B426E] dark:text-blue-400 w-4 h-4" />
+                <Bell className="text-[#2f5da8] dark:text-blue-400 w-4 h-4" />
                 <h3 className="font-bold text-gray-900 dark:text-white text-xs sm:text-sm">Notifications</h3>
-                <span className="text-[10px] sm:text-[11px] bg-blue-50 dark:bg-blue-950/60 text-[#0B426E] dark:text-blue-300 px-2 py-0.5 rounded-full font-bold border border-blue-200 dark:border-blue-800">
+                <span className="text-[10px] sm:text-[11px] bg-blue-50 dark:bg-blue-950/60 text-[#2f5da8] dark:text-blue-300 px-2 py-0.5 rounded-full font-bold border border-blue-200 dark:border-blue-800">
                   {unreadCount} Unread
                 </span>
               </div>
@@ -78,7 +78,7 @@ export const NotificationBell: React.FC = () => {
             </div>
 
             {/* Notification Items List */}
-            <div className="overflow-y-auto flex-1 divide-y divide-gray-100 dark:divide-gray-700/60 custom-scrollbar overscroll-contain">
+            <div className="overflow-y-auto flex-1 divide-y divide-gray-200 dark:divide-gray-700/60 custom-scrollbar overscroll-contain">
               {notifications.length === 0 ? (
                 <div className="p-8 text-center text-gray-400 text-xs">
                   No notifications yet.
@@ -96,8 +96,8 @@ export const NotificationBell: React.FC = () => {
                       title={absoluteTimestampStr}
                       className={`p-3 sm:p-3.5 transition-colors cursor-pointer flex items-start justify-between gap-2.5 ${
                         item.read
-                          ? 'bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700/40 text-gray-600 dark:text-gray-300'
-                          : 'bg-blue-50/50 dark:bg-blue-950/30 hover:bg-blue-50 dark:hover:bg-blue-950/50 text-gray-900 dark:text-gray-100 border-l-4 border-[#0B426E]'
+                          ? 'bg-white dark:bg-gray-800 hover:bg-blue-50/50 dark:hover:bg-gray-700/40 text-gray-600 dark:text-gray-300'
+                          : 'bg-blue-50/50 dark:bg-blue-950/30 hover:bg-blue-50 dark:hover:bg-blue-950/50 text-gray-900 dark:text-gray-100 border-l-4 border-[#2f5da8]'
                       }`}
                     >
                       <div className="flex-1 min-w-0 space-y-1">
@@ -105,7 +105,7 @@ export const NotificationBell: React.FC = () => {
                           <div className="flex items-center gap-1.5 min-w-0 flex-1">
                             {!item.read && (
                               <span
-                                className="w-2 h-2 rounded-full bg-[#0B426E] dark:bg-blue-400 shrink-0"
+                                className="w-2 h-2 rounded-full bg-[#2f5da8] dark:bg-blue-400 shrink-0"
                                 title="Unread"
                               />
                             )}
@@ -137,7 +137,7 @@ export const NotificationBell: React.FC = () => {
                             Sender: <strong className="font-semibold text-gray-600 dark:text-gray-300">{item.sender.name}</strong> ({item.sender.role})
                           </span>
                           {targetRoute && (
-                            <ExternalLink className="w-3 h-3 text-[#0B426E] dark:text-blue-300 shrink-0 ml-1" />
+                            <ExternalLink className="w-3 h-3 text-[#2f5da8] dark:text-blue-300 shrink-0 ml-1" />
                           )}
                         </div>
                       </div>
@@ -155,7 +155,7 @@ export const NotificationBell: React.FC = () => {
                       fetchNextPage();
                     }}
                     disabled={isFetchingNextPage}
-                    className="text-xs text-[#0B426E] dark:text-blue-300 font-semibold hover:underline flex items-center justify-center gap-1.5 w-full cursor-pointer py-1"
+                    className="text-xs text-[#2f5da8] dark:text-blue-300 font-semibold hover:underline flex items-center justify-center gap-1.5 w-full cursor-pointer py-1"
                   >
                     {isFetchingNextPage ? (
                       <>
@@ -170,13 +170,13 @@ export const NotificationBell: React.FC = () => {
             </div>
 
             {notifications.length > 0 && (
-              <div className="p-2.5 bg-gray-50 dark:bg-gray-700/50 border-t border-gray-200 dark:border-gray-700 flex items-center justify-between px-3 shrink-0">
+              <div className="p-2.5 bg-gray-100 dark:bg-gray-700/50 border-t border-gray-300 dark:border-gray-700 flex items-center justify-between px-3 shrink-0">
                 <span className="text-[11px] text-gray-400">
                   Showing {notifications.length} updates
                 </span>
                 <button
                   onClick={() => setIsOpen(false)}
-                  className="text-xs text-[#0B426E] dark:text-blue-300 hover:underline font-semibold cursor-pointer py-0.5 px-2"
+                  className="text-xs text-[#2f5da8] dark:text-blue-300 hover:underline font-semibold cursor-pointer py-0.5 px-2"
                 >
                   Dismiss
                 </button>

@@ -110,10 +110,10 @@ export const HistoricalODViewer: React.FC = () => {
   return (
     <div className="space-y-4">
       {/* Top Banner */}
-      <div className="p-4 bg-white dark:bg-gray-800 rounded-md border border-gray-200 dark:border-gray-700 shadow-xs flex flex-col md:flex-row items-start md:items-center justify-between gap-3">
+      <div className="p-4 bg-white dark:bg-gray-800 rounded-md border border-gray-300 dark:border-gray-700 shadow-xs flex flex-col md:flex-row items-start md:items-center justify-between gap-3">
         <div>
           <h2 className="text-base sm:text-lg font-bold text-gray-900 dark:text-white tracking-tight flex items-center gap-2">
-            <History className="w-5 h-5 text-[#0B426E] dark:text-blue-400" />
+            <History className="w-5 h-5 text-[#2f5da8] dark:text-blue-400" />
             Historical OD Inspector
           </h2>
           <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
@@ -123,18 +123,18 @@ export const HistoricalODViewer: React.FC = () => {
       </div>
 
       {/* Filter Control Bar */}
-      <div className="p-3.5 bg-white dark:bg-gray-800 rounded-md border border-gray-200 dark:border-gray-700 shadow-xs space-y-3">
+      <div className="p-3.5 bg-white dark:bg-gray-800 rounded-md border border-gray-300 dark:border-gray-700 shadow-xs space-y-3">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
           {/* Date Selector */}
           <div>
             <label className="block text-[11px] font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider mb-1 flex items-center gap-1">
-              <Calendar className="w-3.5 h-3.5 text-[#0B426E] dark:text-blue-400" /> Target Date
+              <Calendar className="w-3.5 h-3.5 text-[#2f5da8] dark:text-blue-400" /> Target Date
             </label>
             <input
               type="date"
               value={selectedDate}
               onChange={(e) => setSelectedDate(e.target.value)}
-              className="w-full bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md p-1.5 text-xs text-gray-900 dark:text-white focus:ring-1 focus:ring-[#0B426E]"
+              className="w-full bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md p-1.5 text-xs text-gray-900 dark:text-white focus:ring-1 focus:ring-[#2f5da8]"
             />
           </div>
 
@@ -146,7 +146,7 @@ export const HistoricalODViewer: React.FC = () => {
             <select
               value={selectedDept}
               onChange={(e) => setSelectedDept(e.target.value)}
-              className="w-full bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md p-1.5 text-xs text-gray-900 dark:text-white cursor-pointer focus:ring-1 focus:ring-[#0B426E]"
+              className="w-full bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md p-1.5 text-xs text-gray-900 dark:text-white cursor-pointer focus:ring-1 focus:ring-[#2f5da8]"
             >
               <option value="ALL">All Departments</option>
               <option value="CSE">CSE</option>
@@ -167,7 +167,7 @@ export const HistoricalODViewer: React.FC = () => {
             <select
               value={selectedSection}
               onChange={(e) => setSelectedSection(e.target.value)}
-              className="w-full bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md p-1.5 text-xs text-gray-900 dark:text-white cursor-pointer focus:ring-1 focus:ring-[#0B426E]"
+              className="w-full bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md p-1.5 text-xs text-gray-900 dark:text-white cursor-pointer focus:ring-1 focus:ring-[#2f5da8]"
             >
               <option value="ALL">All Sections</option>
               {uniqueSections.map((sec) => (
@@ -186,7 +186,7 @@ export const HistoricalODViewer: React.FC = () => {
             <select
               value={selectedMentor}
               onChange={(e) => setSelectedMentor(e.target.value)}
-              className="w-full bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md p-1.5 text-xs text-gray-900 dark:text-white cursor-pointer focus:ring-1 focus:ring-[#0B426E]"
+              className="w-full bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md p-1.5 text-xs text-gray-900 dark:text-white cursor-pointer focus:ring-1 focus:ring-[#2f5da8]"
             >
               <option value="ALL">All Mentors</option>
               {uniqueMentors.map(([uid, name]) => (
@@ -197,7 +197,7 @@ export const HistoricalODViewer: React.FC = () => {
             </select>
           </div>
 
-          {/* Status Filter */}
+          {/* OD Status Filter */}
           <div>
             <label className="block text-[11px] font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider mb-1">
               OD Status
@@ -205,7 +205,7 @@ export const HistoricalODViewer: React.FC = () => {
             <select
               value={selectedStatus}
               onChange={(e) => setSelectedStatus(e.target.value)}
-              className="w-full bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md p-1.5 text-xs text-gray-900 dark:text-white cursor-pointer focus:ring-1 focus:ring-[#0B426E]"
+              className="w-full bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md p-1.5 text-xs text-gray-900 dark:text-white cursor-pointer focus:ring-1 focus:ring-[#2f5da8]"
             >
               <option value="ALL">All Statuses</option>
               <option value="HOD_APPROVED">Approved (Sanctioned)</option>
@@ -227,16 +227,16 @@ export const HistoricalODViewer: React.FC = () => {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Filter by student name, reg no, request #, or purpose..."
-            className="w-full pl-9 pr-3 py-1.5 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-md text-xs text-gray-800 dark:text-gray-100 placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-[#0B426E]"
+            className="w-full pl-9 pr-3 py-1.5 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md text-xs text-gray-800 dark:text-gray-100 placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-[#2f5da8]"
           />
         </div>
       </div>
 
       {/* Date Status Summary Pills */}
       <div className="grid grid-cols-2 sm:grid-cols-6 gap-2 text-xs">
-        <div className="p-2.5 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md text-center">
+        <div className="p-2.5 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-md text-center">
           <span className="text-[10px] text-gray-500 uppercase font-semibold block">Total Active</span>
-          <span className="text-base font-bold text-[#0B426E] dark:text-blue-300">{statusCounts.total}</span>
+          <span className="text-base font-bold text-[#2f5da8] dark:text-blue-300">{statusCounts.total}</span>
         </div>
         <div className="p-2.5 bg-green-50/70 dark:bg-green-950/30 border border-green-200 dark:border-green-800 rounded-md text-center">
           <span className="text-[10px] text-green-700 dark:text-green-300 uppercase font-semibold block">Approved</span>
@@ -250,7 +250,7 @@ export const HistoricalODViewer: React.FC = () => {
           <span className="text-[10px] text-red-700 dark:text-red-300 uppercase font-semibold block">Rejected</span>
           <span className="text-base font-bold text-red-600 dark:text-red-400">{statusCounts.rejected}</span>
         </div>
-        <div className="p-2.5 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 rounded-md text-center">
+        <div className="p-2.5 bg-gray-100 dark:bg-gray-700/50 border border-gray-300 dark:border-gray-600 rounded-md text-center">
           <span className="text-[10px] text-gray-600 dark:text-gray-300 uppercase font-semibold block">Withdrawn</span>
           <span className="text-base font-bold text-gray-700 dark:text-gray-300">{statusCounts.withdrawn}</span>
         </div>
@@ -262,7 +262,7 @@ export const HistoricalODViewer: React.FC = () => {
 
       {/* Main Table */}
       {filteredRequests.length === 0 ? (
-        <div className="p-8 text-center bg-white dark:bg-gray-800 rounded-md border border-gray-200 dark:border-gray-700 space-y-2">
+        <div className="p-8 text-center bg-white dark:bg-gray-800 rounded-md border border-gray-300 dark:border-gray-700 space-y-2">
           <p className="text-xs text-gray-500 dark:text-gray-400 font-medium">
             No OD requests found active on {selectedDate} for the selected filters.
           </p>

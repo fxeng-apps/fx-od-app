@@ -5,7 +5,6 @@ import { Login } from '../pages/Login/Login';
 import { Dashboard } from '../pages/Dashboard/Dashboard';
 import { ApplyOD } from '../pages/Student/ApplyOD';
 import { MyRequests } from '../pages/Student/MyRequests';
-import { History as StudentHistory } from '../pages/Student/History';
 import { StudentNotifications } from '../pages/Student/Notifications';
 import { StudentsUnderMe } from '../pages/Mentor/StudentsUnderMe';
 import { PendingApprovals as MentorPending } from '../pages/Mentor/PendingApprovals';
@@ -37,7 +36,7 @@ export const AppRoutes: React.FC = () => {
           <Route element={<ProtectedRoute allowedRoles={['STUDENT']} />}>
             <Route path="/student/requests" element={<MyRequests />} />
             <Route path="/student/apply" element={<ApplyOD />} />
-            <Route path="/student/history" element={<StudentHistory />} />
+            <Route path="/student/history" element={<Navigate to="/student/requests" replace />} />
             <Route path="/student/notifications" element={<StudentNotifications />} />
           </Route>
 

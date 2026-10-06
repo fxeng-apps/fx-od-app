@@ -59,7 +59,7 @@ export const CalendarWidget: React.FC = () => {
         key={d}
         type="button"
         className={`h-8 sm:h-9 w-full relative flex flex-col items-center justify-center rounded-md text-[11px] sm:text-xs font-semibold transition-all hover:bg-gray-100 dark:hover:bg-gray-700 ${
-          isToday ? 'bg-[#0B426E] text-white hover:bg-[#083356]' : 'text-gray-800 dark:text-gray-200'
+          isToday ? 'bg-[#2f5da8] text-white hover:bg-[#234a87]' : 'text-gray-800 dark:text-gray-200'
         }`}
       >
         <span>{d}</span>

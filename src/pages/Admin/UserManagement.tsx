@@ -211,11 +211,11 @@ export const UserManagement: React.FC = () => {
             download="sample_roster_template.csv"
             className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium bg-gray-50 dark:bg-gray-700 text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-600"
           >
-            <Download className="w-3.5 h-3.5 text-[#0B426E]" />
+            <Download className="w-3.5 h-3.5 text-[#2f5da8]" />
             <span>CSV Template</span>
           </a>
 
-          <label className="cursor-pointer inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium bg-[#0B426E] hover:bg-[#4F75BC] text-white">
+          <label className="cursor-pointer inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium bg-[#2f5da8] hover:bg-[#234a87] text-white">
             <Upload className="w-3.5 h-3.5" />
             <span>{bulkImportMutation.isPending ? 'Validating...' : 'Import Excel'}</span>
             <input
@@ -228,7 +228,7 @@ export const UserManagement: React.FC = () => {
           </label>
 
           <Button variant="secondary" onClick={() => setIsAddModalOpen(true)}>
-            <Plus className="mr-1 w-3.5 h-3.5 text-[#0B426E]" /> Add User
+            <Plus className="mr-1 w-3.5 h-3.5 text-[#2f5da8]" /> Add User
           </Button>
         </div>
       </div>
@@ -316,7 +316,7 @@ export const UserManagement: React.FC = () => {
               placeholder="Arun Kumar K"
               value={newName}
               onChange={(e) => setNewName(e.target.value)}
-              className="w-full bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md p-2 text-gray-900 dark:text-white focus:ring-1 focus:ring-[#0B426E]"
+              className="w-full bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md p-2 text-gray-900 dark:text-white focus:ring-1 focus:ring-[#2f5da8]"
             />
           </div>
 
@@ -328,7 +328,7 @@ export const UserManagement: React.FC = () => {
               placeholder="student@fx.edu.in"
               value={newEmail}
               onChange={(e) => setNewEmail(e.target.value)}
-              className="w-full bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md p-2 text-gray-900 dark:text-white focus:ring-1 focus:ring-[#0B426E]"
+              className="w-full bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md p-2 text-gray-900 dark:text-white focus:ring-1 focus:ring-[#2f5da8]"
             />
           </div>
 
@@ -338,7 +338,7 @@ export const UserManagement: React.FC = () => {
               <select
                 value={newRole}
                 onChange={(e) => setNewRole(e.target.value as UserRole)}
-                className="w-full bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md p-2 text-gray-900 dark:text-white focus:ring-1 focus:ring-[#0B426E] cursor-pointer"
+                className="w-full bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md p-2 text-gray-900 dark:text-white focus:ring-1 focus:ring-[#2f5da8] cursor-pointer"
               >
                 <option value="STUDENT">Student</option>
                 <option value="MENTOR">Faculty Mentor</option>
@@ -354,7 +354,7 @@ export const UserManagement: React.FC = () => {
               <select
                 value={newDepartment}
                 onChange={(e) => setNewDepartment(e.target.value as Department)}
-                className="w-full bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md p-2 text-gray-900 dark:text-white focus:ring-1 focus:ring-[#0B426E] cursor-pointer"
+                className="w-full bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md p-2 text-gray-900 dark:text-white focus:ring-1 focus:ring-[#2f5da8] cursor-pointer"
               >
                 <option value="CSE">CSE</option>
                 <option value="ECE">ECE</option>
@@ -377,7 +377,7 @@ export const UserManagement: React.FC = () => {
                     placeholder="951221104001"
                     value={newRegNo}
                     onChange={(e) => setNewRegNo(e.target.value)}
-                    className="w-full bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md p-2 text-gray-900 dark:text-white focus:ring-1 focus:ring-[#0B426E]"
+                    className="w-full bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md p-2 text-gray-900 dark:text-white focus:ring-1 focus:ring-[#2f5da8]"
                   />
                 </div>
                 <div>
@@ -385,7 +385,7 @@ export const UserManagement: React.FC = () => {
                   <select
                     value={newYear}
                     onChange={(e) => setNewYear(e.target.value as any)}
-                    className="w-full bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md p-2 text-gray-900 dark:text-white focus:ring-1 focus:ring-[#0B426E] cursor-pointer"
+                    className="w-full bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md p-2 text-gray-900 dark:text-white focus:ring-1 focus:ring-[#2f5da8] cursor-pointer"
                   >
                     <option value="I">I</option>
                     <option value="II">II</option>
@@ -400,7 +400,7 @@ export const UserManagement: React.FC = () => {
                     placeholder="A"
                     value={newSection}
                     onChange={(e) => setNewSection(e.target.value)}
-                    className="w-full bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md p-2 text-gray-900 dark:text-white focus:ring-1 focus:ring-[#0B426E]"
+                    className="w-full bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md p-2 text-gray-900 dark:text-white focus:ring-1 focus:ring-[#2f5da8]"
                   />
                 </div>
               </div>
@@ -412,7 +412,7 @@ export const UserManagement: React.FC = () => {
                   placeholder="mentor@fx.edu.in"
                   value={newMentorEmail}
                   onChange={(e) => setNewMentorEmail(e.target.value)}
-                  className="w-full bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md p-2 text-gray-900 dark:text-white focus:ring-1 focus:ring-[#0B426E]"
+                  className="w-full bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md p-2 text-gray-900 dark:text-white focus:ring-1 focus:ring-[#2f5da8]"
                 />
               </div>
             </>

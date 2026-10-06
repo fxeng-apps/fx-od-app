@@ -290,9 +290,9 @@ export const DepartmentStudents: React.FC = () => {
   const renderSortIcon = (col: SortCol) => {
     if (sortCol !== col) return <ArrowUp className="inline w-3 h-3 opacity-40 ml-1" />;
     return sortDir === 'asc' ? (
-      <ArrowUp className="inline w-3 h-3 text-[#0B426E] dark:text-blue-400 ml-1" />
+      <ArrowUp className="inline w-3 h-3 text-[#2f5da8] dark:text-blue-400 ml-1" />
     ) : (
-      <ArrowDown className="inline w-3 h-3 text-[#0B426E] dark:text-blue-400 ml-1" />
+      <ArrowDown className="inline w-3 h-3 text-[#2f5da8] dark:text-blue-400 ml-1" />
     );
   };
 
@@ -322,22 +322,22 @@ export const DepartmentStudents: React.FC = () => {
 
       return (
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-left">
-          <div className="p-3 bg-white dark:bg-gray-800 rounded-md border border-gray-200 dark:border-gray-700 flex items-center justify-between">
+          <div className="p-3 bg-white dark:bg-gray-800 rounded-md border border-gray-300 dark:border-gray-700 flex items-center justify-between">
             <div>
               <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block">Total Students ({dept})</span>
               <span className="text-lg font-bold text-gray-800 dark:text-white">{total}</span>
             </div>
-            <div className="p-2 rounded bg-blue-50 dark:bg-blue-950/40 text-[#0B426E] dark:text-blue-400">
+            <div className="p-2 rounded bg-blue-50 dark:bg-blue-950/40 text-[#2f5da8] dark:text-blue-400">
               <GraduationCap className="w-5 h-5" />
             </div>
           </div>
-          <div className="p-3 bg-white dark:bg-gray-800 rounded-md border border-gray-200 dark:border-gray-700 flex items-center justify-between">
+          <div className="p-3 bg-white dark:bg-gray-800 rounded-md border border-gray-300 dark:border-gray-700 flex items-center justify-between">
             <div>
               <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block">Active Accounts</span>
               <span className="text-lg font-bold text-green-600 dark:text-green-400">{linked}</span>
             </div>
           </div>
-          <div className="p-3 bg-white dark:bg-gray-800 rounded-md border border-gray-200 dark:border-gray-700 flex items-center justify-between">
+          <div className="p-3 bg-white dark:bg-gray-800 rounded-md border border-gray-300 dark:border-gray-700 flex items-center justify-between">
             <div>
               <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block">Pre-Registered</span>
               <span className="text-lg font-bold text-amber-600 dark:text-amber-400">{unlinked}</span>
@@ -354,7 +354,7 @@ export const DepartmentStudents: React.FC = () => {
 
       return (
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-left">
-          <div className="p-3 bg-white dark:bg-gray-800 rounded-md border border-gray-200 dark:border-gray-700 flex items-center justify-between">
+          <div className="p-3 bg-white dark:bg-gray-800 rounded-md border border-gray-300 dark:border-gray-700 flex items-center justify-between">
             <div>
               <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block">Total Dept Staff</span>
               <span className="text-lg font-bold text-gray-800 dark:text-white">{total}</span>
@@ -363,13 +363,13 @@ export const DepartmentStudents: React.FC = () => {
               <Users className="w-5 h-5" />
             </div>
           </div>
-          <div className="p-3 bg-white dark:bg-gray-800 rounded-md border border-gray-200 dark:border-gray-700 flex items-center justify-between">
+          <div className="p-3 bg-white dark:bg-gray-800 rounded-md border border-gray-300 dark:border-gray-700 flex items-center justify-between">
             <div>
               <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block">Assigned Mentors</span>
               <span className="text-lg font-bold text-green-600">{assigned}</span>
             </div>
           </div>
-          <div className="p-3 bg-white dark:bg-gray-800 rounded-md border border-gray-200 dark:border-gray-700 flex items-center justify-between">
+          <div className="p-3 bg-white dark:bg-gray-800 rounded-md border border-gray-300 dark:border-gray-700 flex items-center justify-between">
             <div>
               <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block">Unassigned Mentors</span>
               <span className="text-lg font-bold text-amber-600">{unassigned}</span>
@@ -383,7 +383,7 @@ export const DepartmentStudents: React.FC = () => {
       const total = sectionList.length;
       return (
         <div className="grid grid-cols-1 gap-3 text-left max-w-xs">
-          <div className="p-3 bg-white dark:bg-gray-800 rounded-md border border-gray-200 dark:border-gray-700 flex items-center justify-between">
+          <div className="p-3 bg-white dark:bg-gray-800 rounded-md border border-gray-300 dark:border-gray-700 flex items-center justify-between">
             <div>
               <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block">Total HODs ({dept})</span>
               <span className="text-lg font-bold text-gray-800 dark:text-white">{total}</span>
@@ -402,9 +402,9 @@ export const DepartmentStudents: React.FC = () => {
   return (
     <div className="space-y-4">
       {/* 1. Header Banner */}
-      <div className="p-4 bg-white dark:bg-gray-800 rounded-md border border-gray-200 dark:border-gray-700 shadow-xs text-left">
+      <div className="p-4 bg-white dark:bg-gray-800 rounded-md border border-gray-300 dark:border-gray-700 shadow-xs text-left">
         <h2 className="text-base sm:text-lg font-bold text-gray-900 dark:text-white tracking-tight flex items-center gap-2">
-          <Building className="w-5 h-5 text-[#0B426E] dark:text-blue-400" />
+          <Building className="w-5 h-5 text-[#2f5da8] dark:text-blue-400" />
           Department Students Directory ({dept})
         </h2>
         <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
@@ -414,7 +414,7 @@ export const DepartmentStudents: React.FC = () => {
 
       {/* 2. Top Segmented Swticher Tab */}
       <div className="flex justify-start">
-        <div className="p-1 bg-gray-100 dark:bg-gray-700 rounded-lg inline-flex gap-1 border border-gray-200 dark:border-gray-600 w-full sm:w-auto">
+        <div className="p-1 bg-gray-200 dark:bg-gray-700 rounded-lg inline-flex gap-1 border border-gray-300 dark:border-gray-600 w-full sm:w-auto">
           {(
             [
               { id: 'STUDENT', label: 'Students' },
@@ -429,8 +429,8 @@ export const DepartmentStudents: React.FC = () => {
                 onClick={() => handleSectionSwitch(tab.id)}
                 className={`flex-1 sm:flex-none px-4 py-2 rounded-md text-xs font-bold transition-all cursor-pointer ${
                   isSelected
-                    ? 'bg-[#0B426E] text-white shadow-xs dark:bg-blue-600'
-                    : 'text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white'
+                    ? 'bg-[#2f5da8] text-white shadow-xs'
+                    : 'text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white'
                 }`}
               >
                 {tab.label}
@@ -444,7 +444,7 @@ export const DepartmentStudents: React.FC = () => {
       {renderSummaryCards()}
 
       {/* 4. Filters & Search Box */}
-      <div className="p-3.5 bg-white dark:bg-gray-800 rounded-md border border-gray-200 dark:border-gray-700 shadow-xs space-y-3 text-xs text-left">
+      <div className="p-3.5 bg-white dark:bg-gray-800 rounded-md border border-gray-300 dark:border-gray-700 shadow-xs space-y-3 text-xs text-left">
         <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3">
           <div className="relative flex-1 max-w-md">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-3.5 h-3.5" />
@@ -460,7 +460,7 @@ export const DepartmentStudents: React.FC = () => {
                   ? 'Search student name, reg no, email...'
                   : 'Search staff by name or email...'
               }
-              className="w-full pl-9 pr-3 py-1.5 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-md text-xs text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-[#0B426E]"
+              className="w-full pl-9 pr-3 py-1.5 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-md text-xs text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-[#2f5da8]"
             />
           </div>
 
@@ -479,7 +479,7 @@ export const DepartmentStudents: React.FC = () => {
                   setStatusFilter(e.target.value);
                   setCurrentPage(1);
                 }}
-                className="bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-md px-2.5 py-1 text-xs text-gray-800 dark:text-gray-200 font-semibold focus:outline-none focus:ring-1 focus:ring-[#0B426E] cursor-pointer"
+                className="bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-md px-2.5 py-1 text-xs text-gray-800 dark:text-gray-200 font-semibold focus:outline-none focus:ring-1 focus:ring-[#2f5da8] cursor-pointer"
               >
                 <option value="ALL">All Statuses</option>
                 <option value="ACTIVE">Active Account</option>
@@ -557,23 +557,23 @@ export const DepartmentStudents: React.FC = () => {
       {isLoading ? (
         <Loader label="Loading directory records..." />
       ) : sortedList.length === 0 ? (
-        <div className="p-8 text-center bg-white dark:bg-gray-800 rounded-md border border-gray-200 dark:border-gray-700 text-gray-500 dark:text-gray-400 text-xs">
+        <div className="p-8 text-center bg-white dark:bg-gray-800 rounded-md border border-gray-300 dark:border-gray-700 text-gray-500 dark:text-gray-400 text-xs">
           No records match selected section filters.
         </div>
       ) : (
         <div className="space-y-4">
-          <div className="overflow-x-auto bg-white dark:bg-gray-800 rounded-md border border-gray-200 dark:border-gray-700 shadow-xs">
+          <div className="overflow-x-auto bg-white dark:bg-gray-800 rounded-md border border-gray-300 dark:border-gray-700 shadow-xs">
             <table className="w-full text-left text-xs border-collapse">
               <thead>
-                <tr className="bg-gray-50 dark:bg-gray-800 text-gray-600 dark:text-gray-300 border-b border-gray-200 dark:border-gray-700 uppercase font-semibold text-[11px] tracking-wider select-none">
-                  <th className="p-3 cursor-pointer hover:text-gray-900 dark:hover:text-white" onClick={() => toggleSort('displayName')}>
+                <tr className="bg-[#E2E8F0] dark:bg-gray-800 text-gray-800 dark:text-gray-200 border-b border-gray-300 dark:border-gray-700 uppercase font-bold text-[11px] tracking-wider select-none">
+                  <th className="p-3 cursor-pointer hover:text-blue-900 dark:hover:text-white" onClick={() => toggleSort('displayName')}>
                     Name {renderSortIcon('displayName')}
                   </th>
-                  <th className="p-3 cursor-pointer hover:text-gray-900 dark:hover:text-white" onClick={() => toggleSort('email')}>
+                  <th className="p-3 cursor-pointer hover:text-blue-900 dark:hover:text-white" onClick={() => toggleSort('email')}>
                     College Email {renderSortIcon('email')}
                   </th>
                   {activeSection !== 'HOD' && (
-                    <th className="p-3 cursor-pointer hover:text-gray-900 dark:hover:text-white" onClick={() => toggleSort('registerNumber')}>
+                    <th className="p-3 cursor-pointer hover:text-blue-900 dark:hover:text-white" onClick={() => toggleSort('registerNumber')}>
                       {activeSection === 'STUDENT' ? 'Register No' : 'Role Badge'} {renderSortIcon('registerNumber')}
                     </th>
                   )}
@@ -587,13 +587,13 @@ export const DepartmentStudents: React.FC = () => {
                   {activeSection === 'STAFF' && (
                     <th className="p-3 text-center">Assigned Students</th>
                   )}
-                  <th className="p-3 cursor-pointer hover:text-gray-900 dark:hover:text-white" onClick={() => toggleSort('isLinked')}>
+                  <th className="p-3 cursor-pointer hover:text-blue-900 dark:hover:text-white" onClick={() => toggleSort('isLinked')}>
                     Status {renderSortIcon('isLinked')}
                   </th>
                   <th className="p-3 text-right">Action</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-100 dark:divide-gray-700/60 text-gray-700 dark:text-gray-200 font-medium">
+              <tbody className="divide-y divide-gray-200 dark:divide-gray-700/60 text-gray-700 dark:text-gray-200 font-medium">
                 {paginatedList.map((rec) => {
                   const isStudent = rec.role === 'STUDENT';
                   const isStaff = rec.role === 'MENTOR';
@@ -622,9 +622,9 @@ export const DepartmentStudents: React.FC = () => {
                   const odStatus = isStudent ? getStudentODStatus(rec.id) : null;
 
                   return (
-                    <tr key={rec.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/40 transition-colors text-left">
+                    <tr key={rec.id} className="hover:bg-blue-50/50 dark:hover:bg-gray-700/40 transition-colors text-left">
                       <td className="p-3 font-semibold text-gray-900 dark:text-white">{rec.displayName}</td>
-                      <td className="p-3 font-mono text-[#0B426E] dark:text-blue-300 font-semibold">{rec.email}</td>
+                      <td className="p-3 font-mono text-[#2f5da8] dark:text-blue-300 font-semibold">{rec.email}</td>
                       {activeSection !== 'HOD' && (
                         <td className="p-3">
                           {isStudent ? (
@@ -652,7 +652,7 @@ export const DepartmentStudents: React.FC = () => {
                         <td className="p-3 text-center">
                           <button
                             onClick={() => setViewingMentorStudents(rec)}
-                            className="px-2 py-1 rounded text-xs font-bold text-[#0B426E] dark:text-blue-300 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer underline decoration-dotted"
+                            className="px-2 py-1 rounded text-xs font-bold text-[#2f5da8] dark:text-blue-300 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer underline decoration-dotted"
                           >
                             {mentorStudentCount} Student(s)
                           </button>

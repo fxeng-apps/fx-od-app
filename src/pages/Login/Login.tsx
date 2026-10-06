@@ -39,12 +39,12 @@ export const Login: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#F5F7FA] dark:bg-[#0F172A] flex flex-col justify-center items-center p-4 sm:p-6 relative text-left select-none">
+    <div className="min-h-screen bg-[#2f5da8] dark:bg-[#0F172A] flex flex-col justify-center items-center p-4 sm:p-6 relative text-left select-none">
       {/* Theme Switcher Button */}
       <div className="absolute top-4 right-4 z-20">
         <button
           onClick={toggleTheme}
-          className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer shadow-xs transition-colors"
+          className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold bg-white/90 dark:bg-gray-800/90 backdrop-blur-xs border border-white/40 dark:border-gray-700 text-gray-800 dark:text-gray-200 hover:bg-white dark:hover:bg-gray-800 cursor-pointer shadow-md transition-colors"
           title={`Switch to ${theme === 'light' ? 'Dark' : 'Light'} Mode`}
         >
           {theme === 'light' ? (
@@ -61,7 +61,7 @@ export const Login: React.FC = () => {
         </button>
       </div>
 
-      <div className="max-w-md w-full space-y-5 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-6 sm:p-8 rounded-2xl shadow-xl transition-all">
+      <div className="max-w-md w-full space-y-5 bg-white dark:bg-gray-800 border border-white/40 dark:border-gray-700 p-6 sm:p-8 rounded-2xl shadow-2xl transition-all">
         {/* Brand Header */}
         <div className="text-center space-y-3">
           {/* Institutional High-Contrast Branding Container */}
@@ -79,7 +79,7 @@ export const Login: React.FC = () => {
             <h2 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white tracking-tight">
               Francis Xavier Engineering College
             </h2>
-            <p className="text-xs text-[#0B426E] dark:text-blue-400 font-semibold mt-0.5">
+            <p className="text-xs text-[#2f5da8] dark:text-blue-400 font-semibold mt-0.5">
               Institutional Movement Pass Management System v2.0
             </p>
           </div>
@@ -109,7 +109,7 @@ export const Login: React.FC = () => {
           <button
             onClick={handleSignIn}
             disabled={loading}
-            className="w-full min-h-[48px] flex items-center justify-center gap-2 bg-[#0B426E] hover:bg-[#083356] text-white font-semibold text-sm py-3 px-4 rounded-xl shadow-md hover:shadow-lg active:scale-[0.99] transition-all cursor-pointer disabled:opacity-50"
+            className="w-full min-h-[48px] flex items-center justify-center gap-2 bg-[#2f5da8] hover:bg-[#234a87] text-white font-semibold text-sm py-3 px-4 rounded-xl shadow-md hover:shadow-lg active:scale-[0.99] transition-all cursor-pointer disabled:opacity-50"
           >
             <span>{loading ? 'Authenticating...' : 'Sign In with Google Account'}</span>
           </button>
@@ -139,14 +139,14 @@ export const Login: React.FC = () => {
               <button
                 onClick={installApp}
                 type="button"
-                className="w-full flex items-center justify-center gap-2 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 text-[#0B426E] dark:text-blue-300 border border-[#0B426E]/30 dark:border-blue-500/30 font-semibold text-xs py-2 px-3 rounded-lg shadow-xs hover:shadow-sm active:scale-[0.98] transition-all cursor-pointer"
+                className="w-full flex items-center justify-center gap-2 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 text-[#2f5da8] dark:text-blue-300 border border-[#2f5da8]/30 dark:border-blue-500/30 font-semibold text-xs py-2 px-3 rounded-lg shadow-xs hover:shadow-sm active:scale-[0.98] transition-all cursor-pointer"
               >
                 <Download className="w-3.5 h-3.5" />
                 <span>Install App on Phone</span>
               </button>
 
               {installFeedback && (
-                <div className="p-2 rounded-lg bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-800 text-[11px] text-[#0B426E] dark:text-blue-300 text-center animate-in fade-in duration-200">
+                <div className="p-2 rounded-lg bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-800 text-[11px] text-[#2f5da8] dark:text-blue-300 text-center animate-in fade-in duration-200">
                   {installFeedback}
                 </div>
               )}
@@ -189,7 +189,7 @@ export const Login: React.FC = () => {
             {/* Instruction Steps */}
             <div className="space-y-3 text-xs text-gray-700 dark:text-gray-300">
               <div className="flex items-start gap-3 p-2.5 rounded-xl bg-gray-50 dark:bg-gray-700/50 border border-gray-100 dark:border-gray-600">
-                <div className="w-6 h-6 rounded-full bg-[#0B426E] text-white flex items-center justify-center text-xs font-bold shrink-0 mt-0.5">
+                <div className="w-6 h-6 rounded-full bg-[#2f5da8] text-white flex items-center justify-center text-xs font-bold shrink-0 mt-0.5">
                   1
                 </div>
                 <div>
@@ -203,7 +203,7 @@ export const Login: React.FC = () => {
               </div>
 
               <div className="flex items-start gap-3 p-2.5 rounded-xl bg-gray-50 dark:bg-gray-700/50 border border-gray-100 dark:border-gray-600">
-                <div className="w-6 h-6 rounded-full bg-[#0B426E] text-white flex items-center justify-center text-xs font-bold shrink-0 mt-0.5">
+                <div className="w-6 h-6 rounded-full bg-[#2f5da8] text-white flex items-center justify-center text-xs font-bold shrink-0 mt-0.5">
                   2
                 </div>
                 <div>
@@ -217,7 +217,7 @@ export const Login: React.FC = () => {
               </div>
 
               <div className="flex items-start gap-3 p-2.5 rounded-xl bg-gray-50 dark:bg-gray-700/50 border border-gray-100 dark:border-gray-600">
-                <div className="w-6 h-6 rounded-full bg-[#0B426E] text-white flex items-center justify-center text-xs font-bold shrink-0 mt-0.5">
+                <div className="w-6 h-6 rounded-full bg-[#2f5da8] text-white flex items-center justify-center text-xs font-bold shrink-0 mt-0.5">
                   3
                 </div>
                 <div>
@@ -233,7 +233,7 @@ export const Login: React.FC = () => {
 
             <button
               onClick={() => setShowIOSPrompt(false)}
-              className="w-full bg-[#0B426E] hover:bg-[#083356] text-white font-semibold text-xs py-2.5 px-4 rounded-xl cursor-pointer transition-colors"
+              className="w-full bg-[#2f5da8] hover:bg-[#234a87] text-white font-semibold text-xs py-2.5 px-4 rounded-xl cursor-pointer transition-colors"
             >
               Got It
             </button>

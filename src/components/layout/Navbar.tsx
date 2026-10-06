@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Moon, Sun, LogOut, Shield, Clock } from 'lucide-react';
+import { Menu, Moon, Sun, LogOut, Shield, Clock } from 'lucide-react';
 import { useAuth } from '../../hooks/useAuth';
 import { useTheme } from '../../hooks/useTheme';
 import { NotificationBell } from './NotificationBell';
@@ -9,7 +9,7 @@ interface NavbarProps {
   onToggleMobileDrawer?: () => void;
 }
 
-export const Navbar: React.FC<NavbarProps> = () => {
+export const Navbar: React.FC<NavbarProps> = ({ onToggleMobileDrawer }) => {
   const { userProfile, logout } = useAuth();
   const { theme, toggleTheme } = useTheme();
   const [currentTime, setCurrentTime] = useState<string>('');
@@ -35,10 +35,20 @@ export const Navbar: React.FC<NavbarProps> = () => {
   const roleLabel = ROLE_LABELS[userRole] || userRole;
 
   return (
-    <header className="sticky top-0 z-30 bg-[#0B426E] text-white border-b border-white/10 px-3 sm:px-4 lg:px-6 py-2 sm:py-2.5 flex items-center justify-between shadow-md select-none">
+    <header className="sticky top-0 z-30 h-14 min-h-[56px] bg-[#2f5da8] dark:bg-[#152a4e] text-white border-b border-black/10 dark:border-gray-800 px-3 sm:px-4 lg:px-6 flex items-center justify-between shadow-xs select-none transition-colors">
       {/* Left Brand Header */}
-      <div className="flex items-center gap-2 sm:gap-2.5 min-w-0">
-        <div className="h-8 w-8 rounded-lg bg-white p-0.5 flex items-center justify-center shrink-0 shadow-xs border border-white/20">
+      <div className="flex items-center gap-2 sm:gap-3 min-w-0">
+        {onToggleMobileDrawer && (
+          <button
+            onClick={onToggleMobileDrawer}
+            className="md:hidden p-1.5 -ml-1 text-white hover:bg-white/15 rounded-lg transition-colors cursor-pointer"
+            title="Toggle Menu"
+            aria-label="Open Navigation Menu"
+          >
+            <Menu className="w-5 h-5" />
+          </button>
+        )}
+        <div className="md:hidden h-8 w-8 rounded-lg bg-white p-0.5 flex items-center justify-center shrink-0 shadow-xs border border-white/20">
           <img src="/college-crest.png" alt="FXEC Crest" className="w-full h-full object-contain" />
         </div>
         <div className="min-w-0">
@@ -47,11 +57,11 @@ export const Navbar: React.FC<NavbarProps> = () => {
               <span className="sm:hidden">FX Movement Pass</span>
               <span className="hidden sm:inline">Institutional Movement Pass Portal</span>
             </h1>
-            <span className="hidden sm:inline-block text-[10px] font-medium bg-white/15 text-white border border-white/20 px-1.5 py-0.5 rounded-md">
+            <span className="hidden sm:inline-block text-[10px] font-medium bg-white/20 text-white border border-white/25 px-1.5 py-0.5 rounded-md">
               v2.0
             </span>
           </div>
-          <p className="text-[10px] sm:text-[11px] text-white/80 truncate">Francis Xavier Engineering College</p>
+          <p className="text-[10px] sm:text-[11px] text-white/85 truncate font-normal">Francis Xavier Engineering College</p>
         </div>
       </div>
 
@@ -111,7 +121,7 @@ export const Navbar: React.FC<NavbarProps> = () => {
                 className="w-7 h-7 rounded-md border border-white/30 object-cover"
               />
             ) : (
-              <div className="w-7 h-7 rounded-md bg-white text-[#0B426E] font-bold flex items-center justify-center text-xs">
+              <div className="w-7 h-7 rounded-md bg-white text-[#2f5da8] font-bold flex items-center justify-center text-xs shadow-xs">
                 {userProfile.displayName.charAt(0)}
               </div>
             )}

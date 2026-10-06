@@ -94,9 +94,9 @@ export const MentorApprovalTable: React.FC<MentorApprovalTableProps> = ({
   const renderSortIcon = (col: SortColumn) => {
     if (sortColumn !== col) return <ArrowUpDown className="w-3 h-3 opacity-40 ml-1 inline" />;
     return sortDirection === 'asc' ? (
-      <ArrowUp className="w-3 h-3 text-[#0B426E] ml-1 inline" />
+      <ArrowUp className="w-3 h-3 text-[#2f5da8] ml-1 inline" />
     ) : (
-      <ArrowDown className="w-3 h-3 text-[#0B426E] ml-1 inline" />
+      <ArrowDown className="w-3 h-3 text-[#2f5da8] ml-1 inline" />
     );
   };
 
@@ -109,7 +109,7 @@ export const MentorApprovalTable: React.FC<MentorApprovalTableProps> = ({
 
   if (requests.length === 0) {
     return (
-      <div className="p-6 text-center bg-white dark:bg-gray-800 rounded-md border border-gray-200 dark:border-gray-700">
+      <div className="p-6 text-center bg-white dark:bg-gray-800 rounded-md border border-gray-300 dark:border-gray-700">
         <p className="text-xs text-gray-500 dark:text-gray-400 font-normal">No pending movement passes assigned for mentor approval.</p>
       </div>
     );
@@ -126,8 +126,8 @@ export const MentorApprovalTable: React.FC<MentorApprovalTableProps> = ({
               key={req.id}
               className={`p-4 bg-white dark:bg-gray-800 rounded-md border transition-all space-y-3 ${
                 isHighlighted
-                  ? 'border-[#0B426E] ring-2 ring-[#0B426E] bg-amber-50/50 dark:bg-amber-950/20 shadow-md'
-                  : 'border-gray-200 dark:border-gray-700 shadow-xs'
+                  ? 'border-[#2f5da8] ring-2 ring-[#2f5da8] bg-amber-50/50 dark:bg-amber-950/20 shadow-md'
+                  : 'border-gray-300 dark:border-gray-700 shadow-xs'
               }`}
             >
               {/* Student Info */}
@@ -135,7 +135,7 @@ export const MentorApprovalTable: React.FC<MentorApprovalTableProps> = ({
                 <div className="min-w-0 text-left">
                   <div className="flex items-center gap-1.5">
                     {isHighlighted && (
-                      <span className="text-[10px] font-bold bg-[#0B426E] text-white px-1.5 py-0.5 rounded-full shrink-0">
+                      <span className="text-[10px] font-bold bg-[#2f5da8] text-white px-1.5 py-0.5 rounded-full shrink-0">
                         Targeted
                       </span>
                     )}
@@ -154,7 +154,7 @@ export const MentorApprovalTable: React.FC<MentorApprovalTableProps> = ({
               <div className="grid grid-cols-2 gap-2 text-xs text-left">
                 <div>
                   <span className="text-[10px] text-gray-500 dark:text-gray-400 uppercase font-semibold block">Pass Type</span>
-                  <span className="font-semibold text-[#0B426E] dark:text-blue-300">{getPassTypeLabel(req)}</span>
+                  <span className="font-semibold text-[#2f5da8] dark:text-blue-300">{getPassTypeLabel(req)}</span>
                 </div>
                 <div>
                   <span className="text-[10px] text-gray-500 dark:text-gray-400 uppercase font-semibold block">Schedule</span>
@@ -200,27 +200,27 @@ export const MentorApprovalTable: React.FC<MentorApprovalTableProps> = ({
       </div>
 
       {/* Main Desktop Approval Table (>= md) */}
-      <div className="hidden md:block overflow-x-auto bg-white dark:bg-gray-800 rounded-md border border-gray-200 dark:border-gray-700 shadow-xs">
-        <table className="w-full text-left text-xs border-collapse">
+      <div className="hidden md:block overflow-x-auto w-full max-w-full bg-white dark:bg-gray-800 rounded-md border border-gray-300 dark:border-gray-700 shadow-xs custom-scrollbar">
+        <table className="min-w-[760px] w-full text-left text-xs border-collapse">
           <thead>
-            <tr className="sticky top-0 bg-gray-50 dark:bg-gray-800 text-gray-600 dark:text-gray-300 border-b border-gray-200 dark:border-gray-700 uppercase font-semibold text-[11px] tracking-wider select-none">
-              <th className="p-3 cursor-pointer hover:text-gray-900 dark:hover:text-white" onClick={() => handleSort('studentName')}>
+            <tr className="sticky top-0 bg-[#E2E8F0] dark:bg-gray-800 text-gray-800 dark:text-gray-200 border-b border-gray-300 dark:border-gray-700 uppercase font-bold text-[11px] tracking-wider select-none">
+              <th className="p-3 cursor-pointer hover:text-blue-900 dark:hover:text-white whitespace-nowrap" onClick={() => handleSort('studentName')}>
                 Student & Reg No {renderSortIcon('studentName')}
               </th>
-              <th className="p-3 cursor-pointer hover:text-gray-900 dark:hover:text-white" onClick={() => handleSort('passType')}>
+              <th className="p-3 cursor-pointer hover:text-blue-900 dark:hover:text-white whitespace-nowrap" onClick={() => handleSort('passType')}>
                 Pass Type {renderSortIcon('passType')}
               </th>
-              <th className="p-3 cursor-pointer hover:text-gray-900 dark:hover:text-white" onClick={() => handleSort('startDate')}>
+              <th className="p-3 cursor-pointer hover:text-blue-900 dark:hover:text-white whitespace-nowrap" onClick={() => handleSort('startDate')}>
                 Schedule {renderSortIcon('startDate')}
               </th>
-              <th className="p-3 cursor-pointer hover:text-gray-900 dark:hover:text-white" onClick={() => handleSort('facultyInCharge')}>
+              <th className="p-3 cursor-pointer hover:text-blue-900 dark:hover:text-white whitespace-nowrap" onClick={() => handleSort('facultyInCharge')}>
                 Faculty In Charge {renderSortIcon('facultyInCharge')}
               </th>
-              <th className="p-3">Status</th>
-              <th className="p-3 text-right">Actions</th>
+              <th className="p-3 whitespace-nowrap">Status</th>
+              <th className="p-3 text-right whitespace-nowrap">Actions</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-gray-100 dark:divide-gray-700/60 text-gray-700 dark:text-gray-200">
+          <tbody className="divide-y divide-gray-200 dark:divide-gray-700/60 text-gray-700 dark:text-gray-200">
             {paginatedRequests.map((req) => {
               const isHighlighted = req.id === highlightedId;
               return (
@@ -228,8 +228,8 @@ export const MentorApprovalTable: React.FC<MentorApprovalTableProps> = ({
                   key={req.id}
                   className={`transition-colors ${
                     isHighlighted
-                      ? 'bg-amber-50 dark:bg-amber-950/30 font-semibold border-l-4 border-l-[#0B426E]'
-                      : 'hover:bg-gray-50 dark:hover:bg-gray-700/40'
+                      ? 'bg-amber-50 dark:bg-amber-950/30 font-semibold border-l-4 border-l-[#2f5da8]'
+                      : 'hover:bg-blue-50/50 dark:hover:bg-gray-700/40'
                   }`}
                 >
                   <td className="p-3 text-left">
@@ -238,7 +238,7 @@ export const MentorApprovalTable: React.FC<MentorApprovalTableProps> = ({
                       Reg: {req.studentSnapshot?.registerNumber} • {req.department} ({req.studentSnapshot?.year}-{req.studentSnapshot?.section})
                     </div>
                   </td>
-                  <td className="p-3 font-semibold text-[#0B426E] dark:text-blue-300">{getPassTypeLabel(req)}</td>
+                  <td className="p-3 font-semibold text-[#2f5da8] dark:text-blue-300">{getPassTypeLabel(req)}</td>
                   <td className="p-3">
                     <div>{req.startDate}</div>
                     <div className="text-[11px] text-gray-400">

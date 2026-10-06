@@ -11,6 +11,7 @@ import {
   PieChart,
   UserCheck,
   ShieldCheck,
+  Bell,
 } from 'lucide-react';
 import { useAuth } from '../../hooks/useAuth';
 import { useMentorPendingRequests, useHODPendingRequests } from '../../hooks/useODRequests';
@@ -50,7 +51,7 @@ export const BottomNav: React.FC = () => {
           { to: '/dashboard', label: 'Home', icon: LayoutDashboard },
           { to: '/student/requests', label: 'Passes', icon: FileText },
           { to: '/student/apply', label: 'Apply', icon: Plus, isCenterAction: true },
-          { to: '/student/history', label: 'History', icon: History },
+          { to: '/student/notifications', label: 'Alerts', icon: Bell },
           { to: '/profile', label: 'Profile', icon: User },
         ];
 
@@ -97,7 +98,7 @@ export const BottomNav: React.FC = () => {
   return (
     <nav
       aria-label="Mobile Navigation Bar"
-      className="fixed bottom-0 inset-x-0 z-40 md:hidden bg-white/95 dark:bg-gray-900/95 backdrop-blur-md border-t border-gray-200/80 dark:border-gray-800 shadow-[0_-4px_20px_rgba(0,0,0,0.06)] select-none"
+      className="fixed bottom-0 inset-x-0 z-40 md:hidden bg-white/95 dark:bg-gray-900/95 backdrop-blur-md border-t border-gray-300 dark:border-gray-800 shadow-[0_-4px_20px_rgba(0,0,0,0.06)] select-none"
       style={{
         paddingBottom: 'max(env(safe-area-inset-bottom, 0px), 8px)',
         paddingTop: '6px',
@@ -120,15 +121,15 @@ export const BottomNav: React.FC = () => {
                     <div
                       className={`w-12 h-12 rounded-full flex items-center justify-center shadow-lg transition-all ${
                         isActive
-                          ? 'bg-[#0B426E] text-white ring-4 ring-blue-100 dark:ring-blue-950 scale-105'
-                          : 'bg-[#0B426E] text-white ring-4 ring-white dark:ring-gray-900 hover:scale-105'
+                          ? 'bg-[#2f5da8] text-white ring-4 ring-blue-100 dark:ring-blue-950 scale-105'
+                          : 'bg-[#2f5da8] text-white ring-4 ring-white dark:ring-gray-900 hover:scale-105'
                       }`}
                     >
                       <Icon className="w-6 h-6 stroke-[2.5]" />
                     </div>
                     <span
                       className={`text-[10px] mt-1 font-semibold tracking-tight transition-colors ${
-                        isActive ? 'text-[#0B426E] dark:text-blue-400 font-bold' : 'text-gray-500 dark:text-gray-400'
+                        isActive ? 'text-[#2f5da8] dark:text-blue-400 font-bold' : 'text-gray-500 dark:text-gray-400'
                       }`}
                     >
                       {tab.label}
@@ -146,7 +147,7 @@ export const BottomNav: React.FC = () => {
               to={tab.to}
               className={({ isActive }) =>
                 `flex flex-col items-center justify-center flex-1 min-w-[56px] py-1 transition-all active:scale-95 cursor-pointer ${
-                  isActive ? 'text-[#0B426E] dark:text-blue-400' : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
+                  isActive ? 'text-[#2f5da8] dark:text-blue-400' : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
                 }`
               }
             >
@@ -157,7 +158,7 @@ export const BottomNav: React.FC = () => {
                     <div
                       className={`px-3 py-1 rounded-full transition-all duration-200 flex items-center justify-center ${
                         isActive
-                          ? 'bg-[#0B426E]/15 dark:bg-blue-500/20 text-[#0B426E] dark:text-blue-400'
+                          ? 'bg-[#2f5da8]/15 dark:bg-[#2f5da8]/25 text-[#2f5da8] dark:text-blue-400'
                           : 'bg-transparent text-gray-500 dark:text-gray-400'
                       }`}
                     >
@@ -174,7 +175,7 @@ export const BottomNav: React.FC = () => {
 
                   <span
                     className={`text-[10px] mt-0.5 tracking-tight transition-all ${
-                      isActive ? 'font-bold text-[#0B426E] dark:text-blue-400 scale-102' : 'font-medium text-gray-500 dark:text-gray-400'
+                      isActive ? 'font-bold text-[#2f5da8] dark:text-blue-400 scale-102' : 'font-medium text-gray-500 dark:text-gray-400'
                     }`}
                   >
                     {tab.label}

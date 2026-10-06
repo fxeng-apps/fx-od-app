@@ -7,8 +7,8 @@
   "description": "Francis Xavier Engineering College Movement Pass Management System",
   "display": "standalone",
   "orientation": "portrait",
-  "background_color": "#F5F7FA",
-  "theme_color": "#0B426E",
+  "background_color": "#2f5da8",
+  "theme_color": "#2f5da8",
   "categories": ["education", "productivity"],
   "icons": [
     {

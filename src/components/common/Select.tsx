@@ -31,8 +31,8 @@ export const Select: React.FC<SelectProps> = ({
       <select
         id={selectId}
         className={`w-full px-3 py-2.5 sm:py-2 border rounded-md text-xs sm:text-sm min-h-[44px] transition-colors duration-150 outline-none cursor-pointer
-          focus:ring-1 focus:ring-[#0B426E] focus:border-[#0B426E]
-          bg-gray-50 dark:bg-gray-700/80 border-gray-300 dark:border-gray-600
+          focus:ring-1 focus:ring-[#2f5da8] focus:border-[#2f5da8]
+          bg-white dark:bg-gray-700/90 border-gray-300 dark:border-gray-600
           text-gray-900 dark:text-white
           disabled:bg-gray-100 dark:disabled:bg-gray-800 disabled:text-gray-400
           ${error ? 'border-red-500 focus:ring-red-500 focus:border-red-500' : ''}

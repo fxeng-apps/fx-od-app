@@ -17,7 +17,7 @@ export const debugLogger = {
   groupStart: (stepName: string, params?: LogStepParams) => {
     console.groupCollapsed(
       `%c[OD_APPROVAL] ${stepName}`,
-      'color: #0B426E; font-weight: bold; font-size: 12px;'
+      'color: #2f5da8; font-weight: bold; font-size: 12px;'
     );
 
     if (params) {

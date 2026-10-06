@@ -95,17 +95,17 @@ export const Analytics: React.FC = () => {
   return (
     <div className="space-y-5">
       {/* Header Overview Banner */}
-      <div className="p-4 bg-white dark:bg-gray-800 rounded-md border border-gray-200 dark:border-gray-700 shadow-xs flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+      <div className="p-4 bg-white dark:bg-gray-800 rounded-md border border-gray-300 dark:border-gray-700 shadow-xs flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
         <div>
           <h2 className="text-base sm:text-lg font-bold text-gray-900 dark:text-white tracking-tight flex items-center gap-2">
-            <Activity className="w-5 h-5 text-[#0B426E] dark:text-blue-400" />
+            <Activity className="w-5 h-5 text-[#2f5da8] dark:text-blue-400" />
             Super Admin Institutional Analytics
           </h2>
           <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
             System-wide overview of user demographics, OD lifecycle metrics, sanction rates, and departmental distributions.
           </p>
         </div>
-        <div className="bg-[#0B426E]/10 dark:bg-blue-950/40 text-[#0B426E] dark:text-blue-300 border border-[#0B426E]/20 px-3 py-1.5 rounded-md text-xs font-bold shrink-0">
+        <div className="bg-[#2f5da8]/10 dark:bg-blue-950/40 text-[#2f5da8] dark:text-blue-300 border border-[#2f5da8]/20 px-3 py-1.5 rounded-md text-xs font-bold shrink-0">
           Institutional Sanction Rate: {approvalRate}%
         </div>
       </div>
@@ -126,8 +126,8 @@ export const Analytics: React.FC = () => {
           <Card className="p-3.5 space-y-1">
             <span className="text-[11px] text-gray-500 dark:text-gray-400 font-medium block">Students</span>
             <div className="flex items-center justify-between">
-              <span className="text-xl font-bold text-[#0B426E] dark:text-blue-400">{totalStudents}</span>
-              <GraduationCap className="w-4 h-4 text-[#0B426E] dark:text-blue-400" />
+              <span className="text-xl font-bold text-[#2f5da8] dark:text-blue-400">{totalStudents}</span>
+              <GraduationCap className="w-4 h-4 text-[#2f5da8] dark:text-blue-400" />
             </div>
           </Card>
           <Card className="p-3.5 space-y-1">
@@ -230,8 +230,8 @@ export const Analytics: React.FC = () => {
         <Card className="p-4 space-y-1 bg-gradient-to-r from-blue-50/50 to-indigo-50/30 dark:from-gray-800 dark:to-gray-800">
           <span className="text-xs text-gray-500 dark:text-gray-400 font-semibold uppercase tracking-wider block">Today's Approved ODs</span>
           <div className="flex items-center justify-between">
-            <h3 className="text-2xl font-extrabold text-[#0B426E] dark:text-blue-300">{todaysApproved}</h3>
-            <Calendar className="w-5 h-5 text-[#0B426E] dark:text-blue-400" />
+            <h3 className="text-2xl font-extrabold text-[#2f5da8] dark:text-blue-300">{todaysApproved}</h3>
+            <Calendar className="w-5 h-5 text-[#2f5da8] dark:text-blue-400" />
           </div>
           <p className="text-[10px] text-gray-400">OD applications sanctioned for today ({todayStr})</p>
         </Card>
@@ -258,9 +258,9 @@ export const Analytics: React.FC = () => {
       {/* Group 4: Visual Distributions */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {/* Department Breakdown */}
-        <div className="p-4 bg-white dark:bg-gray-800 rounded-md border border-gray-200 dark:border-gray-700 shadow-xs space-y-3">
+        <div className="p-4 bg-white dark:bg-gray-800 rounded-md border border-gray-300 dark:border-gray-700 shadow-xs space-y-3">
           <h3 className="text-xs font-bold text-gray-900 dark:text-white uppercase tracking-wider flex items-center gap-2">
-            <BarChart3 className="text-[#0B426E] dark:text-blue-400 w-4 h-4" /> Departmental Volume Distribution
+            <BarChart3 className="text-[#2f5da8] dark:text-blue-400 w-4 h-4" /> Departmental Volume Distribution
           </h3>
           <div className="space-y-2.5">
             {Object.entries(deptCounts).map(([dept, count]) => {
@@ -269,11 +269,11 @@ export const Analytics: React.FC = () => {
                 <div key={dept} className="space-y-1">
                   <div className="flex items-center justify-between text-xs font-semibold">
                     <span className="text-gray-800 dark:text-gray-200">{dept}</span>
-                    <span className="text-[#0B426E] dark:text-blue-300">{count} requests ({pct}%)</span>
+                    <span className="text-[#2f5da8] dark:text-blue-300">{count} requests ({pct}%)</span>
                   </div>
-                  <div className="w-full bg-gray-100 dark:bg-gray-700 h-2 rounded-full overflow-hidden">
+                  <div className="w-full bg-gray-200 dark:bg-gray-700 h-2 rounded-full overflow-hidden">
                     <div
-                      className="bg-[#0B426E] dark:bg-blue-500 h-full rounded-full transition-all duration-500"
+                      className="bg-[#2f5da8] dark:bg-blue-500 h-full rounded-full transition-all duration-500"
                       style={{ width: `${pct}%` }}
                     />
                   </div>
@@ -284,9 +284,9 @@ export const Analytics: React.FC = () => {
         </div>
 
         {/* OD Category Breakdown */}
-        <div className="p-4 bg-white dark:bg-gray-800 rounded-md border border-gray-200 dark:border-gray-700 shadow-xs space-y-3">
+        <div className="p-4 bg-white dark:bg-gray-800 rounded-md border border-gray-300 dark:border-gray-700 shadow-xs space-y-3">
           <h3 className="text-xs font-bold text-gray-900 dark:text-white uppercase tracking-wider flex items-center gap-2">
-            <PieChart className="text-[#0B426E] dark:text-blue-400 w-4 h-4" /> Category Volume Distribution
+            <PieChart className="text-[#2f5da8] dark:text-blue-400 w-4 h-4" /> Category Volume Distribution
           </h3>
           <div className="space-y-2.5">
             {Object.entries(typeCounts).map(([cat, count]) => {
@@ -295,9 +295,9 @@ export const Analytics: React.FC = () => {
                 <div key={cat} className="space-y-1">
                   <div className="flex items-center justify-between text-xs font-semibold">
                     <span className="text-gray-800 dark:text-gray-200">{cat}</span>
-                    <span className="text-[#0B426E] dark:text-blue-300">{count} ({pct}%)</span>
+                    <span className="text-[#2f5da8] dark:text-blue-300">{count} ({pct}%)</span>
                   </div>
-                  <div className="w-full bg-gray-100 dark:bg-gray-700 h-2 rounded-full overflow-hidden">
+                  <div className="w-full bg-gray-200 dark:bg-gray-700 h-2 rounded-full overflow-hidden">
                     <div
                       className="bg-indigo-600 dark:bg-indigo-400 h-full rounded-full transition-all duration-500"
                       style={{ width: `${pct}%` }}

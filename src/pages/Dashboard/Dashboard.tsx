@@ -124,11 +124,11 @@ export const Dashboard: React.FC = () => {
       {/* Today's Date Academic session Banner */}
       <div className="p-3 bg-white dark:bg-gray-800 rounded-md border border-gray-200 dark:border-gray-700 shadow-xs flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
         <div className="flex items-center gap-2.5">
-          <CalendarIcon className="w-4 h-4 text-[#0B426E] dark:text-blue-400" />
+          <CalendarIcon className="w-4 h-4 text-[#2f5da8] dark:text-blue-400" />
           <div>
             <h4 className="font-semibold text-xs text-gray-900 dark:text-white">Institutional verification session</h4>
             <p className="text-[11px] text-gray-500 dark:text-gray-400">
-              Active verification date: <strong className="text-[#0b426e] dark:text-blue-400 font-semibold">{selectedDate}</strong>
+              Active verification date: <strong className="text-[#2f5da8] dark:text-blue-400 font-semibold">{selectedDate}</strong>
             </p>
           </div>
         </div>
@@ -143,7 +143,7 @@ export const Dashboard: React.FC = () => {
             🟢 Fully Approved: <strong className="text-green-600">{verifiedPasses.filter(r => (typeof r.status === 'object' ? r.status.overall : r.status) === 'HOD_APPROVED').length}</strong>
           </div>
           <div className="text-xs font-semibold text-gray-600 dark:text-gray-300 bg-gray-50 dark:bg-gray-700 px-3 py-1.5 rounded-md border border-gray-200 dark:border-gray-600">
-            📋 Total OD Requests: <strong className="text-[#0B426E] dark:text-blue-400">{verifiedPasses.length}</strong>
+            📋 Total OD Requests: <strong className="text-[#2f5da8] dark:text-blue-400">{verifiedPasses.length}</strong>
           </div>
         </div>
       </div>
@@ -159,7 +159,7 @@ export const Dashboard: React.FC = () => {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search by student name or register number..."
-              className="w-full pl-9 pr-3 py-1.5 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-md text-xs text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-[#0B426E]"
+              className="w-full pl-9 pr-3 py-1.5 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-md text-xs text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-[#2f5da8]"
             />
           </div>
 
@@ -172,7 +172,7 @@ export const Dashboard: React.FC = () => {
                 type="date"
                 value={selectedDate}
                 onChange={(e) => setSelectedDate(e.target.value)}
-                className="bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-md px-2.5 py-1 text-xs text-gray-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-[#0B426E] font-semibold cursor-pointer"
+                className="bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-md px-2.5 py-1 text-xs text-gray-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-[#2f5da8] font-semibold cursor-pointer"
               />
             </div>
 
@@ -265,7 +265,7 @@ export const Dashboard: React.FC = () => {
               >
                 <div className="flex items-center justify-between border-b border-gray-200/50 dark:border-gray-700/50 pb-2">
                   <div className="flex items-center gap-2 min-w-0">
-                    <div className="w-8 h-8 rounded bg-white/60 dark:bg-black/20 flex items-center justify-center font-bold text-[#0B426E] dark:text-blue-300 shrink-0">
+                    <div className="w-8 h-8 rounded bg-white/60 dark:bg-black/20 flex items-center justify-center font-bold text-[#2f5da8] dark:text-blue-300 shrink-0">
                       <User className="w-4 h-4" />
                     </div>
                     <div className="min-w-0">
@@ -296,7 +296,7 @@ export const Dashboard: React.FC = () => {
                   </div>
                   <div className="flex justify-between items-center text-[11px]">
                     <span className="text-gray-500 dark:text-gray-400 font-medium">Pass Type</span>
-                    <strong className="text-[#0B426E] dark:text-blue-300">{getPassTypeLabelForDate(pass, selectedDate)}</strong>
+                    <strong className="text-[#2f5da8] dark:text-blue-300">{getPassTypeLabelForDate(pass, selectedDate)}</strong>
                   </div>
                   <div className="flex justify-between items-center text-[11px]">
                     <span className="text-gray-500 dark:text-gray-400 font-medium">From</span>

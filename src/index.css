@@ -10,7 +10,7 @@
     padding: 0;
     width: 100%;
     height: 100%;
-    font-family: 'Inter', 'Roboto', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-family: 'Open Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     -webkit-tap-highlight-color: transparent;
@@ -24,30 +24,51 @@
   }
 }
 
-/* Custom Institutional ERP Utilities */
+/* Custom Institutional ERP & FXCAMS Utilities */
+.bg-erp-canvas {
+  background-color: #eaedf2;
+}
+
+.bg-erp-well {
+  background-color: #e2e8f0;
+}
+
+.border-erp-divider {
+  border-color: #cbd5e1;
+}
+
 .bg-erp-primary {
-  background-color: #0B426E;
+  background-color: #2f5da8;
 }
 
 .text-erp-primary {
-  color: #0B426E;
+  color: #2f5da8;
 }
 
 .border-erp-primary {
-  border-color: #0B426E;
+  border-color: #2f5da8;
+}
+
+/* Deep Institutional Navy Accent */
+.bg-erp-navy {
+  background-color: #2f5da8;
+}
+
+.text-erp-navy {
+  color: #2f5da8;
 }
 
 /* Legacy helper alias fallback */
 .bg-erp-blue {
-  background-color: #0B426E;
+  background-color: #2f5da8;
 }
 
 .text-erp-blue {
-  color: #0B426E;
+  color: #2f5da8;
 }
 
 .border-erp-blue {
-  border-color: #0B426E;
+  border-color: #2f5da8;
 }
 
 /* Native-feel scrollbar */

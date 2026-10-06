@@ -13,7 +13,7 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ allowedRoles }) 
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#F5F7FA] dark:bg-[#0F172A] flex items-center justify-center">
+      <div className="min-h-screen bg-[#EAEDF2] dark:bg-[#0B1120] flex items-center justify-center">
         <Loader label="Verifying institutional security credentials..." />
       </div>
     );

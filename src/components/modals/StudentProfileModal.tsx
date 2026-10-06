@@ -38,13 +38,13 @@ export const StudentProfileModal: React.FC<StudentProfileModalProps> = ({
         {/* Top Student Banner */}
         <div className="p-3.5 bg-gray-50 dark:bg-gray-700/80 rounded-md border border-gray-200 dark:border-gray-600 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-md bg-[#0B426E] flex items-center justify-center text-white font-bold text-sm">
+            <div className="w-10 h-10 rounded-md bg-[#2f5da8] flex items-center justify-center text-white font-bold text-sm">
               {student.displayName.charAt(0)}
             </div>
             <div>
               <div className="flex items-center gap-2">
                 <h3 className="text-sm font-semibold text-gray-900 dark:text-white">{student.displayName}</h3>
-                <span className="text-[11px] font-medium text-[#0B426E] dark:text-blue-300 bg-blue-50 dark:bg-blue-950/60 px-2 py-0.5 rounded-md border border-blue-200 dark:border-blue-800">
+                <span className="text-[11px] font-medium text-[#2f5da8] dark:text-blue-300 bg-blue-50 dark:bg-blue-950/60 px-2 py-0.5 rounded-md border border-blue-200 dark:border-blue-800">
                   Reg: {student.registerNumber || 'N/A'}
                 </span>
               </div>
@@ -55,7 +55,7 @@ export const StudentProfileModal: React.FC<StudentProfileModalProps> = ({
           {canEdit && onEdit && (
             <button
               onClick={() => onEdit(student)}
-              className="px-3 py-1.5 rounded-md bg-[#0B426E] hover:bg-[#083356] text-white font-medium text-xs transition-colors cursor-pointer"
+              className="px-3 py-1.5 rounded-md bg-[#2f5da8] hover:bg-[#234a87] text-white font-medium text-xs transition-colors cursor-pointer"
             >
               Edit Details
             </button>
@@ -74,7 +74,7 @@ export const StudentProfileModal: React.FC<StudentProfileModalProps> = ({
           </div>
           <div className="p-2.5 bg-gray-50 dark:bg-gray-700/50 rounded-md border border-gray-200 dark:border-gray-600 col-span-2">
             <span className="text-gray-500 dark:text-gray-400 block text-[10px] uppercase font-semibold">Assigned Mentor</span>
-            <span className="font-semibold text-[#0B426E] dark:text-blue-300 text-xs">
+            <span className="font-semibold text-[#2f5da8] dark:text-blue-300 text-xs">
               {student.mentorName || 'Faculty Mentor'} ({student.mentorEmail || 'N/A'})
             </span>
           </div>
@@ -127,7 +127,7 @@ export const StudentProfileModal: React.FC<StudentProfileModalProps> = ({
                   <div key={req.id} className="p-3 bg-white dark:bg-gray-800 rounded-md border border-gray-200 dark:border-gray-700 space-y-2">
                     <div className="flex items-center justify-between">
                       <div>
-                        <span className="font-mono font-bold text-[#0B426E] dark:text-blue-300">{req.requestNumber}</span>
+                        <span className="font-mono font-bold text-[#2f5da8] dark:text-blue-300">{req.requestNumber}</span>
                         <span className="text-gray-500 dark:text-gray-400 text-[11px] ml-2">
                           ({req.schedule && req.schedule[0]?.passType === 'FULL_DAY' ? 'Full Day' : 'Partial'})
                         </span>

@@ -26,9 +26,9 @@ export const Badge: React.FC<BadgeProps> = ({
     rejected: 'bg-red-50 text-red-700 border-red-200 dark:bg-red-950/60 dark:text-red-300 dark:border-red-800',
     warning: 'bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-950/60 dark:text-amber-300 dark:border-amber-800',
     pending: 'bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-950/60 dark:text-amber-300 dark:border-amber-800',
-    info: 'bg-blue-50 text-[#0B426E] border-blue-200 dark:bg-blue-950/60 dark:text-blue-300 dark:border-blue-800',
+    info: 'bg-blue-50 text-[#2f5da8] border-blue-200 dark:bg-blue-950/60 dark:text-blue-300 dark:border-blue-800',
     ghost: 'bg-gray-100 text-gray-700 border-gray-200 dark:bg-gray-800 dark:text-gray-300 dark:border-gray-700',
-    default: 'bg-blue-50 text-[#0B426E] border-blue-200 dark:bg-blue-950/60 dark:text-blue-300 dark:border-blue-800',
+    default: 'bg-blue-50 text-[#2f5da8] border-blue-200 dark:bg-blue-950/60 dark:text-blue-300 dark:border-blue-800',
   };
 
   const currentStyle = variantStyles[normKey] || variantStyles.default;

@@ -21,7 +21,7 @@ export const MyRequests: React.FC = () => {
             My Movement Passes
           </h2>
           <p className="text-xs text-gray-500 dark:text-gray-400 font-medium">
-            Track and manage your institutional movement pass applications.
+            Track and manage all your active, approved, and archived movement pass applications.
           </p>
         </div>
         <Button variant="primary" onClick={() => navigate('/student/apply')} className="w-full sm:w-auto font-semibold">

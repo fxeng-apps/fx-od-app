@@ -25,6 +25,7 @@ import { sendNotification } from './notificationService';
 import { fetchHODsByDepartment } from './userService';
 import { sanitizeFirestoreData } from '../../utils/sanitize';
 import { debugLogger } from '../../utils/debugLogger';
+import { parseNotificationDate } from '../../utils/dateUtils';
 
 // Helper to generate unique sequential style request number
 const generateRequestNumber = (): string => {
@@ -479,7 +480,7 @@ export const hodReviewODRequest = async (
       decision === 'APPROVED'
         ? `Your Movement Pass ${od.requestNumber} has been officially approved.`
         : `Your Movement Pass ${od.requestNumber} was rejected by HOD. Reason: ${rejectionReason}`,
-      `/student/history?highlight=${odId}`,
+      `/student/requests?highlight=${odId}`,
       decision === 'APPROVED' ? 'OD_HOD_APPROVED' : 'OD_HOD_REJECTED',
       odId
     );
@@ -549,7 +550,7 @@ export const bulkHODApproveODRequests = async (
             { uid: hod.uid, name: hod.displayName, role: hod.role },
             'Movement Pass Approved by HOD',
             `Your Movement Pass ${od.requestNumber} has been officially approved.`,
-            `/student/history?highlight=${id}`,
+            `/student/requests?highlight=${id}`,
             'OD_HOD_APPROVED',
             id
           ).catch(() => {});
@@ -633,7 +634,7 @@ export const bulkHODRejectODRequests = async (
           { uid: hod.uid, name: hod.displayName, role: hod.role },
           'Movement Pass Rejected by HOD',
           `Your Movement Pass ${od.requestNumber} was rejected by HOD. Reason: ${rejectionReason}`,
-          `/student/history?highlight=${id}`,
+          `/student/requests?highlight=${id}`,
           'OD_HOD_REJECTED',
           id
         ).catch(() => {});
@@ -666,8 +667,8 @@ export const fetchStudentODRequests = async (studentUid: string): Promise<ODRequ
     const list = snap.docs.map((d) => ({ id: d.id, ...d.data() })) as ODRequest[];
 
     return list.sort((a, b) => {
-      const tA = a.createdAt ? new Date(a.createdAt as any).getTime() : 0;
-      const tB = b.createdAt ? new Date(b.createdAt as any).getTime() : 0;
+      const tA = parseNotificationDate(a.createdAt).getTime();
+      const tB = parseNotificationDate(b.createdAt).getTime();
       return tB - tA;
     });
   } catch (error) {
@@ -705,7 +706,11 @@ export const fetchMentorPendingRequests = async (
       snap2.docs.forEach((d) => itemsMap.set(d.id, { id: d.id, ...d.data() } as ODRequest));
     }
 
-    return Array.from(itemsMap.values());
+    return Array.from(itemsMap.values()).sort((a, b) => {
+      const tA = parseNotificationDate(a.createdAt).getTime();
+      const tB = parseNotificationDate(b.createdAt).getTime();
+      return tB - tA;
+    });
   } catch (error) {
     console.error('Error fetching mentor pending passes:', error);
     return [];
@@ -749,8 +754,8 @@ export const fetchMentorHistoryRequests = async (
     }
 
     return Array.from(itemsMap.values()).sort((a, b) => {
-      const tA = a.createdAt ? new Date(a.createdAt as any).getTime() : 0;
-      const tB = b.createdAt ? new Date(b.createdAt as any).getTime() : 0;
+      const tA = parseNotificationDate(a.createdAt).getTime();
+      const tB = parseNotificationDate(b.createdAt).getTime();
       return tB - tA;
     });
   } catch (error) {
@@ -770,8 +775,8 @@ export const fetchHODPendingRequests = async (department: Department): Promise<O
     const snap = await getDocs(q);
     const list = snap.docs.map((d) => ({ id: d.id, ...d.data() })) as ODRequest[];
     return list.sort((a, b) => {
-      const tA = a.createdAt ? new Date(a.createdAt as any).getTime() : 0;
-      const tB = b.createdAt ? new Date(b.createdAt as any).getTime() : 0;
+      const tA = parseNotificationDate(a.createdAt).getTime();
+      const tB = parseNotificationDate(b.createdAt).getTime();
       return tB - tA;
     });
   } catch (error) {
@@ -791,8 +796,8 @@ export const fetchHODHistoryRequests = async (department: Department): Promise<O
     const snap = await getDocs(q);
     const list = snap.docs.map((d) => ({ id: d.id, ...d.data() })) as ODRequest[];
     return list.sort((a, b) => {
-      const tA = a.createdAt ? new Date(a.createdAt as any).getTime() : 0;
-      const tB = b.createdAt ? new Date(b.createdAt as any).getTime() : 0;
+      const tA = parseNotificationDate(a.createdAt).getTime();
+      const tB = parseNotificationDate(b.createdAt).getTime();
       return tB - tA;
     });
   } catch (error) {
@@ -810,8 +815,8 @@ export const fetchAllODRequests = async (): Promise<ODRequest[]> => {
     const snap = await getDocs(q);
     const list = snap.docs.map((d) => ({ id: d.id, ...d.data() })) as ODRequest[];
     const sorted = list.sort((a, b) => {
-      const tA = a.createdAt ? new Date(a.createdAt as any).getTime() : 0;
-      const tB = b.createdAt ? new Date(b.createdAt as any).getTime() : 0;
+      const tA = parseNotificationDate(a.createdAt).getTime();
+      const tB = parseNotificationDate(b.createdAt).getTime();
       return tB - tA;
     });
     return checkAndExpireODRequests(sorted);

@@ -53,7 +53,7 @@ export const Pagination: React.FC<PaginationProps> = ({
   const pages = getPageNumbers();
 
   return (
-    <div className="flex flex-col sm:flex-row items-center justify-between gap-3 p-3 bg-white dark:bg-gray-800 rounded-md border border-gray-200 dark:border-gray-700 text-xs select-none shadow-xs">
+    <div className="flex flex-col sm:flex-row items-center justify-between gap-3 p-3 bg-white dark:bg-gray-800 rounded-md border border-gray-300 dark:border-gray-700 text-xs select-none shadow-xs">
       {/* Item Range & Page Size Selector */}
       <div className="flex items-center gap-3 text-gray-600 dark:text-gray-400 font-medium">
         <span>
@@ -63,12 +63,12 @@ export const Pagination: React.FC<PaginationProps> = ({
         </span>
 
         {onPageSizeChange && (
-          <div className="flex items-center gap-1.5 ml-2 border-l border-gray-200 dark:border-gray-700 pl-3">
+          <div className="flex items-center gap-1.5 ml-2 border-l border-gray-300 dark:border-gray-700 pl-3">
             <span className="text-[11px]">Rows:</span>
             <select
               value={pageSize}
               onChange={(e) => onPageSizeChange(Number(e.target.value))}
-              className="bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded px-1.5 py-0.5 text-xs text-gray-800 dark:text-gray-200 font-semibold focus:outline-none focus:ring-1 focus:ring-[#0B426E] cursor-pointer"
+              className="bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded px-1.5 py-0.5 text-xs text-gray-800 dark:text-gray-200 font-semibold focus:outline-none focus:ring-1 focus:ring-[#2f5da8] cursor-pointer"
             >
               {pageSizeOptions.map((opt) => (
                 <option key={opt} value={opt}>
@@ -86,7 +86,7 @@ export const Pagination: React.FC<PaginationProps> = ({
         <button
           onClick={() => onPageChange(1)}
           disabled={currentPage === 1}
-          className="p-1.5 rounded-md border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer transition-colors"
+          className="p-1.5 rounded-md border border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer transition-colors"
           title="First Page"
         >
           <ChevronsLeft className="w-3.5 h-3.5" />
@@ -96,7 +96,7 @@ export const Pagination: React.FC<PaginationProps> = ({
         <button
           onClick={() => onPageChange(currentPage - 1)}
           disabled={currentPage === 1}
-          className="p-1.5 rounded-md border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer transition-colors"
+          className="p-1.5 rounded-md border border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer transition-colors"
           title="Previous Page"
         >
           <ChevronLeft className="w-3.5 h-3.5" />
@@ -119,8 +119,8 @@ export const Pagination: React.FC<PaginationProps> = ({
                 onClick={() => onPageChange(p as number)}
                 className={`min-w-[28px] h-7 px-2 rounded-md font-semibold text-xs transition-colors cursor-pointer ${
                   isSelected
-                    ? 'bg-[#0B426E] text-white shadow-xs'
-                    : 'bg-gray-50 dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-600 border border-gray-200 dark:border-gray-600'
+                    ? 'bg-[#2f5da8] text-white shadow-xs'
+                    : 'bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-600 border border-gray-300 dark:border-gray-600'
                 }`}
               >
                 {p}
@@ -133,7 +133,7 @@ export const Pagination: React.FC<PaginationProps> = ({
         <button
           onClick={() => onPageChange(currentPage + 1)}
           disabled={currentPage === totalPages || totalPages === 0}
-          className="p-1.5 rounded-md border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer transition-colors"
+          className="p-1.5 rounded-md border border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer transition-colors"
           title="Next Page"
         >
           <ChevronRight className="w-3.5 h-3.5" />
@@ -143,7 +143,7 @@ export const Pagination: React.FC<PaginationProps> = ({
         <button
           onClick={() => onPageChange(totalPages)}
           disabled={currentPage === totalPages || totalPages === 0}
-          className="p-1.5 rounded-md border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer transition-colors"
+          className="p-1.5 rounded-md border border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer transition-colors"
           title="Last Page"
         >
           <ChevronsRight className="w-3.5 h-3.5" />

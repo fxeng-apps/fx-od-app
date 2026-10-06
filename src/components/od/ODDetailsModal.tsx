@@ -50,13 +50,13 @@ export const ODDetailsModal: React.FC<ODDetailsModalProps> = ({
           </div>
           <div className="text-right">
             <p className="text-[11px] text-gray-500 dark:text-gray-400 font-medium">Total Duration</p>
-            <p className="text-base font-bold text-[#0B426E] dark:text-blue-300">{request.totalDays} Day(s)</p>
+            <p className="text-base font-bold text-[#2f5da8] dark:text-blue-300">{request.totalDays} Day(s)</p>
           </div>
         </div>
 
         {/* Student Identity Snapshot */}
         <div className="p-3.5 bg-white dark:bg-gray-700/40 border border-gray-200 dark:border-gray-600 rounded-md space-y-2.5">
-          <div className="flex items-center gap-2 text-[#0B426E] dark:text-blue-300 font-bold text-xs uppercase tracking-wider">
+          <div className="flex items-center gap-2 text-[#2f5da8] dark:text-blue-300 font-bold text-xs uppercase tracking-wider">
             <GraduationCap className="w-4 h-4" />
             <span>Student & Institutional Snapshot</span>
           </div>
@@ -82,7 +82,7 @@ export const ODDetailsModal: React.FC<ODDetailsModalProps> = ({
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
           <div className="p-3.5 bg-white dark:bg-gray-700/40 border border-gray-200 dark:border-gray-600 rounded-md space-y-1 sm:col-span-1">
             <span className="text-gray-500 dark:text-gray-400 block text-[11px]">Faculty In Charge</span>
-            <p className="font-semibold text-[#0B426E] dark:text-blue-300">{request.facultyInCharge}</p>
+            <p className="font-semibold text-[#2f5da8] dark:text-blue-300">{request.facultyInCharge}</p>
           </div>
 
           <div className="p-3.5 bg-white dark:bg-gray-700/40 border border-gray-200 dark:border-gray-600 rounded-md space-y-2 sm:col-span-2 text-left">
@@ -92,7 +92,7 @@ export const ODDetailsModal: React.FC<ODDetailsModalProps> = ({
                 request.schedule.map((entry, sIdx) => (
                   <div key={sIdx} className="flex justify-between items-center py-1 border-b border-gray-100 dark:border-gray-700 last:border-b-0">
                     <span className="font-semibold text-gray-800 dark:text-gray-200 flex items-center gap-1">
-                      <Calendar className="w-3 h-3 text-[#0B426E] dark:text-blue-400" /> {entry.date}
+                      <Calendar className="w-3 h-3 text-[#2f5da8] dark:text-blue-400" /> {entry.date}
                     </span>
                     <span className="text-[11px]">
                       {entry.passType === 'FULL_DAY' ? (
@@ -107,7 +107,7 @@ export const ODDetailsModal: React.FC<ODDetailsModalProps> = ({
                 ))
               ) : (
                 <div className="flex items-center gap-1.5 font-semibold text-gray-900 dark:text-white">
-                  <Calendar className="w-3.5 h-3.5 text-[#0B426E] dark:text-blue-400" />
+                  <Calendar className="w-3.5 h-3.5 text-[#2f5da8] dark:text-blue-400" />
                   <span>
                     {request.startDate} {request.endDate ? ` to ${request.endDate}` : ''}
                   </span>
@@ -126,7 +126,7 @@ export const ODDetailsModal: React.FC<ODDetailsModalProps> = ({
               href={request.proofDocumentUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 text-xs text-[#0B426E] dark:text-blue-300 hover:underline font-semibold pt-1"
+              className="inline-flex items-center gap-1.5 text-xs text-[#2f5da8] dark:text-blue-300 hover:underline font-semibold pt-1"
             >
               View Verification Document <ExternalLink className="w-3 h-3" />
             </a>

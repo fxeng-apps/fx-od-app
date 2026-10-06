@@ -28,7 +28,7 @@ export const Modal: React.FC<ModalProps> = ({
       {/* Modal Wrapper */}
       <div className="flex min-h-full items-end sm:items-center justify-center p-0 sm:p-4 text-center">
         <div
-          className={`relative transform overflow-hidden rounded-t-2xl sm:rounded-xl bg-white dark:bg-gray-800 border-t sm:border border-gray-200 dark:border-gray-700 text-left shadow-2xl transition-all w-full ${maxWidth} p-4 sm:p-6 max-h-[85vh] sm:max-h-[90vh] flex flex-col animate-in slide-in-from-bottom-6 duration-200`}
+          className={`relative transform overflow-hidden rounded-t-2xl sm:rounded-xl bg-white dark:bg-gray-800 border-t sm:border border-gray-300 dark:border-gray-700 text-left shadow-2xl transition-all w-full ${maxWidth} p-4 sm:p-6 max-h-[85vh] sm:max-h-[90vh] flex flex-col animate-in slide-in-from-bottom-6 duration-200`}
           style={{
             paddingBottom: 'max(env(safe-area-inset-bottom, 0px), 16px)',
           }}

@@ -91,13 +91,13 @@ export const StudentsUnderMe: React.FC = () => {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search by student name, register number, email..."
-            className="w-full pl-9 pr-3 py-1.5 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-md text-xs text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-[#0B426E]"
+            className="w-full pl-9 pr-3 py-1.5 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-md text-xs text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-[#2f5da8]"
           />
         </div>
 
         <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto">
           <div className="flex items-center gap-1.5 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-md px-2.5 py-1 text-xs">
-            <Filter className="text-[#0B426E] dark:text-blue-400 w-3.5 h-3.5" />
+            <Filter className="text-[#2f5da8] dark:text-blue-400 w-3.5 h-3.5" />
             <span className="text-gray-500 dark:text-gray-400 font-medium">Year:</span>
             <select
               value={selectedYear}
@@ -149,7 +149,7 @@ export const StudentsUnderMe: React.FC = () => {
                 >
                   <div className="flex items-center justify-between gap-2">
                     <div className="flex items-center gap-2 min-w-0">
-                      <GraduationCap className="w-4 h-4 text-[#0B426E] dark:text-blue-300 shrink-0" />
+                      <GraduationCap className="w-4 h-4 text-[#2f5da8] dark:text-blue-300 shrink-0" />
                       <h3 className="font-semibold text-gray-900 dark:text-white truncate">{s.displayName}</h3>
                     </div>
                     <Badge variant={odStatus.variant}>{odStatus.label}</Badge>
@@ -158,7 +158,7 @@ export const StudentsUnderMe: React.FC = () => {
                   <div className="grid grid-cols-2 gap-2 text-[11px] text-gray-600 dark:text-gray-300">
                     <div>
                       <span className="text-gray-400 block">Register No</span>
-                      <span className="font-mono font-bold text-[#0B426E] dark:text-blue-300">{s.registerNumber || 'N/A'}</span>
+                      <span className="font-mono font-bold text-[#2f5da8] dark:text-blue-300">{s.registerNumber || 'N/A'}</span>
                     </div>
                     <div>
                       <span className="text-gray-400 block">Class</span>
@@ -187,10 +187,10 @@ export const StudentsUnderMe: React.FC = () => {
               <thead>
                 <tr className="bg-gray-50 dark:bg-gray-800 text-gray-600 dark:text-gray-300 border-b border-gray-200 dark:border-gray-700 uppercase font-semibold text-[11px] tracking-wider select-none">
                   <th className="p-3 cursor-pointer hover:text-gray-900 dark:hover:text-white" onClick={() => toggleSort('displayName')}>
-                    Student Name {sortCol === 'displayName' && (sortDir === 'asc' ? <ArrowUp className="inline w-3 h-3 text-[#0B426E] ml-1" /> : <ArrowDown className="inline w-3 h-3 text-[#0B426E] ml-1" />)}
+                    Student Name {sortCol === 'displayName' && (sortDir === 'asc' ? <ArrowUp className="inline w-3 h-3 text-[#2f5da8] ml-1" /> : <ArrowDown className="inline w-3 h-3 text-[#2f5da8] ml-1" />)}
                   </th>
                   <th className="p-3 cursor-pointer hover:text-gray-900 dark:hover:text-white" onClick={() => toggleSort('registerNumber')}>
-                    Register No {sortCol === 'registerNumber' && (sortDir === 'asc' ? <ArrowUp className="inline w-3 h-3 text-[#0B426E] ml-1" /> : <ArrowDown className="inline w-3 h-3 text-[#0B426E] ml-1" />)}
+                    Register No {sortCol === 'registerNumber' && (sortDir === 'asc' ? <ArrowUp className="inline w-3 h-3 text-[#2f5da8] ml-1" /> : <ArrowDown className="inline w-3 h-3 text-[#2f5da8] ml-1" />)}
                   </th>
                   <th className="p-3">Department & Class</th>
                   <th className="p-3 font-mono">College Email</th>
@@ -205,11 +205,11 @@ export const StudentsUnderMe: React.FC = () => {
                     <tr key={s.uid} className="hover:bg-gray-50 dark:hover:bg-gray-700/40 transition-colors">
                       <td className="p-3">
                         <div className="font-semibold text-gray-900 dark:text-white flex items-center gap-2">
-                          <GraduationCap className="text-[#0B426E] dark:text-blue-300 w-4 h-4" />
+                          <GraduationCap className="text-[#2f5da8] dark:text-blue-300 w-4 h-4" />
                           <span>{s.displayName}</span>
                         </div>
                       </td>
-                      <td className="p-3 font-mono font-bold text-[#0B426E] dark:text-blue-300">
+                      <td className="p-3 font-mono font-bold text-[#2f5da8] dark:text-blue-300">
                         {s.registerNumber || 'N/A'}
                       </td>
                       <td className="p-3 text-gray-600 dark:text-gray-300">

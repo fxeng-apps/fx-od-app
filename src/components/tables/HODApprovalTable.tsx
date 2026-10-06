@@ -104,9 +104,9 @@ export const HODApprovalTable: React.FC<HODApprovalTableProps> = ({
   const renderSortIcon = (col: SortColumn) => {
     if (sortColumn !== col) return <ArrowUpDown className="w-3 h-3 opacity-40 ml-1 inline" />;
     return sortDirection === 'asc' ? (
-      <ArrowUp className="w-3 h-3 text-[#0B426E] ml-1 inline" />
+      <ArrowUp className="w-3 h-3 text-[#2f5da8] ml-1 inline" />
     ) : (
-      <ArrowDown className="w-3 h-3 text-[#0B426E] ml-1 inline" />
+      <ArrowDown className="w-3 h-3 text-[#2f5da8] ml-1 inline" />
     );
   };
 
@@ -150,7 +150,7 @@ export const HODApprovalTable: React.FC<HODApprovalTableProps> = ({
 
   if (requests.length === 0) {
     return (
-      <div className="p-6 text-center bg-white dark:bg-gray-800 rounded-md border border-gray-200 dark:border-gray-700">
+      <div className="p-6 text-center bg-white dark:bg-gray-800 rounded-md border border-gray-300 dark:border-gray-700">
         <p className="text-xs text-gray-500 dark:text-gray-400 font-normal">No pending movement passes for department HOD sanction.</p>
       </div>
     );
@@ -160,8 +160,8 @@ export const HODApprovalTable: React.FC<HODApprovalTableProps> = ({
     <div className="space-y-3 text-left">
       {/* Bulk Action Header Toolbar */}
       {selectedIds.length > 0 && (
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-3 bg-blue-50 dark:bg-gray-700 border border-blue-200 dark:border-gray-600 rounded-md gap-2 text-left">
-          <span className="text-xs font-semibold text-[#0B426E] dark:text-blue-300">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-3 bg-blue-50/80 dark:bg-gray-700 border border-blue-200 dark:border-gray-600 rounded-md gap-2 text-left">
+          <span className="text-xs font-semibold text-[#2f5da8] dark:text-blue-300">
             {selectedIds.length} Mentor-Approved Request(s) Selected
           </span>
           <div className="flex items-center gap-2 w-full sm:w-auto">
@@ -200,10 +200,10 @@ export const HODApprovalTable: React.FC<HODApprovalTableProps> = ({
               key={req.id}
               className={`p-4 bg-white dark:bg-gray-800 rounded-md border space-y-3 transition-colors ${
                 isHighlighted
-                  ? 'border-[#0B426E] ring-2 ring-[#0B426E] bg-amber-50/50 dark:bg-amber-950/20 shadow-md'
+                  ? 'border-[#2f5da8] ring-2 ring-[#2f5da8] bg-amber-50/50 dark:bg-amber-950/20 shadow-md'
                   : isSelected
-                  ? 'border-[#0B426E] ring-1 ring-[#0B426E]'
-                  : 'border-gray-200 dark:border-gray-700 shadow-xs'
+                  ? 'border-[#2f5da8] ring-1 ring-[#2f5da8]'
+                  : 'border-gray-300 dark:border-gray-700 shadow-xs'
               } ${!isMentorApproved ? 'opacity-80 bg-gray-50/50 dark:bg-gray-900/20' : ''}`}
             >
               <div className="flex items-start justify-between gap-2 border-b border-gray-100 dark:border-gray-700 pb-2.5">
@@ -213,13 +213,13 @@ export const HODApprovalTable: React.FC<HODApprovalTableProps> = ({
                       type="checkbox"
                       checked={isSelected}
                       onChange={() => toggleSelectOne(req.id)}
-                      className="w-4 h-4 rounded border-gray-300 dark:border-gray-600 text-[#0B426E] focus:ring-[#0B426E] cursor-pointer shrink-0"
+                      className="w-4 h-4 rounded border-gray-300 dark:border-gray-600 text-[#2f5da8] focus:ring-[#2f5da8] cursor-pointer shrink-0"
                     />
                   )}
                   <div className="min-w-0">
                     <div className="flex items-center gap-1.5">
                       {isHighlighted && (
-                        <span className="text-[10px] font-bold bg-[#0B426E] text-white px-1.5 py-0.5 rounded-full shrink-0">
+                        <span className="text-[10px] font-bold bg-[#2f5da8] text-white px-1.5 py-0.5 rounded-full shrink-0">
                           Targeted
                         </span>
                       )}
@@ -248,7 +248,7 @@ export const HODApprovalTable: React.FC<HODApprovalTableProps> = ({
               <div className="grid grid-cols-2 gap-2 text-xs text-left">
                 <div>
                   <span className="text-[10px] text-gray-500 dark:text-gray-400 uppercase font-semibold block">Pass Type</span>
-                  <span className="font-semibold text-[#0B426E] dark:text-blue-300">{getPassTypeLabel(req)}</span>
+                  <span className="font-semibold text-[#2f5da8] dark:text-blue-300">{getPassTypeLabel(req)}</span>
                 </div>
                 <div>
                   <span className="text-[10px] text-gray-500 dark:text-gray-400 uppercase font-semibold block">Schedule</span>
@@ -294,11 +294,11 @@ export const HODApprovalTable: React.FC<HODApprovalTableProps> = ({
       </div>
 
       {/* Main Desktop Approval Table (>= md) */}
-      <div className="hidden md:block overflow-x-auto bg-white dark:bg-gray-800 rounded-md border border-gray-200 dark:border-gray-700 shadow-xs">
-        <table className="w-full text-left text-xs border-collapse">
+      <div className="hidden md:block overflow-x-auto w-full max-w-full bg-white dark:bg-gray-800 rounded-md border border-gray-300 dark:border-gray-700 shadow-xs custom-scrollbar">
+        <table className="min-w-[800px] w-full text-left text-xs border-collapse">
           <thead>
-            <tr className="sticky top-0 bg-gray-50 dark:bg-gray-800 text-gray-600 dark:text-gray-300 border-b border-gray-200 dark:border-gray-700 uppercase font-semibold text-[11px] tracking-wider select-none">
-              <th className="p-3 w-10">
+            <tr className="sticky top-0 bg-[#E2E8F0] dark:bg-gray-800 text-gray-800 dark:text-gray-200 border-b border-gray-300 dark:border-gray-700 uppercase font-bold text-[11px] tracking-wider select-none">
+              <th className="p-3 w-10 whitespace-nowrap">
                 <input
                   type="checkbox"
                   checked={
@@ -307,22 +307,22 @@ export const HODApprovalTable: React.FC<HODApprovalTableProps> = ({
                   }
                   onChange={toggleSelectAll}
                   disabled={selectableRequests.length === 0}
-                  className="rounded border-gray-300 dark:border-gray-600 text-[#0B426E] focus:ring-[#0B426E] cursor-pointer disabled:opacity-30"
+                  className="rounded border-gray-300 dark:border-gray-600 text-[#2f5da8] focus:ring-[#2f5da8] cursor-pointer disabled:opacity-30"
                 />
               </th>
-              <th className="p-3 cursor-pointer hover:text-gray-900 dark:hover:text-white" onClick={() => handleSort('studentName')}>
+              <th className="p-3 cursor-pointer hover:text-blue-900 dark:hover:text-white whitespace-nowrap" onClick={() => handleSort('studentName')}>
                 Student & Reg No {renderSortIcon('studentName')}
               </th>
-              <th className="p-3 cursor-pointer hover:text-gray-900 dark:hover:text-white" onClick={() => handleSort('passType')}>
+              <th className="p-3 cursor-pointer hover:text-blue-900 dark:hover:text-white whitespace-nowrap" onClick={() => handleSort('passType')}>
                 Pass Type & Days {renderSortIcon('passType')}
               </th>
-              <th className="p-3 cursor-pointer hover:text-gray-900 dark:hover:text-white" onClick={() => handleSort('status')}>
+              <th className="p-3 cursor-pointer hover:text-blue-900 dark:hover:text-white whitespace-nowrap" onClick={() => handleSort('status')}>
                 Mentor Review Status {renderSortIcon('status')}
               </th>
-              <th className="p-3 text-right">Actions</th>
+              <th className="p-3 text-right whitespace-nowrap">Actions</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-gray-100 dark:divide-gray-700/60 text-gray-700 dark:text-gray-200">
+          <tbody className="divide-y divide-gray-200 dark:divide-gray-700/60 text-gray-700 dark:text-gray-200">
             {paginatedRequests.map((req) => {
               const statusVal = getStatusStr(req);
               const isMentorApproved = statusVal === 'MENTOR_APPROVED';
@@ -333,8 +333,8 @@ export const HODApprovalTable: React.FC<HODApprovalTableProps> = ({
                   key={req.id}
                   className={`transition-colors ${
                     isHighlighted
-                      ? 'bg-amber-50 dark:bg-amber-950/30 font-semibold border-l-4 border-l-[#0B426E]'
-                      : 'hover:bg-gray-50 dark:hover:bg-gray-700/40'
+                      ? 'bg-amber-50 dark:bg-amber-950/30 font-semibold border-l-4 border-l-[#2f5da8]'
+                      : 'hover:bg-blue-50/50 dark:hover:bg-gray-700/40'
                   } ${!isMentorApproved ? 'opacity-75 bg-gray-50/50 dark:bg-gray-900/20' : ''}`}
                 >
                   <td className="p-3">
@@ -343,7 +343,7 @@ export const HODApprovalTable: React.FC<HODApprovalTableProps> = ({
                       checked={selectedIds.includes(req.id)}
                       onChange={() => toggleSelectOne(req.id)}
                       disabled={!isMentorApproved}
-                      className="rounded border-gray-300 dark:border-gray-600 text-[#0B426E] focus:ring-[#0B426E] cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed"
+                      className="rounded border-gray-300 dark:border-gray-600 text-[#2f5da8] focus:ring-[#2f5da8] cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed"
                     />
                   </td>
                   <td className="p-3 text-left">
@@ -353,7 +353,7 @@ export const HODApprovalTable: React.FC<HODApprovalTableProps> = ({
                     </div>
                   </td>
                   <td className="p-3 text-left">
-                    <div className="font-semibold text-[#0B426E] dark:text-blue-300">{getPassTypeLabel(req)}</div>
+                    <div className="font-semibold text-[#2f5da8] dark:text-blue-300">{getPassTypeLabel(req)}</div>
                     <div className="text-[11px] text-gray-500 dark:text-gray-400">
                       {req.startDate} {req.endDate ? ` to ${req.endDate}` : ''} ({req.totalDays} day)
                     </div>
